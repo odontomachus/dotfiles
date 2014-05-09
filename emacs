@@ -139,7 +139,10 @@
  python-shell-completion-string-code
    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
+; force emacs to use spaces
+(setq-default indent-tabs-mode nil)
 
+(menu-bar-mode -1)
 
 ;; (defun tavish-alert ()
 ;;   (when (and (stringp buffer-file-name)

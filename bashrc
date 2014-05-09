@@ -5,12 +5,12 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-# Turn the **** bell off
-set bell-style none
-
 # The stuff bellow this will only apply to interactive shells
 # exit if we're not running an interactive shell
 [ -z "$PS1" ] && return
+
+# Turn the **** bell off
+set bell-style none
 
 # Autocomplete virtualenv listings
 _venv() {
@@ -63,3 +63,11 @@ if [[ "$?" = 2 ]] ; then
     ssh-agent -t 2400 > ~/.sshagent 2>/dev/null
     source ~/.sshagent > /dev/null
 fi;
+
+# up down arrow key behavior
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
+export HISTSIZE=5000
+
+export LANG="en_US.UTF-8"
