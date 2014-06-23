@@ -148,6 +148,7 @@
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
+(column-number-mode 1)
 
 ;; (defun tavish-alert ()
 ;;   (when (and (stringp buffer-file-name)
@@ -159,3 +160,6 @@
 
 
 ;; (add-hook 'find-file-hook 'tavish-alert)
+
+; force emacs to use spaces
+(setq-default indent-tabs-mode nil)
