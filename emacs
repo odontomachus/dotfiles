@@ -156,3 +156,6 @@
 
 
 ;; (add-hook 'find-file-hook 'tavish-alert)
+
+; force emacs to use spaces
+(setq-default indent-tabs-mode nil)
