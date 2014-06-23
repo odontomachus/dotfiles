@@ -106,6 +106,10 @@
         (when (not (display-graphic-p))
           (setenv "GPG_AGENT_INFO" agent))))
 
+(add-to-list 'load-path "~/.emacs.d/vendor/yaml-mode")
+(require 'yaml-mode)
+    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+
 ;; (load-library  "~/.emacs.d/vendor/php-htm-mode/multi-mode.el")
 ;; (load-library  "~/.emacs.d/vendor/php-htm-mode/php-htm-mode.el")
 
@@ -143,6 +147,7 @@
 (setq-default indent-tabs-mode nil)
 
 (menu-bar-mode -1)
+(tool-bar-mode -1)
 
 ;; (defun tavish-alert ()
 ;;   (when (and (stringp buffer-file-name)
