@@ -52,9 +52,9 @@ alias memail='echo "" | mutt odontomachus@gmail.com'
 export VISUAL=emacs
 #export CDPATH=$CDPATH
 
-alias user_shutdown='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.ConsoleKit.UPower.Stop'
+alias user_shutdown='xfce4-session-logout --halt'
 
-alias user_suspend='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend'
+alias user_suspend='dbus-send --system --print-reply --dest="org.freedesktop.PowerManagement" /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend'
 
 touch ~/.sshagent
 source ~/.sshagent > /dev/null
