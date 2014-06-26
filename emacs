@@ -75,25 +75,6 @@
 ;; (require 'drupal-php)
 ;; (drupal-php)
 
-;; Need to find auto solution based on curr path
-;(defvar drupal-project-path "/var/shared/sites/coursecal/site")
-
-;; Tags
-;(require 'etags)
-;(setq tags-file-name (expand-file-name "tags" drupal-project-path))
-
-(require 'etags-table)
-(setq tag-table-alist 
-      '(("~/.emacs.d/" . "~/.emacs.d/TAGS")
-        ("~/projects/source/" . "~/.TAGS/projects.tags")))
-(setq etags-table-alist tag-table-alist)
-(setq etags-table-search-up-depth 10)
-
-(defun compile-tags ()
-  "compile etags for the current project"
-  (interactive)
-  (compile "find . -name '*.module' -o -name '*.inc' | etags -a -l php -"))
-
 ;; Encrypt / Decrypt .gpg files
 (require 'epa-file)
 (epa-file-enable)
