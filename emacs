@@ -162,3 +162,5 @@
 (setq-default indent-tabs-mode nil)
 
 (load "auctex.el" nil t t)
+(setq-default TeX-install-font-lock 'tex-font-setup)
+(load "preview-latex.el" nil t t)
