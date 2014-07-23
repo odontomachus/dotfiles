@@ -160,3 +160,5 @@
 
 ; force emacs to use spaces
 (setq-default indent-tabs-mode nil)
+
+(load "auctex.el" nil t t)
