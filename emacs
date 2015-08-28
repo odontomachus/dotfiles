@@ -69,7 +69,7 @@
   (goto-char pos)))
 (global-set-key (kbd "C-c C-r") 'sudo-edit-current-file)
 
-(add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/vendor")
 
 ; My PHP setup
 ;; (require 'drupal-php)
@@ -89,10 +89,16 @@
 (setq etags-table-alist tag-table-alist)
 (setq etags-table-search-up-depth 10)
 
-(defun compile-tags ()
+(defun compile-tags-drupal ()
   "compile etags for the current project"
   (interactive)
   (compile "find . -name '*.module' -o -name '*.inc' | etags -a -l php -"))
+
+(defun compile-tags-c ()
+  "compile etags for the current project"
+  (interactive)
+  (compile "find . -name '*.c' | etags -a -l c -"))
+
 
 ;; Encrypt / Decrypt .gpg files
 (require 'epa-file)
@@ -163,3 +169,16 @@
 
 ; force emacs to use spaces
 (setq-default indent-tabs-mode nil)
+
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'reverse)
+
+; Semantic for code parsing
+(require 'semantic)
+(require 'semantic/bovine/gcc)
+
+(setq tramp-default-method "ssh")
+(require 'tramp)
+
+(add-to-list 'load-path "~/.emacs.d/vendor/go-mode.el")
+(require 'go-mode-autoloads)
