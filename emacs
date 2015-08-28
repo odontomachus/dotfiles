@@ -54,8 +54,6 @@
   (c-set-offset 'arglist-close 0))
 (add-hook 'php-mode-hook 'wicked/php-mode-init)
 
- (setq tramp-default-method "ssh")
-
 ; Open root files with sudo 
 (defun sudo-edit (&optional arg)
   (interactive "p")
