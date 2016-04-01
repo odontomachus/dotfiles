@@ -50,6 +50,8 @@ alias lpwd='cd "`cat '$HOME'/.spwd`"'
 alias memail='echo "" | mutt odontomachus@gmail.com'
 
 export VISUAL=emacs
+export JAVA_HOME=/usr/lib/jvm/java-openjdk
+export PATH=$HOME/bin:$HOME/.Android/Sdk/tools:$PATH
 #export CDPATH=$CDPATH
 
 alias user_shutdown='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.ConsoleKit.UPower.Stop'
@@ -70,4 +72,14 @@ bind '"\e[B": history-search-forward'
 
 export HISTSIZE=5000
 
-export LANG="en_US.UTF-8"
+export LANG="en_US.utf8"
+export LC_ALL="en_US.utf8"
+
+# No accessibility bridge.
+export NO_AT_BRIDGE=1
+
+export NVM_DIR="/home/jonathan/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+# adds too much overhead
+# use stable nodejs
+#nvm use stable

@@ -150,6 +150,7 @@
 
 ; force emacs to use spaces
 (setq-default indent-tabs-mode nil)
+(setq js-indent-level 2)
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
