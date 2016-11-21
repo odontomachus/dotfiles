@@ -1,16 +1,38 @@
-# .bashrc
+#
+# ~/.bashrc
+#
 
-# Source global definitions
-if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-fi
-
-# The stuff bellow this will only apply to interactive shells
-# exit if we're not running an interactive shell
-[ -z "$PS1" ] && return
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
 
 # Turn the **** bell off
 set bell-style none
+
+alias ls='ls --color=auto'
+PS1='[\u@\h \W]\$ '
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export PAGER=less
+export EDITOR='emacs -mm'
+export VISUAL='emacs -mm'
+
+export HISTFILESIZE=20000
+export HISTSIZE=10000
+shopt -s histappend
+# Combine multiline commands into one in history
+shopt -s cmdhist
+# Ignore duplicates, ls without options and builtin commands
+HISTCONTROL=ignoreboth
+export HISTIGNORE="&:ls:[bf]g:exit"
+
+## Up Arrow: search and complete from previous history
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
+alias e='emacs -mm'
+
+# Load rvm as a function
+source $HOME/.rvm/scripts/rvm
 
 # Autocomplete virtualenv listings
 _venv() {
@@ -44,30 +66,5 @@ rmvenv () {
     done;
 }
 
-alias lpr='/usr/bin/lpr -o media=Letter -o page-top=72 -o page-left=72 -o page-right=72 -o page-bottom=72'
-alias spwd='/bin/pwd > '$HOME'/.spwd'
-alias lpwd='cd "`cat '$HOME'/.spwd`"'
-alias memail='echo "" | mutt odontomachus@gmail.com'
+[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
 
-export VISUAL=emacs
-#export CDPATH=$CDPATH
-
-alias user_shutdown='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.ConsoleKit.UPower.Stop'
-
-alias user_suspend='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend'
-
-touch ~/.sshagent
-source ~/.sshagent > /dev/null
-ssh-add -l &>/dev/null
-if [[ "$?" = 2 ]] ; then
-    ssh-agent -t 2400 > ~/.sshagent 2>/dev/null
-    source ~/.sshagent > /dev/null
-fi;
-
-# up down arrow key behavior
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
-
-export HISTSIZE=5000
-
-export LANG="en_US.UTF-8"
