@@ -27,20 +27,20 @@ complete -C _venv venv
 
 mkvenv () {
         test -f ~/virtualenv/$1/bin/activate && ( echo "Virtualenv already exists" && exit 1 )
-	virtualenv-3.5 ~/virtualenv/"$@"
+	virtualenv-3 ~/virtualenv/"$@"
 }
 
 rmvenv () {
     test -d ~/virtualenv/"$1" || ( echo "No such virtualenv" && exit 1 ) || return 1
     N=0;
     echo -n "Are you sure you want to remove virtualenv $1? (y/N) "
-    read a 
-    while [ $N -lt 3 ]; do 
+    read a
+    while [ $N -lt 3 ]; do
 	[[ x$a =~ ^x[yY]$ ]] && return $( rm -r ~/virtualenv/"$1" )
 	[[ x$a =~ ^x[nN]$ ]] && echo "Cancelling" && return 1
 	let N=N+1
 	echo -n "Please answer 'y' or 'n'."
-	read a 
+	read a
     done;
 }
 
@@ -83,3 +83,6 @@ export NVM_DIR="/home/jonathan/.nvm"
 # adds too much overhead
 # use stable nodejs
 #nvm use stable
+. $HOME/.asdf/asdf.sh
+
+. $HOME/.asdf/completions/asdf.bash
