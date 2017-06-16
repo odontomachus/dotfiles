@@ -32,7 +32,7 @@ bind '"\e[B": history-search-forward'
 alias e='emacs -mm'
 
 # Load rvm as a function
-source $HOME/.rvm/scripts/rvm
+[ -r $HOME/.rvm/scripts/rvm ] && source $HOME/.rvm/scripts/rvm
 
 # Autocomplete virtualenv listings
 _venv() {
@@ -56,15 +56,14 @@ rmvenv () {
     test -d ~/virtualenv/"$1" || ( echo "No such virtualenv" && exit 1 ) || return 1
     N=0;
     echo -n "Are you sure you want to remove virtualenv $1? (y/N) "
-    read a 
-    while [ $N -lt 3 ]; do 
+    read a
+    while [ $N -lt 3 ]; do
 	[[ x$a =~ ^x[yY]$ ]] && return $( rm -r ~/virtualenv/"$1" )
 	[[ x$a =~ ^x[nN]$ ]] && echo "Cancelling" && return 1
 	let N=N+1
 	echo -n "Please answer 'y' or 'n'."
-	read a 
+	read a
     done;
 }
 
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
-
