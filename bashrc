@@ -11,13 +11,16 @@ set bell-style none
 alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export GOPATH=$HOME/projects/go
+
+export PATH="$PATH:$HOME/.rvm/bin:$HOME/bin:$GOPATH/bin" # Add RVM & GO to PATH for scripting
 export PAGER=less
 export EDITOR='emacs -mm'
 export VISUAL='emacs -mm'
 
 export HISTFILESIZE=20000
 export HISTSIZE=10000
+
 shopt -s histappend
 # Combine multiline commands into one in history
 shopt -s cmdhist
@@ -67,3 +70,5 @@ rmvenv () {
 }
 
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
+
+type kubectl >/dev/null 2>&1 && source <(kubectl completion bash)
