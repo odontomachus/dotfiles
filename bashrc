@@ -8,8 +8,26 @@
 # Turn the **** bell off
 set bell-style none
 
+if type kubectl >/dev/null 2>&1
+then
+    source <(kubectl completion bash)
+    {
+        # Get current context
+        __kube_ps1() {
+            CONTEXT=$(kubectl config current-context 2>&1)
+            if [ -n "$CONTEXT" ]; then
+                echo "(k8s: ${CONTEXT})"
+            fi
+        }
+    }
+fi
+
+alias kube='export PS1="[\u@\h \W]$(__kube_ps1)\$ "'
+
+
 alias ls='ls --color=auto'
-PS1='[\u@\h \W]\$ '
+
+alias unkube='export PS1="[\u@\h \W]\$ "'
 
 export GOPATH=$HOME/projects/go
 
@@ -70,5 +88,3 @@ rmvenv () {
 }
 
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
-
-type kubectl >/dev/null 2>&1 && source <(kubectl completion bash)
