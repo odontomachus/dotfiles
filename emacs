@@ -1,162 +1,174 @@
-;; .emacs
+;; No splash
+(setq inhibit-startup-message t
+      inhibit-startup-echo-area-message t)
 
-;;; uncomment this line to disable loading of "default.el" at startup
-;; (setq inhibit-default-init t)
-(setq inhibit-startup-screen t)
+;; Start empty org mode screen
+(setq inhibit-startup-screen +1)
+;; (setq initial-major-mode 'org-mode)
+(setq initial-scratch-message nil)
 
-;; enable visual feedback on selections
-;(setq transient-mark-mode t)
+;; Full frame
+(toggle-frame-maximized)
 
-;; default to better frame titles
-(setq frame-title-format
-      (concat  "%b - emacs@" (system-name)))
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(setq delete-old-versions 4)
+(setq version-control t)
+(setq vc-make-backup-files t)
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 
-;; default to unified diffs
-(setq diff-switches "-u")
-
-;; always end a file with a newline
-;(setq require-final-newline 'query)
-
-;; ========== Place Backup Files in Specific Directory ==========
-
-;; Enable backup files.
-(setq make-backup-files t)
-
-;; Enable versioning with default values (keep five last versions, I think!)
-(setq delete-old-versions t
-  kept-new-versions 6
-  kept-old-versions 2
-  version-control t)
+(setq savehist-file "~/.emacs.d/savehist")
+(savehist-mode 1)
+(setq history-length t)
+(setq history-delete-duplicates t)
+(setq savehist-save-minibuffer-history 1)
+(setq savehist-additional-variables
+      '(kill-ring
+        search-ring
+        regexp-search-ring))
 
 
-;; Save all backup file in this directory.
-(setq backup-directory-alist (quote ((".*" . "~/.emacs_backups/"))))
-
-;; Keep case on expansion
-(setq dabbrev-case-replace nil)
-
-(define-key global-map [f9] 'bookmark-jump)
-(define-key global-map [f10] 'bookmark-set)
-
- (add-to-list 'auto-mode-alist '("\\.module$" . drupal-mode))
- (add-to-list 'auto-mode-alist '("\\.inc$" . drupal-mode))
- (add-to-list 'auto-mode-alist '("\\.install$" . drupal-mode))
-
-(defun wicked/php-mode-init ()
-  "Set some buffer-local variables."
-  (setq case-fold-search t)
-  (setq indent-tabs-mode nil)
-  (setq fill-column 78)
-  (setq c-basic-offset 4)
-  (c-set-offset 'arglist-cont 0)
-  (c-set-offset 'arglist-intro '+)
-  (c-set-offset 'case-label 4)
-  (c-set-offset 'arglist-close 0))
-(add-hook 'php-mode-hook 'wicked/php-mode-init)
-
- (setq tramp-default-method "ssh")
-
-; Open root files with sudo 
-(defun sudo-edit (&optional arg)
-  (interactive "p")
-  (if arg
-      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
- 
-(defun sudo-edit-current-file ()
-  (interactive)
-  (let ((pos (point)))
-  (find-alternate-file (concat "/sudo:root@localhost:" (buffer-file-name (current-buffer))))
-  (goto-char pos)))
-(global-set-key (kbd "C-c C-r") 'sudo-edit-current-file)
-
-(add-to-list 'load-path "~/.emacs.d")
-
-; My PHP setup
-;; (require 'drupal-php)
-;; (drupal-php)
-
-;; Need to find auto solution based on curr path
-;(defvar drupal-project-path "/var/shared/sites/coursecal/site")
-
-;; Tags
-;(require 'etags)
-;(setq tags-file-name (expand-file-name "tags" drupal-project-path))
-
-(require 'etags-table)
-(setq tag-table-alist 
-      '(("~/.emacs.d/" . "~/.emacs.d/TAGS")
-        ("~/projects/source/" . "~/.TAGS/projects.tags")))
-(setq etags-table-alist tag-table-alist)
-(setq etags-table-search-up-depth 10)
-
-(defun compile-tags ()
-  "compile etags for the current project"
-  (interactive)
-  (compile "find . -name '*.module' -o -name '*.inc' | etags -a -l php -"))
-
-;; Encrypt / Decrypt .gpg files
-(require 'epa-file)
-(epa-file-enable)
-;; Do not use gpg agent when runing in terminal
-    (defadvice epg--start (around advice-epg-disable-agent activate)
-      (let ((agent (getenv "GPG_AGENT_INFO")))
-        (when (not (display-graphic-p))
-          (setenv "GPG_AGENT_INFO" nil))
-        ad-do-it
-        (when (not (display-graphic-p))
-          (setenv "GPG_AGENT_INFO" agent))))
-
-;; (load-library  "~/.emacs.d/vendor/php-htm-mode/multi-mode.el")
-;; (load-library  "~/.emacs.d/vendor/php-htm-mode/php-htm-mode.el")
-
-(autoload 'php-mode "php-mode" "PHP mode." t)
-
-(add-hook 'php-mode-hook (lambda ()
-    (defun ywb-php-lineup-arglist-intro (langelem)
-      (save-excursion
-        (goto-char (cdr langelem))
-        (vector (+ (current-column) c-basic-offset))))
-    (defun ywb-php-lineup-arglist-close (langelem)
-      (save-excursion
-        (goto-char (cdr langelem))
-        (vector (current-column))))
-    (c-set-offset 'arglist-intro 'ywb-php-lineup-arglist-intro)
-    (c-set-offset 'arglist-close 'ywb-php-lineup-arglist-close))
-)
-
-;; Do not indent substatement open, that is after statement ({[...
-(setq substatement-open 0)
-
-(setq
- python-shell-interpreter "ipython"
- python-shell-interpreter-args ""
- python-shell-prompt-regexp "In \\[[0-9]+\\]: "
- python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
- python-shell-completion-setup-code
-   "from IPython.core.completerlib import module_completion"
- python-shell-completion-module-string-code
-   "';'.join(module_completion('''%s'''))\n"
- python-shell-completion-string-code
-   "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-
-; force emacs to use spaces
-(setq-default indent-tabs-mode nil)
-
-(menu-bar-mode -1)
 (tool-bar-mode -1)
-(column-number-mode 1)
+(menu-bar-mode -1)
 
-;; (defun tavish-alert ()
-;;   (when (and (stringp buffer-file-name)
-;;              (string-match ".*\\(bashrc\\|emacs\\)" buffer-file-name))
-;;   (start-process "running-alert" nil "mplayer" "/home/jonathan/siren.mp3")
-;;   (start-process "lock-screen" nil "xscreensaver-command" "-lock")
-;;   (start-process "take-pics" nil "/home/jonathan/script.sh")
-;;   ))
+;; Tooltips in echo area
+(tooltip-mode -1)
+(setq tooltip-use-echo-area t)
 
-
-;; (add-hook 'find-file-hook 'tavish-alert)
-
-; force emacs to use spaces
 (setq-default indent-tabs-mode nil)
+(setq show-trailing-whitespace 't)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; y/n prompt only, no yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Create file/buffer without prompt
+(setq confirm-nonexistent-file-or-buffer nil)
+
+;; Disable prompt on closing buffer with active process
+(setq kill-buffer-query-functions
+  (remq 'process-kill-buffer-query-function
+         kill-buffer-query-functions))
+
+(require 'uniquify)
+
+;; (setq ido-enable-flex-matching t)
+;; (setq ido-everywhere t)
+;; (ido-mode 1)
+;; (setq ido-auto-merge-delay-time 1.5)
+;; ;; No prompt when creating new buffer
+;; (setq ido-create-new-buffer 'always)
+
+
+(setq ruby-deep-indent-paren nil)
+;; Our coding standard
+(setq ruby-indent-level 2)
+
+(require 'package)
+(package-initialize)
+
+(add-to-list 'package-archives
+             '("marmalade" . "https://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
+
+;; (package-refresh-contents)
+
+(defvar myPackages
+  '(
+    babel
+    elpy
+    elixir-mode
+    alchemist
+    flycheck
+    mmm-mode
+    py-autopep8
+    robe
+    inf-ruby
+    yari
+    ruby-tools
+    solarized-theme
+    )
+  )
+
+(load-theme 'solarized-light t)
+
+(mapc #'(lambda (package)
+    (unless (package-installed-p package)
+      (package-install package)))
+      myPackages)
+
+(require 'ruby-tools)
+(add-hook 'ruby-mode-hook 'robe-mode)
+(add-hook 'robe-mode-hook 'ac-robe-setup)
+
+(defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
+  (rvm-activate-corresponding-ruby))
+
+;; Python ide
+(defun ome-elpy-setup ()
+  (elpy-enable t)
+  (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+  (elpy-use-ipython)
+  (setq elpy-rpc-backend "jedi")
+  (when (executable-find "ipython")
+    (elpy-use-ipython))
+  (when (el-get-package-installed-p 'flycheck)
+    (setq elpy-default-minor-modes
+          (remove 'flymake-mode
+                  elpy-default-minor-modes)))
+  (define-key python-mode-map (kbd "RET")
+    'newline-and-indent))
+
+(global-company-mode t)
+(push 'company-robe company-backends)
+
+(require 'py-autopep8)
+
+(add-hook 'go-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook 'gofmt-before-save)
+            (setq tab-width 4)
+            (setq indent-tabs-mode 1)))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
+ '(custom-safe-themes
+   (quote
+    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+ '(package-selected-packages
+   (quote
+    (jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode rinari projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(require 'org)
+(org-babel-do-load-languages
+ (quote org-babel-load-languages)
+ (quote ((emacs-lisp . t)
+         (java . t)
+         (dot . t)
+         (ditaa . t)
+         (R . t)
+         (python . t)
+         (ruby . t)
+         (gnuplot . t)
+         (clojure . t)
+         (sh . t)
+         (ledger . t)
+         (org . t)
+         (plantuml . t)
+         (latex . t))))
+
+(require 'icicles)
+;;(icy-mode 1)
+(require 'projectile)
+(projectile-global-mode 1)

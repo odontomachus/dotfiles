@@ -27,20 +27,20 @@ complete -C _venv venv
 
 mkvenv () {
         test -f ~/virtualenv/$1/bin/activate && ( echo "Virtualenv already exists" && exit 1 )
-	virtualenv ~/virtualenv/"$@"
+	virtualenv-3 ~/virtualenv/"$@"
 }
 
 rmvenv () {
     test -d ~/virtualenv/"$1" || ( echo "No such virtualenv" && exit 1 ) || return 1
     N=0;
     echo -n "Are you sure you want to remove virtualenv $1? (y/N) "
-    read a 
-    while [ $N -lt 3 ]; do 
+    read a
+    while [ $N -lt 3 ]; do
 	[[ x$a =~ ^x[yY]$ ]] && return $( rm -r ~/virtualenv/"$1" )
 	[[ x$a =~ ^x[nN]$ ]] && echo "Cancelling" && return 1
 	let N=N+1
 	echo -n "Please answer 'y' or 'n'."
-	read a 
+	read a
     done;
 }
 
@@ -50,6 +50,8 @@ alias lpwd='cd "`cat '$HOME'/.spwd`"'
 alias memail='echo "" | mutt odontomachus@gmail.com'
 
 export VISUAL=emacs
+export JAVA_HOME=/usr/lib/jvm/java-openjdk
+export PATH=$HOME/bin:$HOME/.Android/Sdk/tools:$PATH
 #export CDPATH=$CDPATH
 
 alias user_shutdown='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.ConsoleKit.UPower.Stop'
@@ -70,4 +72,17 @@ bind '"\e[B": history-search-forward'
 
 export HISTSIZE=5000
 
-export LANG="en_US.UTF-8"
+export LANG="en_US.utf8"
+export LC_ALL="en_US.utf8"
+
+# No accessibility bridge.
+export NO_AT_BRIDGE=1
+
+export NVM_DIR="/home/jonathan/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+# adds too much overhead
+# use stable nodejs
+#nvm use stable
+. $HOME/.asdf/asdf.sh
+
+. $HOME/.asdf/completions/asdf.bash
