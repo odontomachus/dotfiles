@@ -1,7 +1,23 @@
-style "tasklist-fg-color" {
-  fg[NORMAL]               = "#555565"
-  fg[PRELIGHT]             = "#454545"
-  fg[ACTIVE]               = "#222"
+style "tasklist-color" {
+  fg[NORMAL]               = "#6a6a81"
+  fg[PRELIGHT]             = "#3d3d3d"
+  fg[ACTIVE]               = "#010"
 }
 
-widget_class "XfcePanelWindow.PanelItem*Xfce*.XfceTasklist.XfceArrowButton.XfceHVBox.GtkLabel" style "tasklist-fg-color"
+style "tasklist-dark-bg" {
+  bg[ACTIVE] = "#fcfcfd"
+  bg[NORMAL] = "#ddd"
+
+  engine "xfce"
+  {
+    boxfill
+    {
+      fill_style = gradient
+    }
+  }
+}
+
+
+widget_class "XfcePanelWindow.*.XfceTaskListPlugin.*.XfceTasklist.XfceArrowButton.XfceHVBox.GtkLabel" style "tasklist-color"
+
+widget_class "XfcePanelWindow.PanelItembar.XfceTasklistPlugin.*.XfceTasklist.*" style "tasklist-dark-bg"
