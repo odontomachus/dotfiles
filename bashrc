@@ -51,18 +51,25 @@ alias memail='echo "" | mutt odontomachus@gmail.com'
 
 export VISUAL=emacs
 export JAVA_HOME=/usr/lib/jvm/java-openjdk
-export PATH=$HOME/bin:$HOME/.Android/Sdk/tools:$PATH
+export GOPATH=$(go env GOPATH)
+export PATH=$GOPATH/bin:$HOME/bin:$HOME/.Android/Sdk/tools:$PATH
 #export CDPATH=$CDPATH
 
 alias user_shutdown='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.ConsoleKit.UPower.Stop'
 
 alias user_suspend='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend'
 
-touch ~/.sshagent
+# If freshly updates
+find ~/.sshagent -mmin -0.01 && sleep 0.3 &>/dev/null
+[ -f .sshagent ] && (
+    source ~/.sshagent > /dev/null
+    # Give a chance for ssh-agent to initialize if freshly updated sshagent file is in place
+    find ~/.sshagent -mmin -0.01 && ssh-add -l &>/dev/null || sleep 0.3 &>/dev/null
+    ) || touch ~/.sshagent
 source ~/.sshagent > /dev/null
 ssh-add -l &>/dev/null
 if [[ "$?" = 2 ]] ; then
-    ssh-agent -t 2400 > ~/.sshagent 2>/dev/null
+    ssh-agent -t 36000 > ~/.sshagent 2>/dev/null
     source ~/.sshagent > /dev/null
 fi;
 
@@ -78,11 +85,19 @@ export LC_ALL="en_US.utf8"
 # No accessibility bridge.
 export NO_AT_BRIDGE=1
 
-export NVM_DIR="/home/jonathan/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-# adds too much overhead
-# use stable nodejs
-#nvm use stable
-. $HOME/.asdf/asdf.sh
+NPM_PACKAGES="${HOME}/.npm-packages"
+PATH="$NPM_PACKAGES/bin:$PATH"
 
-. $HOME/.asdf/completions/asdf.bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+ssh() {
+    if [ "$(ps -p $(ps -p $$ -o ppid=) -o comm=)" = "tmux" ]; then
+        tmux rename-window "$(echo $* | cut -d . -f 1)"
+        command ssh "$@"
+        tmux set-window-option automatic-rename "on" 1>/dev/null
+    else
+        command ssh "$@"
+    fi
+}
