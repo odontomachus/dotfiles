@@ -78,32 +78,23 @@
   '(
     babel
     elpy
+    ein
     elixir-mode
     alchemist
     flycheck
     mmm-mode
     py-autopep8
-    robe
-    inf-ruby
-    yari
-    ruby-tools
+    icicles
     solarized-theme
     )
   )
-
-(load-theme 'solarized-light t)
 
 (mapc #'(lambda (package)
     (unless (package-installed-p package)
       (package-install package)))
       myPackages)
 
-(require 'ruby-tools)
-(add-hook 'ruby-mode-hook 'robe-mode)
-(add-hook 'robe-mode-hook 'ac-robe-setup)
-
-(defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
-  (rvm-activate-corresponding-ruby))
+(load-theme 'solarized-light t)
 
 ;; Python ide
 (defun ome-elpy-setup ()
@@ -140,9 +131,10 @@
  '(custom-safe-themes
    (quote
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+ '(jdee-server-dir "/home/villemai/lib/")
  '(package-selected-packages
    (quote
-    (jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode rinari projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
+    (eclim ensime meghanada go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode ac-html-angular angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode rinari projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -162,7 +154,6 @@
          (ruby . t)
          (gnuplot . t)
          (clojure . t)
-         (sh . t)
          (ledger . t)
          (org . t)
          (plantuml . t)
@@ -172,3 +163,38 @@
 ;;(icy-mode 1)
 (require 'projectile)
 (projectile-global-mode 1)
+
+(package-initialize)
+(elpy-enable)
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt")
+
+(autoload 'n3-mode "n3-mode" "Major mode for OWL or N3 files" t)
+
+;; Turn on font lock when in n3 mode
+(add-hook 'n3-mode-hook
+          'turn-on-font-lock)
+
+(setq auto-mode-alist
+      (append
+       (list
+        '("\\.n3" . n3-mode)
+        '("\\.owl" . n3-mode))
+       auto-mode-alist))
+
+;; https://bbpcode.epfl.ch/browse/code/platform/collaboratory-extension-core/tree/README.md?h=refs/heads/master#n8
+;; ssh://bbpcode.epfl.ch/platform/collaboratory-extension-core
+(defun git-link-bbpcode (hostname dirname filename branch commit start end)
+  (format "https://%s/browse/code/%s/tree/%s?%s#%s"
+	  hostname
+	  dirname
+          filename
+	  (if branch (format "h=%s" branch)
+            (format "id=%s" commit))
+          (format "n%s" start)))
+
+(eval-after-load "git-link"
+  '(progn
+     (add-to-list 'git-link-remote-alist
+                  '("bbpcode" git-link-bbpcode))))
+(put 'upcase-region 'disabled nil)
