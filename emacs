@@ -112,7 +112,6 @@
     'newline-and-indent))
 
 (global-company-mode t)
-(push 'company-robe company-backends)
 
 (require 'py-autopep8)
 
@@ -131,10 +130,12 @@
  '(custom-safe-themes
    (quote
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+ '(eclim-executable
+   "/home/villemai/.eclipse/org.eclipse.platform_155965261_linux_gtk_x86_64/eclim")
  '(jdee-server-dir "/home/villemai/lib/")
  '(package-selected-packages
    (quote
-    (eclim ensime meghanada go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode ac-html-angular angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode rinari projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
+    (memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode ac-html-angular angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -198,3 +199,30 @@
      (add-to-list 'git-link-remote-alist
                   '("bbpcode" git-link-bbpcode))))
 (put 'upcase-region 'disabled nil)
+
+;; regular auto-complete initialization
+(require 'auto-complete-config)
+(ac-config-default)
+
+;; add the emacs-eclim source
+;;(require 'ac-emacs-eclim-source)
+;;(ac-emacs-eclim-config)
+
+
+
+(require 'eclim)
+(setq eclimd-autostart t)
+
+(defun my-java-mode-hook ()
+    (eclim-mode t))
+
+(add-hook 'java-mode-hook 'my-java-mode-hook)
+
+(setq help-at-pt-display-when-idle t)
+(setq help-at-pt-timer-delay 0.1)
+(help-at-pt-set-timer)
+
+(require 'company)
+(require 'company-emacs-eclim)
+(company-emacs-eclim-setup)
+(global-company-mode t)

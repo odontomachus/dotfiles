@@ -5,6 +5,9 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+PROMPT_COMMAND='PS1X=$(p="${PWD#${HOME}}"; [ "${PWD}" != "${p}" ] && printf "~";IFS=/; for q in ${p:1}; do printf /${q:0:1}; done; printf "${q:1}")'
+PS1='\[\033[34m\]▶\[\033[00m\]\u@\h ${PS1X} $ '
+
 # Turn the **** bell off
 set bell-style none
 
@@ -116,3 +119,4 @@ ssh() {
 }
 
 [ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
+export MAVEN_OPTS=-Xmx2048m
