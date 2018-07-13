@@ -201,8 +201,8 @@
 (put 'upcase-region 'disabled nil)
 
 ;; regular auto-complete initialization
-(require 'auto-complete-config)
-(ac-config-default)
+;; (require 'auto-complete-config)
+;; (ac-config-default)
 
 ;; add the emacs-eclim source
 ;;(require 'ac-emacs-eclim-source)
