@@ -133,9 +133,11 @@
  '(eclim-executable
    "/home/villemai/.eclipse/org.eclipse.platform_155965261_linux_gtk_x86_64/eclim")
  '(jdee-server-dir "/home/villemai/lib/")
+ '(js-indent-level 2)
+ '(json-reformat:indent-width 2)
  '(package-selected-packages
    (quote
-    (memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode ac-html-angular angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
+    (eglot json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode ac-html-angular angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -201,28 +203,45 @@
 (put 'upcase-region 'disabled nil)
 
 ;; regular auto-complete initialization
-;; (require 'auto-complete-config)
-;; (ac-config-default)
+(require 'auto-complete-config)
+(ac-config-default)
 
 ;; add the emacs-eclim source
-;;(require 'ac-emacs-eclim-source)
-;;(ac-emacs-eclim-config)
+; (require 'ac-emacs-eclim-source)
+; (ac-emacs-eclim-config)
 
 
 
-(require 'eclim)
-(setq eclimd-autostart t)
+; (require 'eclim)
+; (setq eclimd-autostart t)
 
-(defun my-java-mode-hook ()
-    (eclim-mode t))
+; (defun my-java-mode-hook ()
+;     (eclim-mode t))
 
-(add-hook 'java-mode-hook 'my-java-mode-hook)
+; (add-hook 'java-mode-hook 'my-java-mode-hook)
+
+
+(require 'cc-mode)
+
 
 (setq help-at-pt-display-when-idle t)
 (setq help-at-pt-timer-delay 0.1)
 (help-at-pt-set-timer)
 
-(require 'company)
-(require 'company-emacs-eclim)
-(company-emacs-eclim-setup)
-(global-company-mode t)
+; (require 'company)
+; (require 'company-emacs-eclim)
+; (company-emacs-eclim-setup)
+; (global-company-mode t)
+
+(defun gen-password (&optional len)
+  "Generate a random password. Requires gpg. Use C-u <N> to specify length. Default is 16."
+  (or len (setq len 16))
+  (interactive "P")
+  (insert (seq-take
+           (shell-command-to-string (format "gpg --gen-random --armor 1 %d" len))
+           len)))
+
+(global-set-key
+ (kbd "C-c n p")
+ 'gen-password
+ )
