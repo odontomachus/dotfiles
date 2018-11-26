@@ -12,8 +12,10 @@ PS1='\[\033[34m\]▶\[\033[00m\]\u@\h ${PS1X} $ '
 set bell-style none
 
 export GOPATH=$HOME/projects/go
+export NPM_PACKAGES="${HOME}/.npm-packages"
 
-export PATH="$PATH:$HOME/.rvm/bin:$HOME/bin:$GOPATH/bin" # Add RVM & GO to PATH for scripting
+export PATH="$HOME/.rvm/bin:$HOME/bin:$GOPATH/bin:$HOME/.cargo/bin:$NPM_PACKAGES/bin:$PATH" # Add cargo, RVM & GO to PATH for scripting
+
 export PAGER=less
 export EDITOR='emacs -mm'
 export VISUAL='emacs -mm'
@@ -52,7 +54,7 @@ complete -C _venv venv
 
 mkvenv () {
         test -f ~/virtualenv/$1/bin/activate && ( echo "Virtualenv already exists" && exit 1 )
-	virtualenv-3 ~/virtualenv/"$@"
+	virtualenv ~/virtualenv/"$@"
 }
 
 rmvenv () {
@@ -71,8 +73,6 @@ rmvenv () {
 
 export VISUAL=emacs
 export JAVA_HOME=/usr/lib/jvm/java-openjdk
-export GOPATH=$(go env GOPATH)
-export PATH=$GOPATH/bin:$HOME/bin:$HOME/.Android/Sdk/tools:$PATH
 #export CDPATH=$CDPATH
 
 # If freshly updates
@@ -100,9 +100,6 @@ export LC_ALL="en_US.utf8"
 
 # No accessibility bridge.
 export NO_AT_BRIDGE=1
-
-NPM_PACKAGES="${HOME}/.npm-packages"
-PATH="$NPM_PACKAGES/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
