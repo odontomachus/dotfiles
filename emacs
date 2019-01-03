@@ -137,7 +137,8 @@
  '(json-reformat:indent-width 2)
  '(package-selected-packages
    (quote
-    (eglot json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode ac-html-angular angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
+    (plantuml-mode eglot json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode ac-html-angular angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode)))
+ '(plantuml-jar-path "/usr/share/java/plantuml.jar"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -228,10 +229,10 @@
 (setq help-at-pt-timer-delay 0.1)
 (help-at-pt-set-timer)
 
-; (require 'company)
-; (require 'company-emacs-eclim)
-; (company-emacs-eclim-setup)
-; (global-company-mode t)
+(require 'company)
+(require 'company-emacs-eclim)
+(company-emacs-eclim-setup)
+(global-company-mode t)
 
 (defun gen-password (&optional len)
   "Generate a random password. Requires gpg. Use C-u <N> to specify length. Default is 16."
@@ -245,3 +246,6 @@
  (kbd "C-c n p")
  'gen-password
  )
+
+;; Maybe fix memory issue with nxml
+(setq rng-nxml-auto-validate-flag nil)
