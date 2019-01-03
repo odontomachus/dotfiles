@@ -25,14 +25,14 @@
       '(kill-ring
         search-ring
         regexp-search-ring))
-
+(setq vc-follow-symlinks t)
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
 ;; Tooltips in echo area
-(tooltip-mode -1)
-(setq tooltip-use-echo-area t)
+;; (tooltip-mode -1)
+;; (setq tooltip-use-echo-area t)
 
 (setq-default indent-tabs-mode nil)
 (setq show-trailing-whitespace 't)
@@ -52,18 +52,6 @@
 
 (require 'uniquify)
 
-;; (setq ido-enable-flex-matching t)
-;; (setq ido-everywhere t)
-;; (ido-mode 1)
-;; (setq ido-auto-merge-delay-time 1.5)
-;; ;; No prompt when creating new buffer
-;; (setq ido-create-new-buffer 'always)
-
-
-(setq ruby-deep-indent-paren nil)
-;; Our coding standard
-(setq ruby-indent-level 2)
-
 (require 'package)
 (package-initialize)
 
@@ -71,28 +59,6 @@
              '("marmalade" . "https://marmalade-repo.org/packages/"))
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
-
-;; (package-refresh-contents)
-
-(defvar myPackages
-  '(
-    babel
-    elpy
-    ein
-    elixir-mode
-    alchemist
-    flycheck
-    mmm-mode
-    py-autopep8
-    icicles
-    solarized-theme
-    )
-  )
-
-(mapc #'(lambda (package)
-    (unless (package-installed-p package)
-      (package-install package)))
-      myPackages)
 
 (load-theme 'solarized-light t)
 
@@ -111,10 +77,6 @@
   (define-key python-mode-map (kbd "RET")
     'newline-and-indent))
 
-(global-company-mode t)
-
-(require 'py-autopep8)
-
 (add-hook 'go-mode-hook
           (lambda ()
             (add-hook 'before-save-hook 'gofmt-before-save)
@@ -130,14 +92,12 @@
  '(custom-safe-themes
    (quote
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
- '(eclim-executable
-   "/home/villemai/.eclipse/org.eclipse.platform_155965261_linux_gtk_x86_64/eclim")
  '(jdee-server-dir "/home/villemai/lib/")
  '(js-indent-level 2)
  '(json-reformat:indent-width 2)
  '(package-selected-packages
    (quote
-    (plantuml-mode eglot json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode ac-html-angular angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode)))
+    (magit treemacs lsp-java use-package hydra dap-mode company-lsp tide plantuml-mode eglot json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode)))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -203,36 +163,26 @@
                   '("bbpcode" git-link-bbpcode))))
 (put 'upcase-region 'disabled nil)
 
-;; regular auto-complete initialization
-(require 'auto-complete-config)
-(ac-config-default)
-
-;; add the emacs-eclim source
-; (require 'ac-emacs-eclim-source)
-; (ac-emacs-eclim-config)
-
-
-
-; (require 'eclim)
-; (setq eclimd-autostart t)
-
-; (defun my-java-mode-hook ()
-;     (eclim-mode t))
-
-; (add-hook 'java-mode-hook 'my-java-mode-hook)
-
+(require 'company)
+(global-company-mode t)
 
 (require 'cc-mode)
 
+(condition-case nil
+    (require 'use-package)
+  (file-error
+   (require 'package)
+   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+   (package-initialize)
+   (package-refresh-contents)
+   (package-install 'use-package)
+   (require 'use-package)))
+
+(add-hook 'java-mode-hook 'eglot-ensure)
 
 (setq help-at-pt-display-when-idle t)
 (setq help-at-pt-timer-delay 0.1)
 (help-at-pt-set-timer)
-
-(require 'company)
-(require 'company-emacs-eclim)
-(company-emacs-eclim-setup)
-(global-company-mode t)
 
 (defun gen-password (&optional len)
   "Generate a random password. Requires gpg. Use C-u <N> to specify length. Default is 16."
@@ -247,5 +197,24 @@
  'gen-password
  )
 
-;; Maybe fix memory issue with nxml
-(setq rng-nxml-auto-validate-flag nil)
+(defun my-test-emacs ()
+  (interactive)
+  (require 'async)
+  (async-start
+   (lambda () (shell-command-to-string
+          "emacs --batch --eval \"
+(condition-case e
+    (progn
+      (load \\\"~/.emacs.d/init.el\\\")
+      (message \\\"-OK-\\\"))
+  (error
+   (message \\\"ERROR!\\\")
+   (signal (car e) (cdr e))))\""))
+   `(lambda (output)
+      (if (string-match "-OK-" output)
+          (when ,(called-interactively-p 'any)
+            (message "All is well"))
+        (switch-to-buffer-other-window "*startup error*")
+        (delete-region (point-min) (point-max))
+        (insert output)
+        (search-backward "ERROR!")))))
