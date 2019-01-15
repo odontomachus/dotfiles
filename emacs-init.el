@@ -178,6 +178,7 @@
    (package-install 'use-package)
    (require 'use-package)))
 
+;;(add-hook 'java-mode-hook 'my/java-hook)
 (add-hook 'java-mode-hook 'eglot-ensure)
 
 (setq help-at-pt-display-when-idle t)
@@ -218,3 +219,29 @@
         (delete-region (point-min) (point-max))
         (insert output)
         (search-backward "ERROR!")))))
+
+;; (defconst my/eclipse-jdt-home (expand-file-name "~/projects/vendor/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository"))
+
+;; (defun my/eclipse-jdt-contact (interactive)
+;;   (let ((cp (getenv "CLASSPATH")))
+;;     (setenv "CLASSPATH" (concat cp ":" my/eclipse-jdt-home))
+;;     (unwind-protect
+;;         (eglot--eclipse-jdt-contact nil)
+;;       (setenv "CLASSPATH" cp))))
+
+;; (defun my/java-hook ()
+;;   (progn
+;;     (setcdr (assq 'java-mode eglot-server-programs) #'my/eclipse-jdt-contact)
+;;     (eglot-ensure)
+;; ))
+
+;; (defconst my/eclipse-jdt-home "/tmp/jdt-language-server-latest.tar/plugins/org.eclipse.equinox.launcher_1.5.200.v20180922-1751.jar")
+
+;; (defun my/eclipse-jdt-contact (interactive)
+;;   (let ((cp (getenv "CLASSPATH")))
+;;     (setenv "CLASSPATH" (concat cp ":" my/eclipse-jdt-home))
+;;     (unwind-protect
+;;         (eglot--eclipse-jdt-contact nil)
+;;       (setenv "CLASSPATH" cp))))
+
+;; (setcdr (assq 'java-mode eglot-server-programs) #'my/eclipse-jdt-contact)

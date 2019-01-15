@@ -73,6 +73,7 @@ rmvenv () {
 
 export VISUAL=emacs
 export JAVA_HOME=/usr/lib/jvm/java-openjdk
+#export "CLASSPATH=$CLASSPATH:$HOME/projects/vendor/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository"
 #export CDPATH=$CDPATH
 
 # If freshly updates
