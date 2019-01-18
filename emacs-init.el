@@ -97,7 +97,7 @@
  '(json-reformat:indent-width 2)
  '(package-selected-packages
    (quote
-    (magit treemacs lsp-java use-package hydra dap-mode company-lsp tide plantuml-mode eglot json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode)))
+    (lsp-ui magit use-package tide plantuml-mode json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode)))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -178,8 +178,38 @@
    (package-install 'use-package)
    (require 'use-package)))
 
-;;(add-hook 'java-mode-hook 'my/java-hook)
-(add-hook 'java-mode-hook 'eglot-ensure)
+(use-package treemacs :ensure t)
+(use-package yasnippet :ensure t)
+(use-package lsp-mode :ensure t)
+(use-package hydra :ensure t)
+
+(use-package company-lsp
+  :after  company
+  :ensure t
+  :config
+  (setq company-lsp-enable-snippet t
+        company-lsp-cache-candidates t))
+
+(use-package lsp-ui
+  :ensure t
+  :config
+  (setq lsp-ui-sideline-enable t
+        lsp-ui-sideline-show-symbol t
+        lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-show-code-actions t
+        lsp-ui-sideline-update-mode 'point))
+
+(use-package lsp-java :ensure t :after lsp
+  :config (add-hook 'java-mode-hook 'lsp))
+
+(use-package dap-mode
+  :ensure t :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t))
+
+(use-package dap-java :after (lsp-java))
+(use-package lsp-java-treemacs :after (treemacs))
 
 (setq help-at-pt-display-when-idle t)
 (setq help-at-pt-timer-delay 0.1)
@@ -220,28 +250,5 @@
         (insert output)
         (search-backward "ERROR!")))))
 
-;; (defconst my/eclipse-jdt-home (expand-file-name "~/projects/vendor/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository"))
-
-;; (defun my/eclipse-jdt-contact (interactive)
-;;   (let ((cp (getenv "CLASSPATH")))
-;;     (setenv "CLASSPATH" (concat cp ":" my/eclipse-jdt-home))
-;;     (unwind-protect
-;;         (eglot--eclipse-jdt-contact nil)
-;;       (setenv "CLASSPATH" cp))))
-
-;; (defun my/java-hook ()
-;;   (progn
-;;     (setcdr (assq 'java-mode eglot-server-programs) #'my/eclipse-jdt-contact)
-;;     (eglot-ensure)
-;; ))
-
-;; (defconst my/eclipse-jdt-home "/tmp/jdt-language-server-latest.tar/plugins/org.eclipse.equinox.launcher_1.5.200.v20180922-1751.jar")
-
-;; (defun my/eclipse-jdt-contact (interactive)
-;;   (let ((cp (getenv "CLASSPATH")))
-;;     (setenv "CLASSPATH" (concat cp ":" my/eclipse-jdt-home))
-;;     (unwind-protect
-;;         (eglot--eclipse-jdt-contact nil)
-;;       (setenv "CLASSPATH" cp))))
-
-;; (setcdr (assq 'java-mode eglot-server-programs) #'my/eclipse-jdt-contact)
+(add-to-list 'load-path "~/.emacs.d/local")
+(require 'xwiki)
