@@ -228,6 +228,11 @@
  'gen-password
  )
 
+(global-set-key
+ (kbd "C-c p f")
+ 'projectile-find-file
+ )
+
 (defun my-test-emacs ()
   (interactive)
   (require 'async)
