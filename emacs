@@ -100,7 +100,6 @@
 
 (require 'ruby-tools)
 (add-hook 'ruby-mode-hook 'robe-mode)
-(add-hook 'robe-mode-hook 'ac-robe-setup)
 
 (defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
   (rvm-activate-corresponding-ruby))
@@ -121,7 +120,6 @@
     'newline-and-indent))
 
 (global-company-mode t)
-(push 'company-robe company-backends)
 
 (require 'py-autopep8)
 
@@ -142,7 +140,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(package-selected-packages
    (quote
-    (jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode rinari projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
+    (plantuml-mode company-ansible company-erlang company-go company-jedi company-quickhelp company-racer company-shell company-web elixir-mix elixir-yasnippets elm-mode erlang erlstack-mode flycheck-elixir flycheck-mix flymake-elixir racer lsp-rust flymake-rust eglot lsp-mode tidy toml-mode flycheck-rust cargo rust-mode ess jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode rinari projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -162,7 +160,6 @@
          (ruby . t)
          (gnuplot . t)
          (clojure . t)
-         (sh . t)
          (ledger . t)
          (org . t)
          (plantuml . t)
@@ -172,3 +169,13 @@
 ;;(icy-mode 1)
 (require 'projectile)
 (projectile-global-mode 1)
+(add-hook 'rust-mode-hook 'cargo-minor-mode)
+
+(add-hook 'rust-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-c <tab>") #'rust-format-buffer)))
+(setq racer-rust-src-path "/home/jonathan/projects/vendor/rust/src/") ;; Rust source code PATH
+
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook #'company-mode)

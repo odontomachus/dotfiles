@@ -27,7 +27,7 @@ complete -C _venv venv
 
 mkvenv () {
         test -f ~/virtualenv/$1/bin/activate && ( echo "Virtualenv already exists" && exit 1 )
-	virtualenv-3 ~/virtualenv/"$@"
+	virtualenv ~/virtualenv/"$@"
 }
 
 rmvenv () {
@@ -51,7 +51,7 @@ alias memail='echo "" | mutt odontomachus@gmail.com'
 
 export VISUAL=emacs
 export JAVA_HOME=/usr/lib/jvm/java-openjdk
-export PATH=$HOME/bin:$HOME/.Android/Sdk/tools:$PATH
+export PATH=$HOME/bin:$HOME/.cargo/bin:$HOME/.Android/Sdk/tools:$PATH
 #export CDPATH=$CDPATH
 
 alias user_shutdown='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.ConsoleKit.UPower.Stop'
