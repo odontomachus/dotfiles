@@ -1,0 +1,7 @@
+style "tasklist-fg-color" {
+  fg[NORMAL]               = "#555565"
+  fg[PRELIGHT]             = "#454545"
+  fg[ACTIVE]               = "#222"
+}
+
+widget_class "XfcePanelWindow.PanelItem*Xfce*.XfceTasklist.XfceArrowButton.XfceHVBox.GtkLabel" style "tasklist-fg-color"
