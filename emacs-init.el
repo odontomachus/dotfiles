@@ -97,7 +97,7 @@
  '(json-reformat:indent-width 2)
  '(package-selected-packages
    (quote
-    (flycheck-gradle flymake-gradle gradle-mode rope-read-mode jedi lsp-ui magit use-package tide plantuml-mode json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link ttl-mode n3-mode puppet-mode angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode)))
+    (elpy hydra web-mode xref-js2 js2-refactor dap-mode lsp-java company-lsp ansible company-ansible flycheck-gradle flymake-gradle gradle-mode rope-read-mode jedi lsp-ui magit use-package tide plantuml-mode json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link puppet-mode angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack mmm-mode alchemist elixir-mode)))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -115,7 +115,6 @@
          (ditaa . t)
          (R . t)
          (python . t)
-         (ruby . t)
          (gnuplot . t)
          (clojure . t)
          (ledger . t)
@@ -124,27 +123,12 @@
          (latex . t))))
 
 (require 'icicles)
-;;(icy-mode 1)
-(require 'projectile)
-(projectile-global-mode 1)
+(icy-mode 1)
 
 (package-initialize)
 (elpy-enable)
 (setq python-shell-interpreter "jupyter"
       python-shell-interpreter-args "console --simple-prompt")
-
-(autoload 'n3-mode "n3-mode" "Major mode for OWL or N3 files" t)
-
-;; Turn on font lock when in n3 mode
-(add-hook 'n3-mode-hook
-          'turn-on-font-lock)
-
-(setq auto-mode-alist
-      (append
-       (list
-        '("\\.n3" . n3-mode)
-        '("\\.owl" . n3-mode))
-       auto-mode-alist))
 
 ;; https://bbpcode.epfl.ch/browse/code/platform/collaboratory-extension-core/tree/README.md?h=refs/heads/master#n8
 ;; ssh://bbpcode.epfl.ch/platform/collaboratory-extension-core
@@ -178,7 +162,6 @@
    (package-install 'use-package)
    (require 'use-package)))
 
-(use-package treemacs :ensure t)
 (use-package yasnippet :ensure t)
 (use-package lsp-mode :ensure t)
 (use-package hydra :ensure t)
@@ -209,7 +192,6 @@
   (dap-ui-mode t))
 
 (use-package dap-java :after (lsp-java))
-(use-package lsp-java-treemacs :after (treemacs))
 
 (setq help-at-pt-display-when-idle t)
 (setq help-at-pt-timer-delay 0.1)
@@ -228,10 +210,9 @@
  'gen-password
  )
 
-(global-set-key
- (kbd "C-c p f")
- 'projectile-find-file
- )
+(require 'projectile)
+(projectile-global-mode 1)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
 (defun my-test-emacs ()
   (interactive)
