@@ -90,6 +90,7 @@
     solarized-theme
     )
   )
+(elpy-enable)
 
 (load-theme 'solarized-light t)
 
@@ -140,7 +141,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(package-selected-packages
    (quote
-    (plantuml-mode company-ansible company-erlang company-go company-jedi company-quickhelp company-racer company-shell company-web elixir-mix elixir-yasnippets elm-mode erlang erlstack-mode flycheck-elixir flycheck-mix flymake-elixir racer lsp-rust flymake-rust eglot lsp-mode tidy toml-mode flycheck-rust cargo rust-mode ess jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode rinari projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack rvm mmm-mode alchemist elixir-mode))))
+    (flycheck-clang-analyzer company-ctags ctags elpy jedi pyvenv plantuml-mode company-ansible company-erlang company-go company-jedi company-quickhelp company-racer company-shell company-web elixir-mix elixir-yasnippets elm-mode erlang erlstack-mode flycheck-elixir flycheck-mix flymake-elixir racer lsp-rust flymake-rust eglot lsp-mode tidy toml-mode flycheck-rust cargo rust-mode ess jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode projectile-rails dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack mmm-mode alchemist elixir-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

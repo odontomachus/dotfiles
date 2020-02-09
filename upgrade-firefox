@@ -4,7 +4,7 @@
     export WORKDIR=$(mktemp -d)
     [[ "$WORKDIR" =~ '/tmp/' ]]
     cd $WORKDIR
-    test -f /opt/firefox/etag && ETAG=$(cat /opt/firefox/etag) || ETAG=""
+    test -f /opt/firefox/etag && ETAG=$(cat /opt/firefox/etag) || ETAG="x"
     wget 'https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=linux64&lang=en-US' -S --header 'If-None-Match: "'$ETAG'"' -O firefox.tbz 2>&1 | tee wget.log
     grep -q 'ERROR.*304' wget.log && echo "Already up to date" 1&>2 && exit
     grep 'ETag' wget.log |sed 's/^.*"\([0-9a-f]\{32\}\)".*$/\1/'>etag
