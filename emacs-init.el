@@ -62,21 +62,6 @@
 
 (load-theme 'solarized-light t)
 
-;; Python ide
-(defun ome-elpy-setup ()
-  (elpy-enable t)
-  (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-  (elpy-use-ipython)
-  (setq elpy-rpc-backend "jedi")
-  (when (executable-find "ipython")
-    (elpy-use-ipython))
-  (when (el-get-package-installed-p 'flycheck)
-    (setq elpy-default-minor-modes
-          (remove 'flymake-mode
-                  elpy-default-minor-modes)))
-  (define-key python-mode-map (kbd "RET")
-    'newline-and-indent))
-
 (add-hook 'go-mode-hook
           (lambda ()
             (add-hook 'before-save-hook 'gofmt-before-save)
@@ -92,13 +77,17 @@
  '(custom-safe-themes
    (quote
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+ '(elpy-rpc-python-command "python3")
  '(jdee-server-dir "/home/villemai/lib/")
  '(js-indent-level 2)
  '(json-reformat:indent-width 2)
+ '(org-plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(package-selected-packages
    (quote
-    (elpy hydra web-mode xref-js2 js2-refactor dap-mode lsp-java company-lsp ansible company-ansible flycheck-gradle flymake-gradle gradle-mode rope-read-mode jedi lsp-ui magit use-package tide plantuml-mode json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link puppet-mode angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack mmm-mode alchemist elixir-mode)))
- '(plantuml-jar-path "/usr/share/java/plantuml.jar"))
+    (elpy lice hydra web-mode xref-js2 js2-refactor dap-mode lsp-java company-lsp ansible company-ansible flycheck-gradle flymake-gradle gradle-mode rope-read-mode jedi lsp-ui magit use-package tide plantuml-mode json-mode memory-usage mvn eclim company-emacs-eclim go-dlv django-mode docker-compose-mode dockerfile-mode ox-reveal git-link puppet-mode angular-mode ein jinja2-mode markdown-mode nginx-mode icicles helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode terraform-mode solarized-theme babel yaml-mode oauth slack mmm-mode alchemist elixir-mode)))
+ '(plantuml-jar-path "/usr/share/java/plantuml.jar")
+ '(pyvenv-activate "/home/villemai/virtualenv/data/")
+ '(typescript-indent-level 2))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -122,13 +111,23 @@
          (plantuml . t)
          (latex . t))))
 
+
 (require 'icicles)
 (icy-mode 1)
 
 (package-initialize)
 (elpy-enable)
+
 (setq python-shell-interpreter "jupyter"
-      python-shell-interpreter-args "console --simple-prompt")
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "jupyter")
+
+(when (load "flycheck" t t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
 
 ;; https://bbpcode.epfl.ch/browse/code/platform/collaboratory-extension-core/tree/README.md?h=refs/heads/master#n8
 ;; ssh://bbpcode.epfl.ch/platform/collaboratory-extension-core
@@ -193,8 +192,46 @@
 
 (use-package dap-java :after (lsp-java))
 
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
+
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  ;; company is an optional dependency. You have to
+  ;; install it separately via package-install
+  ;; `M-x package-install [ret] company`
+  (company-mode +1))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+(add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+
+
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
+;; enable typescript-tslint checker
+(flycheck-add-mode 'typescript-tslint 'web-mode)
+
 (setq help-at-pt-display-when-idle t)
-(setq help-at-pt-timer-delay 0.1)
+(setq help-at-pt-timer-delay 0.5)
 (help-at-pt-set-timer)
 
 (defun gen-password (&optional len)
@@ -238,3 +275,13 @@
 
 (add-to-list 'load-path "~/.emacs.d/local")
 (require 'xwiki)
+
+(dap-register-debug-provider
+ "tomcat"
+ (lambda (conf)
+   (plist-put conf :debugPort 1234)
+   (plist-put conf :host "localhost")
+   conf))
+
+(add-hook 'dap-stopped-hook
+          (lambda (arg) (call-interactively #'dap-hydra)))

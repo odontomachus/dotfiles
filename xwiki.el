@@ -5,7 +5,7 @@
 (setq my-xwiki-data "~/.cache/xwiki")
 (setq my-tomcat-root "~/projects/vendor/tomcat/apache-tomcat-9.0.14/webapps/ROOT")
 
-(defun reset-xwiki-perm-dir ()
+(defun xwiki-reset-perm-dir ()
   (interactive)
   (if (yes-or-no-p "Wipe permanent dir? ")
       (progn
@@ -13,7 +13,7 @@
         (make-directory my-xwiki-data)
         )))
 
-(defun compile-ext-collab ()
+(defun xwiki-compile-ext-collab ()
   (interactive)
 (let ((default-directory "~/projects/hbp/xwiki/xwiki-distribution-collaboratory/xwiki-ext-collab"))
   (async-shell-command "mvn -o -Pxwiki compile -Dxwiki.checkstyle.skip=true -Dxwiki.revapi.skip=true -Dxwiki.enforcer.skip=true -Dtest=none -DfailIfNoTests=false -Dxwiki.spoon.skip=true"))
@@ -45,7 +45,7 @@
 
 (setq url-java-unreserved-chars (vector nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil '- nil '/ '0 '1 '2 '3 '4 '5 '6 '7 '8 '9 nil nil nil nil nil nil nil 'A 'B 'C 'D 'E 'F 'G 'H 'I 'J 'K 'L 'M 'N 'O 'P 'Q 'R 'S 'T 'U 'V 'W 'X 'Y 'Z nil nil nil nil '_ nil 'a 'b 'c 'd 'e 'f 'g 'h 'i 'j 'k 'l 'm 'n 'o 'p 'q 'r 's 't 'u 'v 'w 'x 'y 'z nil nil nil nil))
 
-(defun publish-ext-collab ()
+(defun xwiki-publish-ext-collab ()
   (interactive)
   (let* ((ext-version (my-xwiki-ext-jar-version))
          (xedpath (my-xwiki-ext-jar ext-version))

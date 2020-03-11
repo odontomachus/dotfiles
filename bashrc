@@ -130,3 +130,4 @@ _gopass_bash_autocomplete() {
 
 complete -F _gopass_bash_autocomplete gopass
 source ~/.fzf.bash
+source ~/.bash_helm_completions
