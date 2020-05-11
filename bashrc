@@ -27,7 +27,7 @@ complete -C _venv venv
 
 mkvenv () {
         test -f ~/virtualenv/$1/bin/activate && ( echo "Virtualenv already exists" && exit 1 )
-	virtualenv ~/virtualenv/"$@"
+	python3 -m venv ~/virtualenv/"$@"
 }
 
 rmvenv () {

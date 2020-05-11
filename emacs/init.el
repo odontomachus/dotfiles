@@ -106,7 +106,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(package-selected-packages
    (quote
-    (graphviz-dot-mode leaf lice magit flycheck-clang-analyzer company-ctags ctags elpy jedi pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix lsp-rust lsp-mode ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel yaml-mode elixir-mode web-mode))))
+    (dap-mode lsp-java lsp-ui company-lsp graphviz-dot-mode leaf lice magit flycheck-clang-analyzer company-ctags ctags elpy jedi pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix lsp-rust lsp-mode ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel yaml-mode elixir-mode web-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -137,3 +137,72 @@
   (projectile-mode +1))
 
 (add-hook 'python-mode-hook #'company-mode)
+
+
+(defun gen-password (&optional len)
+  "Generate a random password. Requires gpg. Use C-u <N> to specify length. Default is 16."
+  (or len (setq len 16))
+  (interactive "P")
+  (insert (seq-take
+           (shell-command-to-string (format "gpg --gen-random --armor 1 %d" len))
+           len)))
+
+(global-set-key
+ (kbd "C-c n p")
+ 'gen-password
+ )
+
+
+(defun my-test-emacs ()
+  (interactive)
+  (require 'async)
+  (async-start
+   (lambda () (shell-command-to-string
+          "emacs --batch --eval \"
+(condition-case e
+    (progn
+      (load \\\"~/.emacs.d/init.el\\\")
+      (message \\\"-OK-\\\"))
+  (error
+   (message \\\"ERROR!\\\")
+   (signal (car e) (cdr e))))\""))
+   `(lambda (output)
+      (if (string-match "-OK-" output)
+          (when ,(called-interactively-p 'any)
+            (message "All is well"))
+        (switch-to-buffer-other-window "*startup error*")
+        (delete-region (point-min) (point-max))
+        (insert output)
+        (search-backward "ERROR!")))))
+
+
+(leaf company-lsp
+  :after  company
+  :ensure t
+  :config
+  (setq company-lsp-enable-snippet t
+        company-lsp-cache-candidates t))
+
+(leaf lsp-ui
+  :ensure t
+  :config
+  (setq lsp-ui-sideline-enable t
+        lsp-ui-sideline-show-symbol t
+        lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-show-code-actions t
+        lsp-ui-sideline-update-mode 'point))
+
+(leaf lsp-java :ensure t :after lsp
+  :config (add-hook 'java-mode-hook 'lsp))
+
+(leaf dap-mode
+  :ensure t :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t))
+
+(leaf dap-java :after (lsp-java))
+
+(setq help-at-pt-display-when-idle t)
+(setq help-at-pt-timer-delay 0.1)
+(help-at-pt-set-timer)
