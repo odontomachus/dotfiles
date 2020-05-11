@@ -1,0 +1,4 @@
+elpy
+*
+!.gitignore
+!init.el
