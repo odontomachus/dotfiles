@@ -8,7 +8,7 @@
 (setq initial-scratch-message nil)
 
 ;; Full frame
-(set-frame-parameter nil 'fullscreen 'maximized)
+;;(set-frame-parameter nil 'fullscreen 'maximized)
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
@@ -61,6 +61,8 @@
 
 (load-theme 'solarized-dark t)
 
+(unless (package-installed-p 'leaf)
+  (package-install 'leaf t))
 (require 'leaf)
 
 (leaf company
@@ -91,7 +93,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(package-selected-packages
    (quote
-    (web-mode leaf magit flycheck-clang-analyzer jedi pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
+    (company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -231,7 +233,7 @@
 )
 
 (leaf elpy
-  :ensure t
+  :ensure t jedi pyvenv
   :init (elpy-enable)
   :config (setq elpy-rpc-backend "jedi" elpy-shell-echo-input nil)
 
@@ -242,8 +244,17 @@
   (add-hook 'elpy-mode-hook 'flycheck-mode))
   )
 
+(leaf phpactor :ensure t)
+(leaf company-phpactor :ensure t)
+
 (leaf php-mode
-  :ensure t)
+  :ensure t
+  :config (add-hook 'php-mode-hook 'lsp)
+  :hook ((php-mode . (lambda () (set (make-local-variable 'company-backends)
+                                     '(;; list of backends
+                                       company-phpactor
+                                       company-files
+                                       ))))))
 
 (leaf yaml-mode
   :ensure t)
