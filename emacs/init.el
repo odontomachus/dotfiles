@@ -63,30 +63,15 @@
 
 (require 'leaf)
 
-(leaf elpy
-  :init (elpy-enable)
-  :config (setq elpy-rpc-backend "jedi" elpy-shell-echo-input nil)
-
-  (add-to-list 'company-backends 'elpy-company-backend)
-  (require 'electric)
-  (when (load "flycheck" t t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
-  )
-
-
 (leaf company
   :ensure t
+  :config
+  (add-hook 'python-mode-hook #'company-mode)
 )
 
 (leaf async
   :leaf-defer nil
   :config (setq async-bytecomp-package-mode t))
-
-(leaf rustic
-  :ensure t
-)
-
 
 
 (add-hook 'go-mode-hook
@@ -106,7 +91,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(package-selected-packages
    (quote
-    (dap-mode lsp-java lsp-ui company-lsp graphviz-dot-mode leaf lice magit flycheck-clang-analyzer company-ctags ctags elpy jedi pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix lsp-rust lsp-mode ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel yaml-mode elixir-mode web-mode))))
+    (web-mode leaf magit flycheck-clang-analyzer jedi pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -134,9 +119,15 @@
   :init
   (setq projectile-keymap-prefix (kbd "C-c p"))
   :config
-  (projectile-mode +1))
+  (projectile-mode +1)
+  (projectile-register-project-type 'php '("composer.json")
+                                      :src-dir "apps"
+                                      :test "composer test"
+                                      :run "composer serve"
+                                      :test-suffix "Test"
+                                      :test-dir "tests"))
 
-(add-hook 'python-mode-hook #'company-mode)
+
 
 
 (defun gen-password (&optional len)
@@ -175,6 +166,30 @@
         (insert output)
         (search-backward "ERROR!")))))
 
+;; Licence headers & content
+(leaf lice
+  :ensure t)
+
+(leaf magit
+  :ensure t)
+
+(leaf ctags
+  :ensure t)
+
+(leaf lsp-mode
+  :ensure t
+  :config
+  (setq lsp-prefer-flymake nil)
+  :hook (php-mode . lsp)
+  :commands lsp)
+
+(leaf company-ctags
+  :after ctags
+  :ensure t)
+
+(leaf company-php
+  :ensure t
+  :after company)
 
 (leaf company-lsp
   :after  company
@@ -185,15 +200,22 @@
 
 (leaf lsp-ui
   :ensure t
+  :after lsp-mode flycheck
   :config
-  (setq lsp-ui-sideline-enable t
+  (setq lsp-ui-sideline-enable nil
         lsp-ui-sideline-show-symbol t
         lsp-ui-sideline-show-hover t
         lsp-ui-sideline-show-code-actions t
-        lsp-ui-sideline-update-mode 'point))
-
-(leaf lsp-java :ensure t :after lsp
-  :config (add-hook 'java-mode-hook 'lsp))
+        lsp-ui-flycheck-enable t
+        ;;        lsp-ui-sideline-update-mode 'point
+        lsp-ui-peek-enable t
+        lsp-ui-peek-list-width 92
+        lsp-ui-peek-peek-height 20
+        lsp-ui-doc-enable t
+        lsp-ui-doc-use-childframe t
+;;        lsp-ui-doc-position ‘top
+        lsp-ui-doc-include-signature t))
+;;  (add-hook ‘lsp-mode-hook ‘lsp-ui-mode))
 
 (leaf dap-mode
   :ensure t :after lsp-mode
@@ -201,8 +223,44 @@
   (dap-mode t)
   (dap-ui-mode t))
 
-(leaf dap-java :after (lsp-java))
+(leaf elixir-mode
+  :ensure t)
+
+(leaf rustic
+  :ensure t
+)
+
+(leaf elpy
+  :ensure t
+  :init (elpy-enable)
+  :config (setq elpy-rpc-backend "jedi" elpy-shell-echo-input nil)
+
+  (add-to-list 'company-backends 'elpy-company-backend)
+  (require 'electric)
+  (when (load "flycheck" t t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+  )
+
+(leaf php-mode
+  :ensure t)
+
+(leaf yaml-mode
+  :ensure t)
+
+(leaf web-mode
+  :ensure t)
 
 (setq help-at-pt-display-when-idle t)
 (setq help-at-pt-timer-delay 0.1)
 (help-at-pt-set-timer)
+
+(leaf graphviz-dot-mode
+  :ensure t)
+
+(leaf lsp-java :ensure t :after lsp
+  :config (add-hook 'java-mode-hook 'lsp))
+
+;; (leaf dap-java
+;;   :ensure t
+;;   :after lsp-java)
