@@ -59,7 +59,6 @@
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-(load-theme 'solarized-dark t)
 
 (unless (package-installed-p 'leaf)
   (package-install 'leaf t))
@@ -70,6 +69,11 @@
   :config
   (add-hook 'python-mode-hook #'company-mode)
 )
+
+(leaf solarized-theme
+  :ensure t
+)
+(load-theme 'solarized-dark t)
 
 (leaf async
   :leaf-defer nil
@@ -93,7 +97,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(package-selected-packages
    (quote
-    (company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
+    (lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -129,8 +133,12 @@
                                       :test-suffix "Test"
                                       :test-dir "tests"))
 
-
-
+(leaf helm-projectile
+  :after projectile
+  :ensure t
+  :init
+  (helm-projectile-on)
+  )
 
 (defun gen-password (&optional len)
   "Generate a random password. Requires gpg. Use C-u <N> to specify length. Default is 16."
@@ -175,19 +183,12 @@
 (leaf magit
   :ensure t)
 
-(leaf ctags
-  :ensure t)
-
 (leaf lsp-mode
   :ensure t
   :config
   (setq lsp-prefer-flymake nil)
   :hook (php-mode . lsp)
   :commands lsp)
-
-(leaf company-ctags
-  :after ctags
-  :ensure t)
 
 (leaf company-php
   :ensure t

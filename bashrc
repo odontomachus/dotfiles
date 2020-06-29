@@ -47,30 +47,31 @@ rmvenv () {
 alias lpr='/usr/bin/lpr -o media=Letter -o page-top=72 -o page-left=72 -o page-right=72 -o page-bottom=72'
 alias spwd='/bin/pwd > '$HOME'/.spwd'
 alias lpwd='cd "`cat '$HOME'/.spwd`"'
-alias memail='echo "" | mutt odontomachus@gmail.com'
 
 export VISUAL=emacs
-export JAVA_HOME=/usr/lib/jvm/java-openjdk
-export PATH=$HOME/bin:$HOME/.cargo/bin:$HOME/.Android/Sdk/tools:$PATH
 #export CDPATH=$CDPATH
-
-alias user_shutdown='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.ConsoleKit.UPower.Stop'
-
-alias user_suspend='dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend'
 
 touch ~/.sshagent
 source ~/.sshagent > /dev/null
 ssh-add -l &>/dev/null
 if [[ "$?" = 2 ]] ; then
-    ssh-agent -t 2400 > ~/.sshagent 2>/dev/null
-    source ~/.sshagent > /dev/null
+    {
+        flock -x 3 -n -c ssh-agent -t 4h > ~/.sshagent 2>/dev/null
+    } 3>> ~/.sshagent
 fi;
+{
+    flock -w 1 -s 3
+    source ~/.sshagent > /dev/null
+} 3< ~/.sshagent
+
 
 # up down arrow key behavior
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
+bind '"\C-p": history-search-backward'
+bind '"\C-n": history-search-forward'
 
-export HISTSIZE=5000
+export HISTSIZE=10000
 
 export LANG="en_US.utf8"
 export LC_ALL="en_US.utf8"
@@ -86,3 +87,4 @@ export NVM_DIR="/home/jonathan/.nvm"
 . $HOME/.asdf/asdf.sh
 
 . $HOME/.asdf/completions/asdf.bash
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
