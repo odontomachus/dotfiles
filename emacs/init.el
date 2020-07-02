@@ -8,7 +8,9 @@
 (setq initial-scratch-message nil)
 
 ;; Full frame
-;;(set-frame-parameter nil 'fullscreen 'maximized)
+(set-frame-parameter nil 'fullscreen (if (<= (display-pixel-width) 1920)
+                                         'maximized
+                                       'fullheight))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
@@ -24,7 +26,10 @@
                                       regexp-search-ring)
       tooltip-use-echo-area t
       show-trailing-whitespace 't
-      confirm-nonexistent-file-or-buffer nil)
+      confirm-nonexistent-file-or-buffer nil
+      gc-cons-threshold 100000000
+      read-process-output-max (* 1024 1024 4)
+)
 
 (savehist-mode 1)
 (tool-bar-mode -1)
@@ -97,7 +102,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(package-selected-packages
    (quote
-    (lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
+    (flycheck lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -180,13 +185,21 @@
 (leaf lice
   :ensure t)
 
+(leaf flycheck
+  :ensure t)
+
 (leaf magit
   :ensure t)
 
 (leaf lsp-mode
   :ensure t
   :config
-  (setq lsp-prefer-flymake nil)
+  (setq lsp-prefer-flymake nil
+        lsp-prefer-capf t
+        lsp-semantic-highlighting t
+        lsp-enable-xref t
+        company-minimum-prefix-length 1
+        company-idle-delay 0.0)
   :hook (php-mode . lsp)
   :commands lsp)
 
