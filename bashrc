@@ -91,7 +91,12 @@ export NVM_DIR="/home/jonathan/.nvm"
 # adds too much overhead
 # use stable nodejs
 #nvm use stable
-. $HOME/.asdf/asdf.sh
+# . $HOME/.asdf/asdf.sh
 
-. $HOME/.asdf/completions/asdf.bash
+# . $HOME/.asdf/completions/asdf.bash
+
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+alias daymode="xrandr --output DP-0 --brightness 1.0 --gamma 1.0"
+alias nightmode="xrandr --output DP-0 --brightness .50 --gamma 1.0:0.6:0.5"
+alias evemode="xrandr --output DP-0 --brightness .70 --gamma 1.0:0.8:0.7"
