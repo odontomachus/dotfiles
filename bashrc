@@ -97,6 +97,7 @@ export NVM_DIR="/home/jonathan/.nvm"
 
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-alias daymode="xrandr --output DP-0 --brightness 1.0 --gamma 1.0"
+
+alias daymode="xrandr --output DP-0 --brightness 1.0 --gamma 1.0:1:1"
 alias nightmode="xrandr --output DP-0 --brightness .50 --gamma 1.0:0.6:0.5"
 alias evemode="xrandr --output DP-0 --brightness .70 --gamma 1.0:0.8:0.7"

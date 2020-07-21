@@ -1,16 +1,19 @@
 ;; No splash
-(setq inhibit-startup-message t
-      inhibit-startup-echo-area-message t)
 
-;; Start empty org mode screen
-(setq inhibit-startup-screen +1)
-;; (setq initial-major-mode 'org-mode)
-(setq initial-scratch-message nil)
+(setq inhibit-startup-message t
+      inhibit-startup-echo-area-message t
+      inhibit-startup-screen +1
+      initial-scratch-message nil)
 
 ;; Full frame
-(set-frame-parameter nil 'fullscreen (if (<= (display-pixel-width) 1920)
-                                         'maximized
-                                       'fullheight))
+(if (<= (display-pixel-width) 1920) (set-frame-parameter nil 'fullscreen 'maximized)
+  (progn
+   (set-frame-parameter (selected-frame) 'fullscreen 'fullheight)
+   (set-frame-width (selected-frame) (/ (display-pixel-width) 2) nil t)
+   (set-frame-position (selected-frame) 0 0)
+   (setq window-min-height (- (/ (window-body-height) 3) 1)
+         window-min-width (- (/ (window-body-width) 3) 1))))
+
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
@@ -34,6 +37,8 @@
 (savehist-mode 1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+
+(add-to-list 'exec-path "~/.nvm/versions/node/v14.5.0/bin/")
 
 ;; Tooltips in echo area
 (tooltip-mode -1)
@@ -102,7 +107,7 @@
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
  '(package-selected-packages
    (quote
-    (flycheck lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
+    (org-re-reveal pandoc-mode flycheck lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -186,7 +191,8 @@
   :ensure t)
 
 (leaf flycheck
-  :ensure t)
+  :ensure t
+  :config (global-flycheck-mode t))
 
 (leaf magit
   :ensure t)
@@ -289,3 +295,11 @@
 ;; (leaf dap-java
 ;;   :ensure t
 ;;   :after lsp-java)
+
+(leaf
+  org-re-reveal
+  :ensure t
+  :after org
+  :config (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+  :hook (org-mode . (require 'org-re-reveal))
+ )
