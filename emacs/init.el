@@ -105,6 +105,9 @@
  '(custom-safe-themes
    (quote
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+ '(lsp-intelephense-files-exclude
+   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"
+    (\, "vendor/")])
  '(package-selected-packages
    (quote
     (org-re-reveal pandoc-mode flycheck lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
@@ -279,6 +282,15 @@
 (leaf yaml-mode
   :ensure t)
 
+(leaf plantuml-mode
+  :ensure t
+  :config (
+           setq plantuml-executable-path "/usr/bin/plantuml"
+           plantuml-default-exec-mode 'executable)
+  (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode)
+               (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))))
+
+
 (leaf web-mode
   :ensure t)
 
@@ -303,3 +315,8 @@
   :config (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
   :hook (org-mode . (require 'org-re-reveal))
  )
+
+(defun my-open-phpstorm ()
+  (interactive)
+  (shell-command (concat "nohup phpstorm " (shell-quote-argument (buffer-file-name))))
+)
