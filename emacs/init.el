@@ -166,6 +166,10 @@
  'gen-password
  )
 
+(global-set-key
+ (kbd "C-c n d")
+ (format-time-string "%Y-%m-%d")
+ )
 
 (defun my-test-emacs ()
   (interactive)
@@ -315,6 +319,12 @@
   :config (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
   :hook (org-mode . (require 'org-re-reveal))
  )
+
+(leaf
+  git-link
+  :ensure t
+)
+
 
 (defun my-open-phpstorm ()
   (interactive)
