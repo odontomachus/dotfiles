@@ -1,4 +1,11 @@
-;; No splash
+;;; Init --- Configuration for emacs.;
+
+;;; Commentary:
+
+;; By Jonathan Villemaire-Krajden
+;; Inspired by lots of online sources.
+
+;;; Code:
 
 (setq inhibit-startup-message t
       inhibit-startup-echo-area-message t
@@ -14,6 +21,7 @@
    (setq window-min-height (- (/ (window-body-height) 3) 1)
          window-min-width (- (/ (window-body-width) 3) 1))))
 
+(savehist-mode 1)
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
@@ -34,7 +42,6 @@
       read-process-output-max (* 1024 1024 4)
 )
 
-(savehist-mode 1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
@@ -101,16 +108,22 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(auth-sources (quote ((:source (:secrets "proton")))))
  '(column-number-mode t)
  '(custom-safe-themes
    (quote
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+ '(lsp-file-watch-ignored
+   (quote
+    ("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache")))
+ '(lsp-file-watch-threshold 30000)
  '(lsp-intelephense-files-exclude
    ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"
     (\, "vendor/")])
  '(package-selected-packages
    (quote
-    (org-re-reveal pandoc-mode flycheck lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
+    (slack yasnippet-snippets git-link org-re-reveal pandoc-mode flycheck lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel)))
+)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -154,9 +167,12 @@
   )
 
 (defun gen-password (&optional len)
-  "Generate a random password. Requires gpg. Use C-u <N> to specify length. Default is 16."
-  (or len (setq len 16))
+  "Generate a random password.
+Use `C-u` <N> to specify length.
+LEN length of password to generate in bytes.  Default is 16
+Depends on system gpg."
   (interactive "P")
+  (or len (setq len 16))
   (insert (seq-take
            (shell-command-to-string (format "gpg --gen-random --armor 1 %d" len))
            len)))
@@ -172,6 +188,7 @@
  )
 
 (defun my-test-emacs ()
+  "Test my Emacs config."
   (interactive)
   (require 'async)
   (async-start
@@ -250,7 +267,16 @@
   :ensure t :after lsp-mode
   :config
   (dap-mode t)
-  (dap-ui-mode t))
+  (dap-ui-mode t)
+  ;; (dap-register-debug-template "PHP"
+  ;;                              (list :type "php"
+  ;;                                    :cwd nil
+  ;;                                    :request "launch"
+  ;;                                    :name "Php Debug"
+  ;;                                    :args '("--server=9000")
+  ;;                                    :pathMappings (ht ("/var/www/api" (projectile-project-root (buffer-file-name))))
+  ;;                                    :sourceMaps t))
+)
 
 (leaf elixir-mode
   :ensure t)
@@ -276,7 +302,7 @@
 
 (leaf php-mode
   :ensure t
-  :config (add-hook 'php-mode-hook 'lsp)
+  :config (add-hook 'php-mode-hook 'lsp) (add-hook 'php-mode 'php-enable-symfony2-coding-style)
   :hook ((php-mode . (lambda () (set (make-local-variable 'company-backends)
                                      '(;; list of backends
                                        company-phpactor
@@ -325,8 +351,41 @@
   :ensure t
 )
 
+(leaf
+  yasnippet-snippets
+  :ensure t)
+
+(leaf
+  slack
+  :ensure t
+  :bind (("C-c s j" . slack-select-rooms)
+         (:slack-mode-map
+          ("C-c s e" . slack-message-edit)
+          ("@" . (lambda ()
+                (interactive)
+                (slack-message-embed-mention)))))
+  :custom (slack-prefer-current-team . t)
+  (slack-buffer-create-on-notify . t)
+  (slack-default-directory . "/home/jonathan/.cache/slack")
+  :init (mkdir slack-default-directory t)
+  :commands (slack-start)
+  :config (slack-register-team
+             :name "ProtonMail"
+             :token (secrets-get-secret "proton" "slack")
+             :default nil
+             :subscribed-channels '(drive drive-be drive-client data-drive api)
+             :visible-threads t)
+  (add-to-list
+   'alert-user-configuration
+   '(((:title . "\\(drive\\|announcement\\|general\\|geneva\\|baby_foot\\).*")
+      (:category . "slack"))
+     notifications nil)))
 
 (defun my-open-phpstorm ()
+  "Open file in phpstorm."
   (interactive)
   (shell-command (concat "nohup phpstorm " (shell-quote-argument (buffer-file-name))))
 )
+
+(provide 'init);
+;;; init.el ends here
