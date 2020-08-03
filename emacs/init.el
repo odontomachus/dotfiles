@@ -83,9 +83,10 @@
 
 (leaf company
   :ensure t
-  :config
-  (add-hook 'python-mode-hook #'company-mode)
-)
+  :custom
+  (company-minimum-prefix-length . 2)
+  (company-idle-delay . 0.3)
+  :hook (python-mode-hook . company-mode))
 
 (leaf solarized-theme
   :ensure t
@@ -94,7 +95,7 @@
 
 (leaf async
   :leaf-defer nil
-  :config (setq async-bytecomp-package-mode t))
+  :custom (async-bytecomp-package-mode . t))
 
 
 (add-hook 'go-mode-hook
@@ -110,6 +111,8 @@
  ;; If there is more than one, they won't work right.
  '(auth-sources (quote ((:source (:secrets "proton")))))
  '(column-number-mode t)
+ '(company-idle-delay 0.3 t)
+ '(company-minimum-prefix-length 2 t)
  '(custom-safe-themes
    (quote
     ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
@@ -118,12 +121,11 @@
     ("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache")))
  '(lsp-file-watch-threshold 30000)
  '(lsp-intelephense-files-exclude
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**"
+   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"
     (\, "vendor/")])
  '(package-selected-packages
    (quote
-    (slack yasnippet-snippets git-link org-re-reveal pandoc-mode flycheck lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel)))
-)
+    (tide company-capf slack yasnippet-snippets git-link org-re-reveal pandoc-mode flycheck lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -148,8 +150,8 @@
          (latex . t))))
 
 (leaf projectile
-  :init
-  (setq projectile-keymap-prefix (kbd "C-c p"))
+  :ensure t
+  :init (setq projectile-keymap-prefix (kbd "C-c p"))
   :config
   (projectile-mode +1)
   (projectile-register-project-type 'php '("composer.json")
@@ -222,16 +224,13 @@ Depends on system gpg."
   :ensure t)
 
 (leaf lsp-mode
-  :ensure t
-  :config
-  (setq lsp-prefer-flymake nil
-        lsp-prefer-capf t
-        lsp-semantic-highlighting t
-        lsp-enable-xref t
-        company-minimum-prefix-length 1
-        company-idle-delay 0.0)
-  :hook (php-mode . lsp)
-  :commands lsp)
+  :ensure t company
+  :init (setq lsp-keymap-prefix (kbd "C-c l"))
+  :custom (lsp-prefer-capf . t)
+  (lsp-semantic-highlighting . t)
+  (lsp-enable-xref . t)
+  :hook (php-mode-hook . lsp)
+  :commands (lsp))
 
 (leaf company-php
   :ensure t
@@ -240,28 +239,28 @@ Depends on system gpg."
 (leaf company-lsp
   :after  company
   :ensure t
-  :config
-  (setq company-lsp-enable-snippet t
-        company-lsp-cache-candidates t))
+  :custom
+  (company-lsp-enable-snippet . t)
+  (company-lsp-cache-candidates . t))
 
 (leaf lsp-ui
   :ensure t
   :after lsp-mode flycheck
-  :config
-  (setq lsp-ui-sideline-enable nil
-        lsp-ui-sideline-show-symbol t
-        lsp-ui-sideline-show-hover t
-        lsp-ui-sideline-show-code-actions t
-        lsp-ui-flycheck-enable t
+  :custom
+  (lsp-ui-sideline-enable . t)
+  (lsp-ui-sideline-show-symbol . t)
+  (lsp-ui-sideline-show-hover . t)
+  (lsp-ui-sideline-show-code-actions . t)
+  (lsp-ui-flycheck-enable . t)
         ;;        lsp-ui-sideline-update-mode 'point
-        lsp-ui-peek-enable t
-        lsp-ui-peek-list-width 92
-        lsp-ui-peek-peek-height 20
-        lsp-ui-doc-enable t
-        lsp-ui-doc-use-childframe t
+  (lsp-ui-peek-enable . t)
+  (lsp-ui-peek-list-width . 92)
+  (lsp-ui-peek-peek-height . 20)
+  (lsp-ui-doc-enable . t)
+  (lsp-ui-doc-use-childframe . t)
 ;;        lsp-ui-doc-position ‘top
-        lsp-ui-doc-include-signature t))
-;;  (add-hook ‘lsp-mode-hook ‘lsp-ui-mode))
+  (lsp-ui-doc-include-signature . t)
+  :hook (lsp-mode-hook . lsp-ui-mode))
 
 (leaf dap-mode
   :ensure t :after lsp-mode
@@ -287,46 +286,45 @@ Depends on system gpg."
 
 (leaf elpy
   :ensure t jedi pyvenv
+  :after company
   :init (elpy-enable)
-  :config (setq elpy-rpc-backend "jedi" elpy-shell-echo-input nil)
-
+  :config
   (add-to-list 'company-backends 'elpy-company-backend)
-  (require 'electric)
-  (when (load "flycheck" t t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
-  )
+  :custom (elpy-modules . (delq 'elpy-module-flymake elpy-modules))
+  (elpy-rpc-backend . "jedi")
+  (elpy-shell-echo-input . nil)
+  :hook elpy-mode-hook.  flycheck-mode)
+
 
 (leaf phpactor :ensure t)
 (leaf company-phpactor :ensure t)
 
 (leaf php-mode
   :ensure t
-  :config (add-hook 'php-mode-hook 'lsp) (add-hook 'php-mode 'php-enable-symfony2-coding-style)
-  :hook ((php-mode . (lambda () (set (make-local-variable 'company-backends)
-                                     '(;; list of backends
-                                       company-phpactor
-                                       company-files
-                                       ))))))
+  :hook
+  (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
+                              '(;; list of backends
+                                company-capf
+                                company-phpactor
+                                company-files
+                                )))))
 
 (leaf yaml-mode
   :ensure t)
 
 (leaf plantuml-mode
   :ensure t
-  :config (
-           setq plantuml-executable-path "/usr/bin/plantuml"
-           plantuml-default-exec-mode 'executable)
-  (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode)
-               (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))))
+  :custom (plantuml-executable-path . "/usr/bin/plantuml")
+  (plantuml-default-exec-mode . 'executable)
+  :config (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml)))
 
 
 (leaf web-mode
   :ensure t)
 
-(setq help-at-pt-display-when-idle t)
-(setq help-at-pt-timer-delay 0.1)
-(help-at-pt-set-timer)
+;; (setq help-at-pt-display-when-idle t)
+;; (help-at-pt-set-timer)
 
 (leaf graphviz-dot-mode
   :ensure t)
@@ -342,7 +340,7 @@ Depends on system gpg."
   org-re-reveal
   :ensure t
   :after org
-  :config (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+  :custom (org-re-reveal-root . "https://cdn.jsdelivr.net/npm/reveal.js")
   :hook (org-mode . (require 'org-re-reveal))
  )
 
@@ -355,6 +353,12 @@ Depends on system gpg."
   yasnippet-snippets
   :ensure t)
 
+(leaf tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
 (leaf
   slack
   :ensure t
