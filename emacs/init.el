@@ -300,8 +300,9 @@ Depends on system gpg."
 (leaf company-phpactor :ensure t)
 
 (leaf php-mode
-  :ensure t
+  :ensure t yasnippet-snippets
   :hook
+  (php-mode-hook . yas-minor-mode)
   (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
                               '(;; list of backends
                                 company-capf
