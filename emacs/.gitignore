@@ -1,4 +1,7 @@
-elpy
-*
+**
 !.gitignore
 !init.el
+!proton.el
+!snippets
+!snippets/php-mode
+!snippets/php-mode/*

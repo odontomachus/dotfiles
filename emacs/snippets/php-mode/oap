@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: oap
+# key: oap
+# --
+$>* $0@OA\Property(property="$1", description="$2", type="${3:string}", example=$4),
+$>

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: oareq
+# key: oareq
+# --
+     * @OA\RequestBody(
+     * )

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: oajson
+# key: oajson
+# --
+* @OA\JsonContent(
+$0
+* )

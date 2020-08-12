@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: oaresp
+# key: oaresp
+# --
+$>* @OA\Response(response="$1", description="$2",
+$>*   $0
+$>* )

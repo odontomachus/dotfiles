@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: doc_schema
+# key: *schema
+# --
+/**
+ * @OA\Schema()
+ */

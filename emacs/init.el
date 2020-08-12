@@ -345,8 +345,7 @@ Depends on system gpg."
   :hook (org-mode . (require 'org-re-reveal))
  )
 
-(leaf
-  git-link
+(leaf git-link
   :ensure t
 )
 
