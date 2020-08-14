@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: oai
+# key: oai
+# --
+     *         @OA\Items(${1:ref=@Model(type=${2::class, groups={$3\}}})}),

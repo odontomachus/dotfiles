@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: pm-oa-page
+# key: pm-oa-page
+# --
+     * @OA\Parameter(name="Page", in="query", description="The page index using 0-based indexing", example=0,
+     *               required=false, @OA\SChema(type="integer"))
+     * @OA\Parameter(name="PageSize", in="query", description="The page size", example=50, required=false,
+     *               @OA\Schema(type="integer"))

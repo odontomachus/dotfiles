@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: php-new
+# key: <?
+# condition: (= 2 (buffer-size))
+# --
+<?php
+
+declare(strict_types=1);
+
+namespace Proton\Apps\\${`(replace-regexp-in-string "/\\(app/\\)?" "\\\\" (directory-file-name (file-relative-name (file-name-directory buffer-file-name) (concat (projectile-project-root) (file-name-as-directory "apps"))) ))`};
+
+/**
+ *
+ */
+${1:class ${2:`(file-name-base (buffer-file-name))`} ${3:implements $4}}
+\{
+    $0
+\}
