@@ -2,4 +2,5 @@
 # name: oai
 # key: oai
 # --
-     *         @OA\Items(${1:ref=@Model(type=${2::class, groups={$3\}}})}),
+     *         @OA\Items(${1:ref=@Model(type=${2:${3}:class, groups=\{${4}\}})}),
+$0

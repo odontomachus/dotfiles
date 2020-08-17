@@ -3,4 +3,4 @@
 # key: oaparam
 # --
      *$0 @OA\Parameter(name="$1", in="${2:query}", description="$3", example=$4,
-     *               required=${5:false}, @OA\SChema(type="${6:integer}"))
+     *               required=${5:false}, @OA\Schema(type="${6:integer}"))
