@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: oaschema
+# key: oasc
+# --
+* @OA\Schema(
+$0
+* ),

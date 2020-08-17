@@ -1,6 +1,6 @@
 #!/bin/bash
 
-"Resize and link photos"
+# Resize and link photos
 fullpath="$1"
 basedir=$(dirname "$fullpath")
 fname=$(basename "$fullpath")
