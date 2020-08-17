@@ -1,2 +1,18 @@
-(fset 'add-oa
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([?\M-< ?\C-s ?u ?s ?e return ?\C-a ?\M-x ?i ?n ?s ?e ?r ?t tab ?b ?u tab return ?o ?a return ?\C-s ?\; return ?\C-s ?\C-s return ?\C-n ?\C-n ?\C-n ?\C-n ?\C-n ?\C-n ?\C-n ?\C-n ?\C-n ?\C-n ?\C-n ?\C-s ?c ?l ?a ?s ?s return ?\C-r ?/ ?* return ?\C-e return ?* ? ])) arg)))
+;;; proton --- Proton Mail productivity tricks
+
+;;; Commentary:
+
+;;; Code:
+
+(defun pm-oa (&optional ARG)
+  "Keyboard macro.  arg ARG."
+  (interactive "p")
+  (let ((pos (point)))
+    (goto-char (point-min))
+    (search-forward "use ")
+    (beginning-of-line)
+    (insert "use OpenApi\\Annotations as OA;\nuse Nelmio\\ApiDocBundle\\Annotation\\Model;\n")
+    (goto-char pos)))
+
+(provide 'proton)
+;;; proton.el ends here
