@@ -23,6 +23,18 @@
 
 (savehist-mode 1)
 
+(setq iphlicence (let ((licf
+       (expand-file-name "~/intelephense/licence.txt")))
+   (if
+       (file-exists-p licf)
+       (with-temp-buffer
+         (insert-file-contents licf)
+         (string-trim
+          (buffer-string)))
+     "")))
+
+(require 'notifications)
+
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
       version-control nil
@@ -76,9 +88,9 @@
              '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-
 (unless (package-installed-p 'leaf)
-  (package-install 'leaf t))
+  (package-refresh-contents)
+  (package-install 'leaf))
 (require 'leaf)
 
 (leaf company
@@ -109,23 +121,19 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auth-sources (quote ((:source (:secrets "proton")))))
+ '(auth-sources '((:source (:secrets "proton"))))
  '(column-number-mode t)
- '(company-idle-delay 0.3 t)
- '(company-minimum-prefix-length 2 t)
+ '(company-idle-delay 0.3)
+ '(company-minimum-prefix-length 2)
  '(custom-safe-themes
-   (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+   '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
  '(lsp-file-watch-ignored
-   (quote
-    ("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache")))
+   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
  '(lsp-file-watch-threshold 30000)
  '(lsp-intelephense-files-exclude
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"
-    (\, "vendor/")])
+   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
  '(package-selected-packages
-   (quote
-    (tide company-capf slack yasnippet-snippets git-link org-re-reveal pandoc-mode flycheck lsp-java graphviz-dot-mode yaml-mode jedi elpy rustic elixir-mode dap-mode lsp-ui company-lsp company-php lsp-mode lice company-phpactor phpactor lsp web-mode magit flycheck-clang-analyzer pyvenv plantuml-mode company-ansible company-go company-quickhelp elixir-mix flycheck-elixir flycheck-mix ess jinja2-mode markdown-mode nginx-mode helm-projectile helm groovy-mode dot-mode dumb-jump go-projectile go-mode solarized-theme babel))))
+   '(yasnippet-snippets yaml-mode web-mode tide solarized-theme slack rustic plantuml-mode php-cs-fixer org-re-reveal magit lsp-ui lsp-java lice leaf jedi helm-projectile graphviz-dot-mode git-link flycheck-phpstan elpy elixir-mode company-phpactor company-php company-lsp)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -227,6 +235,7 @@ Depends on system gpg."
   :ensure t company
   :init (setq lsp-keymap-prefix (kbd "C-c l"))
   :custom (lsp-prefer-capf . t)
+  (lsp-log-io . t)
   (lsp-semantic-highlighting . t)
   (lsp-enable-xref . t)
   :hook (php-mode-hook . lsp)
@@ -248,7 +257,7 @@ Depends on system gpg."
   :after lsp-mode flycheck
   :custom
   (lsp-ui-sideline-enable . t)
-  (lsp-ui-sideline-show-symbol . t)
+  (lsp-ui-sideline-show-symbol . nil)
   (lsp-ui-sideline-show-hover . t)
   (lsp-ui-sideline-show-code-actions . t)
   (lsp-ui-flycheck-enable . t)
@@ -293,7 +302,7 @@ Depends on system gpg."
   :custom (elpy-modules . (delq 'elpy-module-flymake elpy-modules))
   (elpy-rpc-backend . "jedi")
   (elpy-shell-echo-input . nil)
-  :hook elpy-mode-hook.  flycheck-mode)
+  :hook (elpy-mode-hook . flycheck-mode))
 
 
 (leaf phpactor :ensure t)
@@ -301,6 +310,9 @@ Depends on system gpg."
 
 (leaf php-mode
   :ensure t yasnippet-snippets
+  :custom
+  (php-mode-coding-style . (quote symfony2))
+  (lsp-intelephense-licence-key . iphlicence)
   :hook
   (php-mode-hook . yas-minor-mode)
   (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
@@ -309,6 +321,12 @@ Depends on system gpg."
                                 company-phpactor
                                 company-files
                                 )))))
+
+(leaf flycheck-phpstan
+  :ensure t)
+
+(leaf php-cs-fixer
+  :ensure t)
 
 (leaf yaml-mode
   :ensure t)
