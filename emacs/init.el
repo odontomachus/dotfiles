@@ -10,7 +10,8 @@
 (setq inhibit-startup-message t
       inhibit-startup-echo-area-message t
       inhibit-startup-screen +1
-      initial-scratch-message nil)
+      initial-scratch-message nil
+      column-number-mode t)
 
 ;; Full frame
 (if (<= (display-pixel-width) 1920) (set-frame-parameter nil 'fullscreen 'maximized)
@@ -52,6 +53,7 @@
       confirm-nonexistent-file-or-buffer nil
       gc-cons-threshold 100000000
       read-process-output-max (* 1024 1024 4)
+      global-auto-revert-mode t
 )
 
 (tool-bar-mode -1)
@@ -122,18 +124,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-sources '((:source (:secrets "proton"))))
- '(column-number-mode t)
- '(company-idle-delay 0.3)
- '(company-minimum-prefix-length 2)
  '(custom-safe-themes
-   '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
- '(lsp-file-watch-ignored
-   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
- '(lsp-file-watch-threshold 30000)
- '(lsp-intelephense-files-exclude
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
- '(package-selected-packages
-   '(yasnippet-snippets yaml-mode web-mode tide solarized-theme slack rustic plantuml-mode php-cs-fixer org-re-reveal magit lsp-ui lsp-java lice leaf jedi helm-projectile graphviz-dot-mode git-link flycheck-phpstan elpy elixir-mode company-phpactor company-php company-lsp)))
+   '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -226,6 +218,11 @@ Depends on system gpg."
 
 (leaf flycheck
   :ensure t
+  :custom
+  (flycheck-php-phpcs-executable . "~/.composer/vendor/bin/phpcs")
+  (flycheck-php-phpmd-executable . "~/.composer/vendor/bin/phpmd")
+  (phpcbf-executable . "~/.composer/vendor/bin/phpcbf")
+  (flycheck-phpcs-standard . "PSR12")
   :config (global-flycheck-mode t))
 
 (leaf magit
@@ -235,9 +232,17 @@ Depends on system gpg."
   :ensure t company
   :init (setq lsp-keymap-prefix (kbd "C-c l"))
   :custom (lsp-prefer-capf . t)
-  (lsp-log-io . t)
+  (lsp-eldoc-enable-hover . t)
+  (lsp-log-io . nil)
   (lsp-semantic-highlighting . t)
   (lsp-enable-xref . t)
+  (lsp-signature-auto-activate . t)
+  (lsp-signature-render-documentation . t)
+  (lsp-file-watch-ignored . '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
+ (lsp-file-watch-threshold . 30000)
+ (lsp-intelephense-files-exclude .
+   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
+
   :hook (php-mode-hook . lsp)
   :commands (lsp))
 
@@ -257,17 +262,13 @@ Depends on system gpg."
   :after lsp-mode flycheck
   :custom
   (lsp-ui-sideline-enable . t)
-  (lsp-ui-sideline-show-symbol . nil)
-  (lsp-ui-sideline-show-hover . t)
+  (lsp-ui-sideline-show-diagnostics . t)
   (lsp-ui-sideline-show-code-actions . t)
-  (lsp-ui-flycheck-enable . t)
-        ;;        lsp-ui-sideline-update-mode 'point
+  (lsp-ui-sideline-show-hover . nil)
   (lsp-ui-peek-enable . t)
+  (lsp-ui-peek-always-show . t)
   (lsp-ui-peek-list-width . 92)
   (lsp-ui-peek-peek-height . 20)
-  (lsp-ui-doc-enable . t)
-  (lsp-ui-doc-use-childframe . t)
-;;        lsp-ui-doc-position ‘top
   (lsp-ui-doc-include-signature . t)
   :hook (lsp-mode-hook . lsp-ui-mode))
 
@@ -306,6 +307,7 @@ Depends on system gpg."
 
 
 (leaf phpactor :ensure t)
+
 (leaf company-phpactor :ensure t)
 
 (leaf php-mode
@@ -327,6 +329,10 @@ Depends on system gpg."
 
 (leaf php-cs-fixer
   :ensure t)
+
+(leaf phpcbf
+  :ensure t
+  :hook (php-mode . phpcbf-enable-on-save))
 
 (leaf yaml-mode
   :ensure t)
@@ -379,7 +385,7 @@ Depends on system gpg."
          (before-save . tide-format-before-save)))
 (leaf
   slack
-  :ensure t
+  :ensure nil
   :bind (("C-c s j" . slack-select-rooms)
          (:slack-mode-map
           ("C-c s e" . slack-message-edit)
