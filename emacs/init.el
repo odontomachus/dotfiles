@@ -35,6 +35,8 @@
      "")))
 
 (require 'notifications)
+(add-to-list 'load-path "~/.emacs.d/custom/")
+(require 'proton)
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
@@ -100,7 +102,7 @@
   :custom
   (company-minimum-prefix-length . 2)
   (company-idle-delay . 0.3)
-  :hook (python-mode-hook . company-mode))
+  :init (global-company-mode))
 
 (leaf solarized-theme
   :ensure t
@@ -123,9 +125,18 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auth-sources '((:source (:secrets "proton"))))
+ '(company-idle-delay 0.2)
+ '(company-minimum-prefix-length 0)
  '(custom-safe-themes
-   '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+   '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
+ '(lsp-response-timeout 25)
+ '(org-capture-templates
+   '(("s" "Code snippets" entry
+      (file "~/snippets.org")
+      "")
+     ("n" "Notes" entry
+      (file "~/notes.org")
+      ""))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -219,9 +230,9 @@ Depends on system gpg."
 (leaf flycheck
   :ensure t
   :custom
-  (flycheck-php-phpcs-executable . "~/.composer/vendor/bin/phpcs")
-  (flycheck-php-phpmd-executable . "~/.composer/vendor/bin/phpmd")
-  (phpcbf-executable . "~/.composer/vendor/bin/phpcbf")
+  (flycheck-php-phpcs-executable . "~/.config/composer/vendor/bin/phpcs")
+  (flycheck-php-phpmd-executable . "~/.config/composer/vendor/bin/phpmd")
+  (phpcbf-executable . "~/.config/composer/vendor/bin/phpcbf")
   (flycheck-phpcs-standard . "PSR12")
   :config (global-flycheck-mode t))
 
@@ -321,7 +332,6 @@ Depends on system gpg."
                               '(;; list of backends
                                 company-capf
                                 company-phpactor
-                                company-files
                                 )))))
 
 (leaf flycheck-phpstan
@@ -378,36 +388,13 @@ Depends on system gpg."
   :ensure t)
 
 (leaf tide
-  :ensure t
+  :ensure t typescript-mode
   :after (typescript-mode company flycheck)
+  :config ((add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
+           (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode)))
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)
          (before-save . tide-format-before-save)))
-(leaf
-  slack
-  :ensure nil
-  :bind (("C-c s j" . slack-select-rooms)
-         (:slack-mode-map
-          ("C-c s e" . slack-message-edit)
-          ("@" . (lambda ()
-                (interactive)
-                (slack-message-embed-mention)))))
-  :custom (slack-prefer-current-team . t)
-  (slack-buffer-create-on-notify . t)
-  (slack-default-directory . "/home/jonathan/.cache/slack")
-  :init (mkdir slack-default-directory t)
-  :commands (slack-start)
-  :config (slack-register-team
-             :name "ProtonMail"
-             :token (secrets-get-secret "proton" "slack")
-             :default nil
-             :subscribed-channels '(drive drive-be drive-client data-drive api)
-             :visible-threads t)
-  (add-to-list
-   'alert-user-configuration
-   '(((:title . "\\(drive\\|announcement\\|general\\|geneva\\|baby_foot\\).*")
-      (:category . "slack"))
-     notifications nil)))
 
 (defun my-open-phpstorm ()
   "Open file in phpstorm."
@@ -415,5 +402,5 @@ Depends on system gpg."
   (shell-command (concat "nohup phpstorm " (shell-quote-argument (buffer-file-name))))
 )
 
-(provide 'init);
+(provide 'init)
 ;;; init.el ends here
