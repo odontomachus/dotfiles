@@ -55,7 +55,6 @@
       confirm-nonexistent-file-or-buffer nil
       gc-cons-threshold 100000000
       read-process-output-max (* 1024 1024 4)
-      global-auto-revert-mode t
 )
 
 (tool-bar-mode -1)
@@ -100,9 +99,11 @@
 (leaf company
   :ensure t
   :custom
-  (company-minimum-prefix-length . 2)
+  (company-minimum-prefix-length . 1)
   (company-idle-delay . 0.3)
-  :init (global-company-mode))
+  :init
+    (global-set-key  (kbd "C-c <tab>") 'company-complete-common)
+    (global-company-mode))
 
 (leaf solarized-theme
   :ensure t
@@ -125,10 +126,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-idle-delay 0.2)
- '(company-minimum-prefix-length 0)
  '(custom-safe-themes
    '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
+ '(global-auto-revert-mode t)
  '(lsp-response-timeout 25)
  '(org-capture-templates
    '(("s" "Code snippets" entry
@@ -136,7 +136,8 @@
       "")
      ("n" "Notes" entry
       (file "~/notes.org")
-      ""))))
+      "")))
+ '(split-height-threshold 160))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -171,6 +172,10 @@
                                       :run "composer serve"
                                       :test-suffix "Test"
                                       :test-dir "tests"))
+
+(leaf ace-window
+  :ensure t)
+(global-set-key (kbd "C-c o") 'ace-window)
 
 (leaf helm-projectile
   :after projectile
@@ -254,19 +259,8 @@ Depends on system gpg."
  (lsp-intelephense-files-exclude .
    ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
 
-  :hook (php-mode-hook . lsp)
+  :hook (php-mode-hook . lsp-deferred)
   :commands (lsp))
-
-(leaf company-php
-  :ensure t
-  :after company)
-
-(leaf company-lsp
-  :after  company
-  :ensure t
-  :custom
-  (company-lsp-enable-snippet . t)
-  (company-lsp-cache-candidates . t))
 
 (leaf lsp-ui
   :ensure t
@@ -354,7 +348,6 @@ Depends on system gpg."
   :config (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml)))
 
-
 (leaf web-mode
   :ensure t)
 
@@ -387,8 +380,16 @@ Depends on system gpg."
   yasnippet-snippets
   :ensure t)
 
+(defun setup-tide-mode ()
+  "Setup tide mode."
+  (interactive)
+  (defun tide-imenu-index () nil)
+  (tide-setup)
+  (tide-hl-identifier-mode +1))
+
+
 (leaf tide
-  :ensure t typescript-mode
+  :ensure t typescript-mode company flycheck
   :after (typescript-mode company flycheck)
   :config ((add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
            (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode)))
