@@ -126,10 +126,32 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(async-bytecomp-package-mode t)
+ '(company-idle-delay 0.3)
+ '(company-minimum-prefix-length 1)
  '(custom-safe-themes
    '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
+ '(delq nil t)
+ '(elpy-modules nil)
+ '(elpy-rpc-backend "jedi" t)
+ '(elpy-shell-echo-input nil)
+ '(flycheck-php-phpcs-executable "~/.config/composer/vendor/bin/phpcs")
+ '(flycheck-php-phpmd-executable "~/.config/composer/vendor/bin/phpmd")
+ '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
+ '(lsp-eldoc-enable-hover t t)
+ '(lsp-enable-xref t t)
+ '(lsp-file-watch-ignored
+   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") t)
+ '(lsp-file-watch-threshold 30000 t)
+ '(lsp-intelephense-files-exclude
+   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"] t)
+ '(lsp-log-io nil t)
+ '(lsp-prefer-capf t t)
  '(lsp-response-timeout 25)
+ '(lsp-semantic-highlighting t t)
+ '(lsp-signature-auto-activate t t)
+ '(lsp-signature-render-documentation t t)
  '(org-capture-templates
    '(("s" "Code snippets" entry
       (file "~/snippets.org")
@@ -137,6 +159,13 @@
      ("n" "Notes" entry
       (file "~/notes.org")
       "")))
+ '(org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js" t)
+ '(package-selected-packages
+   '(company-jedi yasnippet-snippets yaml-mode web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer org-re-reveal magit lsp-ui lsp-java lice leaf jedi helm-projectile graphviz-dot-mode git-link flycheck-phpstan elpy elixir-mode company-phpactor))
+ '(php-mode-coding-style 'symfony2 t)
+ '(phpcbf-executable "~/.config/composer/vendor/bin/phpcbf" t)
+ '(plantuml-default-exec-mode 'executable t)
+ '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(split-height-threshold 160))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -300,7 +329,7 @@ Depends on system gpg."
 )
 
 (leaf elpy
-  :ensure t jedi pyvenv
+  :ensure t jedi pyvenv company-jedi
   :after company
   :init (elpy-enable)
   :config
