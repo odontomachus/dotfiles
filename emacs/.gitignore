@@ -1,6 +1,7 @@
 **
 !.gitignore
 !init.el
+!early-init.el
 !snippets
 !snippets/php-mode
 !snippets/php-mode/*

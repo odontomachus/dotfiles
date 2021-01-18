@@ -7,25 +7,10 @@
 
 ;;; Code:
 
-(setq inhibit-startup-message t
-      inhibit-startup-echo-area-message t
-      inhibit-startup-screen +1
-      initial-scratch-message nil
-      column-number-mode t)
-
-;; Full frame
-(if (<= (display-pixel-width) 1920) (set-frame-parameter nil 'fullscreen 'maximized)
-  (progn
-   (set-frame-parameter (selected-frame) 'fullscreen 'fullheight)
-   (set-frame-width (selected-frame) (/ (display-pixel-width) 2) nil t)
-   (set-frame-position (selected-frame) 0 0)
-   (setq window-min-height (- (/ (window-body-height) 3) 1)
-         window-min-width (- (/ (window-body-width) 3) 1))))
-
 (savehist-mode 1)
 
 (setq iphlicence (let ((licf
-       (expand-file-name "~/intelephense/licence.txt")))
+       (expand-file-name "~/intelephense/LICENCE.txt")))
    (if
        (file-exists-p licf)
        (with-temp-buffer
@@ -139,19 +124,21 @@
  '(flycheck-php-phpmd-executable "~/.config/composer/vendor/bin/phpmd")
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
- '(lsp-eldoc-enable-hover t t)
- '(lsp-enable-xref t t)
+ '(lsp-completion-provider t t)
+ '(lsp-eldoc-enable-hover t)
+ '(lsp-enable-xref t)
  '(lsp-file-watch-ignored
-   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") t)
- '(lsp-file-watch-threshold 30000 t)
+   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
+ '(lsp-file-watch-ignored-directories
+   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
+ '(lsp-file-watch-threshold 30000)
  '(lsp-intelephense-files-exclude
    ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"] t)
- '(lsp-log-io nil t)
- '(lsp-prefer-capf t t)
+ '(lsp-log-io nil)
  '(lsp-response-timeout 25)
  '(lsp-semantic-highlighting t t)
- '(lsp-signature-auto-activate t t)
- '(lsp-signature-render-documentation t t)
+ '(lsp-signature-auto-activate t)
+ '(lsp-signature-render-documentation t)
  '(org-capture-templates
    '(("s" "Code snippets" entry
       (file "~/snippets.org")
@@ -162,10 +149,14 @@
  '(org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js" t)
  '(package-selected-packages
    '(company-jedi yasnippet-snippets yaml-mode web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer org-re-reveal magit lsp-ui lsp-java lice leaf jedi helm-projectile graphviz-dot-mode git-link flycheck-phpstan elpy elixir-mode company-phpactor))
- '(php-mode-coding-style 'symfony2 t)
+ '(php-mode-coding-style 'symfony2)
  '(phpcbf-executable "~/.config/composer/vendor/bin/phpcbf" t)
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
+ '(safe-local-variable-values
+   '((php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api/)
+     (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api)
+     (php-project-root . default-directory)))
  '(split-height-threshold 160))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
