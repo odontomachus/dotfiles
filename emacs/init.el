@@ -117,14 +117,17 @@
  '(custom-safe-themes
    '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
  '(delq nil t)
- '(elpy-modules nil)
+ '(eldoc-idle-delay 0.2)
+ '(elpy-autodoc-delay 0.3)
+ '(elpy-modules
+   '(elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-django elpy-module-autodoc elpy-module-sane-defaults) nil nil "Customized with leaf in `elpy' block at `/home/jonathan/.emacs.d/init.el'")
  '(elpy-rpc-backend "jedi" t)
  '(elpy-shell-echo-input nil)
  '(flycheck-php-phpcs-executable "~/.config/composer/vendor/bin/phpcs")
  '(flycheck-php-phpmd-executable "~/.config/composer/vendor/bin/phpmd")
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
- '(lsp-completion-provider t t)
+ '(lsp-completion-provider t)
  '(lsp-eldoc-enable-hover t)
  '(lsp-enable-xref t)
  '(lsp-file-watch-ignored
@@ -133,7 +136,7 @@
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
  '(lsp-file-watch-threshold 30000)
  '(lsp-intelephense-files-exclude
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"] t)
+   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
  '(lsp-log-io nil)
  '(lsp-response-timeout 25)
  '(lsp-semantic-highlighting t t)
@@ -149,13 +152,14 @@
       "")))
  '(org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js" t)
  '(package-selected-packages
-   '(company-jedi yasnippet-snippets yaml-mode web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer org-re-reveal magit lsp-ui lsp-java lice leaf jedi helm-projectile graphviz-dot-mode git-link flycheck-phpstan elpy elixir-mode company-phpactor))
+   '(helm-ag company-jedi yasnippet-snippets yaml-mode web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer org-re-reveal magit lsp-ui lsp-java lice leaf jedi helm-projectile graphviz-dot-mode git-link flycheck-phpstan elpy elixir-mode company-phpactor))
  '(php-mode-coding-style 'symfony2)
  '(phpcbf-executable "~/.config/composer/vendor/bin/phpcbf" t)
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(safe-local-variable-values
-   '((php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api/)
+   '((php-project-root . git)
+     (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api/)
      (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api)
      (php-project-root . default-directory)))
  '(split-height-threshold 160))
@@ -223,7 +227,7 @@ Depends on system gpg."
 
 (global-set-key
  (kbd "C-c n d")
- (format-time-string "%Y-%m-%d")
+ ((lambda () "print date" (format-time-string "%Y-%m-%d")))
  )
 
 (defun my-test-emacs ()

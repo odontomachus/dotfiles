@@ -102,3 +102,9 @@ export NVM_DIR="/home/jonathan/.nvm"
 alias daymode="xrandr --output DP-0 --brightness 1.0 --gamma 1.0:1:1"
 alias nightmode="xrandr --output DP-0 --brightness .50 --gamma 1.0:0.6:0.5"
 alias evemode="xrandr --output DP-0 --brightness .70 --gamma 1.0:0.8:0.7"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '~/.local/lib/google-cloud-sdk/path.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/.local/lib/google-cloud-sdk/completion.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/completion.bash.inc'; fi
