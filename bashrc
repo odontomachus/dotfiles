@@ -53,7 +53,6 @@ rmvenv () {
     done;
 }
 
-alias lpr='/usr/bin/lpr -o media=Letter -o page-top=72 -o page-left=72 -o page-right=72 -o page-bottom=72'
 alias spwd='/bin/pwd > '$HOME'/.spwd'
 alias lpwd='cd "`cat '$HOME'/.spwd`"'
 
@@ -65,7 +64,7 @@ source ~/.sshagent > /dev/null
 ssh-add -l &>/dev/null
 if [[ "$?" = 2 ]] ; then
     {
-        flock -x 3 -n -c ssh-agent -t 4h > ~/.sshagent 2>/dev/null
+        flock -x -n ~/.sshagent.lock ssh-agent -t 8h > ~/.sshagent 2>/dev/null
     } 3>> ~/.sshagent
 fi;
 {
@@ -103,10 +102,3 @@ export NVM_DIR="/home/jonathan/.nvm"
 alias daymode="xrandr --output DP-0 --brightness 1.0 --gamma 1.0:1:1"
 alias nightmode="xrandr --output DP-0 --brightness .50 --gamma 1.0:0.6:0.5"
 alias evemode="xrandr --output DP-0 --brightness .70 --gamma 1.0:0.8:0.7"
-# up down arrow key behavior
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
-bind '"\C-p": history-search-backward'
-bind '"\C-n": history-search-forward'
-
-export HISTSIZE=10000

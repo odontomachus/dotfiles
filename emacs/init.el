@@ -139,6 +139,7 @@
  '(lsp-semantic-highlighting t t)
  '(lsp-signature-auto-activate t)
  '(lsp-signature-render-documentation t)
+ '(org-agenda-files '("~/projects/proton/misc/main.org"))
  '(org-capture-templates
    '(("s" "Code snippets" entry
       (file "~/snippets.org")
@@ -400,19 +401,12 @@ Depends on system gpg."
   yasnippet-snippets
   :ensure t)
 
-(defun setup-tide-mode ()
-  "Setup tide mode."
-  (interactive)
-  (defun tide-imenu-index () nil)
-  (tide-setup)
-  (tide-hl-identifier-mode +1))
-
-
 (leaf tide
-  :ensure t typescript-mode company flycheck
-  :after (typescript-mode company flycheck)
-  :config ((add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
-           (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode)))
+  :ensure t typescript-mode company flycheck web-mode
+  :after (typescript-mode company flycheck web-mode)
+  :config
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)
          (before-save . tide-format-before-save)))
