@@ -93,7 +93,7 @@
 (leaf solarized-theme
   :ensure t
 )
-(load-theme 'solarized-dark t)
+(load-theme 'solarized-light t)
 
 (leaf async
   :leaf-defer nil
@@ -115,7 +115,7 @@
  '(company-idle-delay 0.3)
  '(company-minimum-prefix-length 1)
  '(custom-safe-themes
-   '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
+   '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
  '(delq nil t)
  '(eldoc-idle-delay 0.2)
  '(elpy-autodoc-delay 0.3)
@@ -127,21 +127,21 @@
  '(flycheck-php-phpmd-executable "~/.config/composer/vendor/bin/phpmd")
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
- '(lsp-completion-provider t)
- '(lsp-eldoc-enable-hover t)
- '(lsp-enable-xref t)
+ '(lsp-completion-provider t t)
+ '(lsp-eldoc-enable-hover t t)
+ '(lsp-enable-xref t t)
  '(lsp-file-watch-ignored
-   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
+   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") t)
  '(lsp-file-watch-ignored-directories
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
- '(lsp-file-watch-threshold 30000)
+ '(lsp-file-watch-threshold 30000 t)
  '(lsp-intelephense-files-exclude
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
- '(lsp-log-io nil)
+   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"] t)
+ '(lsp-log-io nil t)
  '(lsp-response-timeout 25)
  '(lsp-semantic-highlighting t t)
- '(lsp-signature-auto-activate t)
- '(lsp-signature-render-documentation t)
+ '(lsp-signature-auto-activate t t)
+ '(lsp-signature-render-documentation t t)
  '(org-agenda-files '("~/projects/proton/misc/main.org"))
  '(org-capture-templates
    '(("s" "Code snippets" entry
@@ -152,8 +152,8 @@
       "")))
  '(org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js" t)
  '(package-selected-packages
-   '(helm-ag company-jedi yasnippet-snippets yaml-mode web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer org-re-reveal magit lsp-ui lsp-java lice leaf jedi helm-projectile graphviz-dot-mode git-link flycheck-phpstan elpy elixir-mode company-phpactor))
- '(php-mode-coding-style 'symfony2)
+   '(typescript-mode php-mode phpactor pyvenv dap-mode company lsp-mode flycheck ace-window projectile helm-ag company-jedi yasnippet-snippets yaml-mode web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer org-re-reveal magit lsp-ui lsp-java lice leaf jedi helm-projectile graphviz-dot-mode git-link flycheck-phpstan elpy elixir-mode company-phpactor))
+ '(php-mode-coding-style 'symfony2 t)
  '(phpcbf-executable "~/.config/composer/vendor/bin/phpcbf" t)
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
@@ -227,7 +227,20 @@ Depends on system gpg."
 
 (global-set-key
  (kbd "C-c n d")
- ((lambda () "print date" (format-time-string "%Y-%m-%d")))
+ 'org-time-stamp
+ )
+
+(defun current-date (&optional arg)
+  "Insert current date.
+ARG nil
+Insert current date at point."
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d"))
+  )
+
+(global-set-key
+ (kbd "C-c n D")
+ 'current-date
  )
 
 (defun my-test-emacs ()
