@@ -56,6 +56,7 @@ rmvenv () {
 alias spwd='/bin/pwd > '$HOME'/.spwd'
 alias lpwd='cd "`cat '$HOME'/.spwd`"'
 
+export EDITOR=emacs
 export VISUAL=emacs
 #export CDPATH=$CDPATH
 
@@ -108,3 +109,4 @@ if [ -f '~/.local/lib/google-cloud-sdk/path.bash.inc' ]; then . '~/.local/lib/go
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/.local/lib/google-cloud-sdk/completion.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/completion.bash.inc'; fi
+. "$HOME/.cargo/env"

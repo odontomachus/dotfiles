@@ -142,7 +142,7 @@
  '(lsp-semantic-highlighting t t)
  '(lsp-signature-auto-activate t t)
  '(lsp-signature-render-documentation t t)
- '(org-agenda-files '("~/projects/proton/misc/main.org"))
+ '(org-agenda-files nil)
  '(org-capture-templates
    '(("s" "Code snippets" entry
       (file "~/snippets.org")
@@ -151,14 +151,14 @@
       (file "~/notes.org")
       "")))
  '(org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js" t)
- '(package-selected-packages
-   '(typescript-mode php-mode phpactor pyvenv dap-mode company lsp-mode flycheck ace-window projectile helm-ag company-jedi yasnippet-snippets yaml-mode web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer org-re-reveal magit lsp-ui lsp-java lice leaf jedi helm-projectile graphviz-dot-mode git-link flycheck-phpstan elpy elixir-mode company-phpactor))
- '(php-mode-coding-style 'symfony2 t)
+ '(php-mode-coding-style 'symfony2)
  '(phpcbf-executable "~/.config/composer/vendor/bin/phpcbf" t)
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(safe-local-variable-values
-   '((php-project-root . git)
+   '((org-image-actual-width . 400)
+     (org-image-actual-width)
+     (php-project-root . git)
      (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api/)
      (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api)
      (php-project-root . default-directory)))
@@ -281,6 +281,12 @@ Insert current date at point."
 
 (leaf magit
   :ensure t)
+
+(leaf forge
+  :ensure t magit)
+
+(leaf gitlab-ci-mode
+  :ensure t magit)
 
 (leaf lsp-mode
   :ensure t company
@@ -418,15 +424,14 @@ Insert current date at point."
   yasnippet-snippets
   :ensure t)
 
+(leaf typescript-mode
+  :ensure t
+  :mode ("\\.ts$" "\\.tsx$")
+  :hook (typescript-mode-hook . lsp))
+
 (leaf tide
-  :ensure t typescript-mode company flycheck web-mode
-  :after (typescript-mode company flycheck web-mode)
-  :config
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save)))
+  :ensure t typescript-mode
+  :hook (typescript-mode . setup-tide))
 
 (defun my-open-phpstorm ()
   "Open file in phpstorm."
