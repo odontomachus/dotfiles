@@ -9,6 +9,9 @@
 
 (savehist-mode 1)
 
+;;(setq debug-on-quit t)
+;; (setq lsp-print-io t)
+
 (setq iphlicence (let ((licf
        (expand-file-name "~/intelephense/LICENCE.txt")))
    (if
@@ -45,7 +48,12 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
-(add-to-list 'exec-path "~/.nvm/versions/node/v14.5.0/bin/")
+(let ((node_path "~/.nvm/versions/node/"))
+  (let ((version (car (reverse (sort (directory-files node_path) 'string-collate-lessp)))))
+    (if (string-match-p "^v[0-9]\\{2\\}\\." version)
+        (add-to-list 'exec-path (file-directory-p (concat node_path version "/bin")))
+      )))
+
 
 ;; Tooltips in echo area
 (tooltip-mode -1)
@@ -74,6 +82,7 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
 (unless (package-installed-p 'leaf)
@@ -99,6 +108,8 @@
   :leaf-defer nil
   :custom (async-bytecomp-package-mode . t))
 
+(leaf kotlin-mode
+  :ensure t)
 
 (add-hook 'go-mode-hook
           (lambda ()
@@ -127,21 +138,21 @@
  '(flycheck-php-phpmd-executable "~/.config/composer/vendor/bin/phpmd")
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
- '(lsp-completion-provider t t)
- '(lsp-eldoc-enable-hover t t)
- '(lsp-enable-xref t t)
+ '(lsp-completion-provider t)
+ '(lsp-eldoc-enable-hover t)
+ '(lsp-enable-xref t)
  '(lsp-file-watch-ignored
-   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") t)
+   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
  '(lsp-file-watch-ignored-directories
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
- '(lsp-file-watch-threshold 30000 t)
+ '(lsp-file-watch-threshold 30000)
  '(lsp-intelephense-files-exclude
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"] t)
- '(lsp-log-io nil t)
+   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
+ '(lsp-log-io nil)
  '(lsp-response-timeout 25)
  '(lsp-semantic-highlighting t t)
- '(lsp-signature-auto-activate t t)
- '(lsp-signature-render-documentation t t)
+ '(lsp-signature-auto-activate t)
+ '(lsp-signature-render-documentation t)
  '(org-agenda-files nil)
  '(org-capture-templates
    '(("s" "Code snippets" entry
@@ -151,6 +162,8 @@
       (file "~/notes.org")
       "")))
  '(org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js" t)
+ '(package-selected-packages
+   '(helm-ag typescript-mode yaml-mode php-mode phpactor pyvenv dap-mode lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer ox-reveal lsp-ui lsp-java lice jedi helm-projectile graphviz-dot-mode gitlab-ci-mode git-link forge flycheck-phpstan elpy elixir-mode company-phpactor company-jedi))
  '(php-mode-coding-style 'symfony2)
  '(phpcbf-executable "~/.config/composer/vendor/bin/phpcbf" t)
  '(plantuml-default-exec-mode 'executable t)
@@ -193,6 +206,11 @@
   (projectile-mode +1)
   (projectile-register-project-type 'php '("composer.json")
                                       :src-dir "apps"
+                                      :test "composer test"
+                                      :run "composer serve"
+                                      :test-suffix "Test"
+                                      :test-dir "tests")
+  (projectile-register-project-type 'js '("package.json")
                                       :test "composer test"
                                       :run "composer serve"
                                       :test-suffix "Test"
@@ -318,7 +336,12 @@ Insert current date at point."
   (lsp-ui-peek-always-show . t)
   (lsp-ui-peek-list-width . 92)
   (lsp-ui-peek-peek-height . 20)
+  (lsp-ui-doc-enable . t)
+  (lsp-ui-doc-show-with-cursor . t)
   (lsp-ui-doc-include-signature . t)
+  (lsp-signature-auto-activate . t)
+  (lsp-lens-enable . t)
+  (lsp-signature-render-documentation . t)
   :hook (lsp-mode-hook . lsp-ui-mode))
 
 (leaf dap-mode
@@ -404,17 +427,18 @@ Insert current date at point."
 (leaf lsp-java :ensure t :after lsp
   :config (add-hook 'java-mode-hook 'lsp))
 
-;; (leaf dap-java
-;;   :ensure t
-;;   :after lsp-java)
+;; (leaf
+;;   org-re-reveal
+;;   :ensure nil
+;;   :after org
+;;   :custom (org-re-reveal-root . "https://cdn.jsdelivr.net/npm/reveal.js")
+;;   :hook (org-mode . (require 'org-re-reveal))
+;;  )
 
-(leaf
-  org-re-reveal
+(leaf ox-reveal
   :ensure t
   :after org
-  :custom (org-re-reveal-root . "https://cdn.jsdelivr.net/npm/reveal.js")
-  :hook (org-mode . (require 'org-re-reveal))
- )
+  :hook (org-mode . (require 'ox-reveal)))
 
 (leaf git-link
   :ensure t
@@ -431,7 +455,8 @@ Insert current date at point."
 
 (leaf tide
   :ensure t typescript-mode
-  :hook (typescript-mode . setup-tide))
+  :hook ((typescript-mode . setup-tide)
+         (javascript-mode . setup-tide)))
 
 (defun my-open-phpstorm ()
   "Open file in phpstorm."

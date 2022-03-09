@@ -1,6 +1,7 @@
 # .bashrc
 
 shopt -qs histappend
+export HISTCONTROL=ignoredups:erasedups:ignorespace
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -90,9 +91,9 @@ export NO_AT_BRIDGE=1
 
 export NVM_DIR="/home/jonathan/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-# adds too much overhead
+
 # use stable nodejs
-#nvm use stable
+nvm use stable > /dev/null &
 # . $HOME/.asdf/asdf.sh
 
 # . $HOME/.asdf/completions/asdf.bash
