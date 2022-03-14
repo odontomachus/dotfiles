@@ -128,7 +128,7 @@
  '(custom-safe-themes
    '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
  '(delq nil t)
- '(eldoc-idle-delay 0.2)
+ '(eldoc-idle-delay 0.3)
  '(elpy-autodoc-delay 0.3)
  '(elpy-modules
    '(elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-django elpy-module-autodoc elpy-module-sane-defaults) nil nil "Customized with leaf in `elpy' block at `/home/jonathan/.emacs.d/init.el'")
@@ -139,7 +139,6 @@
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
  '(lsp-completion-provider t)
- '(lsp-eldoc-enable-hover t)
  '(lsp-enable-xref t)
  '(lsp-file-watch-ignored
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
@@ -153,7 +152,7 @@
  '(lsp-semantic-highlighting t t)
  '(lsp-signature-auto-activate t)
  '(lsp-signature-render-documentation t)
- '(org-agenda-files nil)
+ '(org-agenda-files '("~/Documents/org/agenda.org")
  '(org-capture-templates
    '(("s" "Code snippets" entry
       (file "~/snippets.org")
@@ -162,17 +161,12 @@
       (file "~/notes.org")
       "")))
  '(org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js" t)
- '(package-selected-packages
-   '(helm-ag typescript-mode yaml-mode php-mode phpactor pyvenv dap-mode lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer ox-reveal lsp-ui lsp-java lice jedi helm-projectile graphviz-dot-mode gitlab-ci-mode git-link forge flycheck-phpstan elpy elixir-mode company-phpactor company-jedi))
  '(php-mode-coding-style 'symfony2)
  '(phpcbf-executable "~/.config/composer/vendor/bin/phpcbf" t)
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(safe-local-variable-values
-   '((org-image-actual-width . 400)
-     (org-image-actual-width)
-     (php-project-root . git)
-     (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api/)
+   '((php-project-root . git)
      (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api)
      (php-project-root . default-directory)))
  '(split-height-threshold 160))
@@ -198,6 +192,10 @@
          (org . t)
          (plantuml . t)
          (latex . t))))
+
+(leaf which-key
+  :ensure t
+  :init (which-key-mode))
 
 (leaf projectile
   :ensure t
@@ -225,6 +223,10 @@
   :ensure t
   :init
   (helm-projectile-on)
+  )
+
+(leaf helm-ag
+  :ensure t
   )
 
 (defun gen-password (&optional len)
@@ -320,7 +322,7 @@ Insert current date at point."
  (lsp-file-watch-threshold . 30000)
  (lsp-intelephense-files-exclude .
    ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
-
+; (lsp-idle-display . 0.500)
   :hook (php-mode-hook . lsp-deferred)
   :commands (lsp))
 
@@ -333,9 +335,10 @@ Insert current date at point."
   (lsp-ui-sideline-show-code-actions . t)
   (lsp-ui-sideline-show-hover . nil)
   (lsp-ui-peek-enable . t)
+  (lsp-ui-peek--offset . 10)
   (lsp-ui-peek-always-show . t)
   (lsp-ui-peek-list-width . 92)
-  (lsp-ui-peek-peek-height . 20)
+  (lsp-ui-peek-peek-height . 24)
   (lsp-ui-doc-enable . t)
   (lsp-ui-doc-show-with-cursor . t)
   (lsp-ui-doc-include-signature . t)
