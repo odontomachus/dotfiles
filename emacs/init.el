@@ -48,17 +48,17 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
-(let ((node_path "~/.nvm/versions/node/"))
-  (let ((version (car (reverse (sort (directory-files node_path) 'string-collate-lessp)))))
-    (if (string-match-p "^v[0-9]\\{2\\}\\." version)
-        (add-to-list 'exec-path (file-directory-p (concat node_path version "/bin")))
-      )))
-
-
 ;; Tooltips in echo area
 (tooltip-mode -1)
 
 (setq-default indent-tabs-mode nil)
+
+(let* ((node_path (expand-file-name "~/.nvm/versions/node/"))
+       (version (car (reverse (sort (directory-files node_path) 'string-collate-lessp))))
+       )
+  (if (string-match-p "^v[0-9]\\{2\\}\\." version)
+      (add-to-list 'exec-path (concat node_path version "/bin"))
+      ))
 
 ;; y/n prompt only, no yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -138,21 +138,21 @@
  '(flycheck-php-phpmd-executable "~/.config/composer/vendor/bin/phpmd")
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
- '(lsp-completion-provider t)
- '(lsp-enable-xref t)
+ '(lsp-completion-provider t t)
+ '(lsp-enable-xref t t)
  '(lsp-file-watch-ignored
-   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
+   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") t)
  '(lsp-file-watch-ignored-directories
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
- '(lsp-file-watch-threshold 30000)
+ '(lsp-file-watch-threshold 30000 t)
  '(lsp-intelephense-files-exclude
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
- '(lsp-log-io nil)
+   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"] t)
+ '(lsp-log-io nil t)
  '(lsp-response-timeout 25)
  '(lsp-semantic-highlighting t t)
- '(lsp-signature-auto-activate t)
- '(lsp-signature-render-documentation t)
- '(org-agenda-files '("~/Documents/org/agenda.org")
+ '(lsp-signature-auto-activate t t)
+ '(lsp-signature-render-documentation t t)
+ '(org-agenda-files '("~/Documents/org/agenda.org"))
  '(org-capture-templates
    '(("s" "Code snippets" entry
       (file "~/snippets.org")
@@ -161,7 +161,9 @@
       (file "~/notes.org")
       "")))
  '(org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js" t)
- '(php-mode-coding-style 'symfony2)
+ '(package-selected-packages
+   '(typescript-mode yaml-mode php-mode phpactor pyvenv dap-mode lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer ox-reveal lsp-ui lsp-java lice kotlin-mode jedi helm-projectile helm-ag graphviz-dot-mode gitlab-ci-mode git-link forge flycheck-phpstan elpy elixir-mode company-phpactor company-jedi))
+ '(php-mode-coding-style 'symfony2 t)
  '(phpcbf-executable "~/.config/composer/vendor/bin/phpcbf" t)
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
