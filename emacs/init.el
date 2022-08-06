@@ -13,16 +13,16 @@
 ;; (setq lsp-print-io t)
 
 (setq iphlicence (let ((licf
-       (expand-file-name "~/intelephense/LICENCE.txt")))
-   (if
-       (file-exists-p licf)
-       (with-temp-buffer
-         (insert-file-contents licf)
-         (string-trim
-          (buffer-string)))
-     "")))
+			(expand-file-name "~/intelephense/LICENCE.txt")))
+		   (if
+		       (file-exists-p licf)
+		       (with-temp-buffer
+			 (insert-file-contents licf)
+			 (string-trim
+			  (buffer-string)))
+		     "")))
 
-(require 'notifications)
+;; (require 'notifications)
 (add-to-list 'load-path "~/.emacs.d/custom/")
 (require 'proton)
 
@@ -43,7 +43,9 @@
       confirm-nonexistent-file-or-buffer nil
       gc-cons-threshold 100000000
       read-process-output-max (* 1024 1024 4)
-)
+      ;; Speedup long lines
+      bidi-inhibit-bpa t
+      )
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -67,8 +69,8 @@
 
 ;; Disable prompt on closing buffer with active process
 (setq kill-buffer-query-functions
-  (remq 'process-kill-buffer-query-function
-         kill-buffer-query-functions))
+      (remq 'process-kill-buffer-query-function
+            kill-buffer-query-functions))
 
 (require 'uniquify)
 
@@ -80,33 +82,41 @@
 ;; (setq ido-create-new-buffer 'always)
 
 (require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 
 (unless (package-installed-p 'leaf)
-  (package-refresh-contents)
-  (package-install 'leaf))
+  (prog
+   (package-refresh-contents)
+   (package-install 'leaf)))
 (require 'leaf)
 
-(leaf company
+(leaf feather
   :ensure t
-  :custom
-  (company-minimum-prefix-length . 1)
-  (company-idle-delay . 0.3)
-  :init
-    (global-set-key  (kbd "C-c <tab>") 'company-complete-common)
-    (global-company-mode))
+  :config (feather-mode))
+
+(leaf company
+      :ensure t
+      :custom
+      (company-minimum-prefix-length . 1)
+      (company-tooltip-align-annotations . t)
+      (company-idle-delay . 0.3)
+      :init
+      (global-set-key  (kbd "C-c <tab>") 'company-complete-common)
+      (global-company-mode))
 
 (leaf solarized-theme
   :ensure t
-)
-(load-theme 'solarized-light t)
+  :config
+  (load-theme 'solarized-light t))
+
+(leaf rainbow-delimiters
+  :ensure t)
 
 (leaf async
-  :leaf-defer nil
-  :custom (async-bytecomp-package-mode . t))
+      :leaf-defer nil
+      :custom (async-bytecomp-package-mode . t))
 
 (leaf kotlin-mode
   :ensure t)
@@ -129,49 +139,17 @@
    '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
  '(delq nil t)
  '(eldoc-idle-delay 0.3)
- '(elpy-autodoc-delay 0.3)
- '(elpy-modules
-   '(elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-django elpy-module-autodoc elpy-module-sane-defaults) nil nil "Customized with leaf in `elpy' block at `/home/jonathan/.emacs.d/init.el'")
- '(elpy-rpc-backend "jedi" t)
- '(elpy-shell-echo-input nil)
- '(flycheck-php-phpcs-executable "~/.config/composer/vendor/bin/phpcs")
- '(flycheck-php-phpmd-executable "~/.config/composer/vendor/bin/phpmd")
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
- '(lsp-completion-provider t t)
- '(lsp-enable-xref t t)
- '(lsp-file-watch-ignored
-   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") t)
- '(lsp-file-watch-ignored-directories
-   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
- '(lsp-file-watch-threshold 30000 t)
- '(lsp-intelephense-files-exclude
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"] t)
- '(lsp-log-io nil t)
- '(lsp-response-timeout 25)
- '(lsp-semantic-highlighting t t)
- '(lsp-signature-auto-activate t t)
- '(lsp-signature-render-documentation t t)
- '(org-agenda-files '("~/Documents/org/agenda.org"))
- '(org-capture-templates
-   '(("s" "Code snippets" entry
-      (file "~/snippets.org")
-      "")
-     ("n" "Notes" entry
-      (file "~/notes.org")
-      "")))
- '(org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js" t)
- '(package-selected-packages
-   '(typescript-mode yaml-mode php-mode phpactor pyvenv dap-mode lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets web-mode tide solarized-theme rustic plantuml-mode phpcbf php-cs-fixer ox-reveal lsp-ui lsp-java lice kotlin-mode jedi helm-projectile helm-ag graphviz-dot-mode gitlab-ci-mode git-link forge flycheck-phpstan elpy elixir-mode company-phpactor company-jedi))
- '(php-mode-coding-style 'symfony2 t)
- '(phpcbf-executable "~/.config/composer/vendor/bin/phpcbf" t)
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(safe-local-variable-values
    '((php-project-root . git)
      (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api)
      (php-project-root . default-directory)))
- '(split-height-threshold 160))
+ '(split-height-threshold 160)
+ '(warning-suppress-types '((emacs))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -190,46 +168,45 @@
          (python . t)
          (gnuplot . t)
          (clojure . t)
-         (ledger . t)
          (org . t)
          (plantuml . t)
          (latex . t))))
 
 (leaf which-key
-  :ensure t
-  :init (which-key-mode))
+      :ensure t
+      :init (which-key-mode))
 
 (leaf projectile
-  :ensure t
-  :init (setq projectile-keymap-prefix (kbd "C-c p"))
-  :config
-  (projectile-mode +1)
-  (projectile-register-project-type 'php '("composer.json")
-                                      :src-dir "apps"
-                                      :test "composer test"
-                                      :run "composer serve"
-                                      :test-suffix "Test"
-                                      :test-dir "tests")
-  (projectile-register-project-type 'js '("package.json")
-                                      :test "composer test"
-                                      :run "composer serve"
-                                      :test-suffix "Test"
-                                      :test-dir "tests"))
+      :ensure t
+      :init (setq projectile-keymap-prefix (kbd "C-c p"))
+      :config
+      (projectile-mode +1)
+      (projectile-register-project-type 'php '("composer.json")
+					:src-dir "apps"
+					:test "composer test"
+					:run "composer serve"
+					:test-suffix "Test"
+					:test-dir "tests")
+      (projectile-register-project-type 'js '("package.json")
+					:test "composer test"
+					:run "composer serve"
+					:test-suffix "Test"
+					:test-dir "tests"))
 
 (leaf ace-window
-  :ensure t)
+      :ensure t)
 (global-set-key (kbd "C-c o") 'ace-window)
 
 (leaf helm-projectile
-  :after projectile
-  :ensure t
-  :init
-  (helm-projectile-on)
-  )
+      :after projectile
+      :ensure t
+      :init
+      (helm-projectile-on)
+      )
 
 (leaf helm-ag
-  :ensure t
-  )
+      :ensure t
+      )
 
 (defun gen-password (&optional len)
   "Generate a random password.
@@ -271,7 +248,7 @@ Insert current date at point."
   (require 'async)
   (async-start
    (lambda () (shell-command-to-string
-          "emacs --batch --eval \"
+               "emacs --batch --eval \"
 (condition-case e
     (progn
       (load \\\"~/.emacs.d/init.el\\\")
@@ -290,97 +267,97 @@ Insert current date at point."
 
 ;; Licence headers & content
 (leaf lice
-  :ensure t)
+      :ensure t)
 
 (leaf flycheck
-  :ensure t
-  :custom
-  (flycheck-php-phpcs-executable . "~/.config/composer/vendor/bin/phpcs")
-  (flycheck-php-phpmd-executable . "~/.config/composer/vendor/bin/phpmd")
-  (phpcbf-executable . "~/.config/composer/vendor/bin/phpcbf")
-  (flycheck-phpcs-standard . "PSR12")
-  :config (global-flycheck-mode t))
+      :ensure t
+      :custom
+      (flycheck-php-phpcs-executable . "~/.config/composer/vendor/bin/phpcs")
+      (flycheck-php-phpmd-executable . "~/.config/composer/vendor/bin/phpmd")
+      (phpcbf-executable . "~/.config/composer/vendor/bin/phpcbf")
+      (flycheck-phpcs-standard . "PSR12")
+      :config (global-flycheck-mode t))
 
 (leaf magit
-  :ensure t)
+      :ensure t)
 
 (leaf forge
-  :ensure t magit)
+      :ensure t magit)
 
 (leaf gitlab-ci-mode
-  :ensure t magit)
+      :ensure t magit)
 
 (leaf lsp-mode
-  :ensure t company
-  :init (setq lsp-keymap-prefix (kbd "C-c l"))
-  :custom (lsp-prefer-capf . t)
-  (lsp-eldoc-enable-hover . t)
-  (lsp-log-io . nil)
-  (lsp-semantic-highlighting . t)
-  (lsp-enable-xref . t)
-  (lsp-signature-auto-activate . t)
-  (lsp-signature-render-documentation . t)
-  (lsp-file-watch-ignored . '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
- (lsp-file-watch-threshold . 30000)
- (lsp-intelephense-files-exclude .
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
-; (lsp-idle-display . 0.500)
-  :hook (php-mode-hook . lsp-deferred)
-  :commands (lsp))
+      :ensure t company
+      :init (setq lsp-keymap-prefix (kbd "C-c l"))
+      :custom (lsp-prefer-capf . t)
+      (lsp-eldoc-enable-hover . t)
+      (lsp-log-io . nil)
+      (lsp-semantic-highlighting . t)
+      (lsp-enable-xref . t)
+      (lsp-signature-auto-activate . t)
+      (lsp-signature-render-documentation . t)
+      (lsp-file-watch-ignored . '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
+      (lsp-file-watch-threshold . 30000)
+      (lsp-intelephense-files-exclude .
+                                      ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
+                                        ; (lsp-idle-display . 0.500)
+      :hook (php-mode-hook . lsp-deferred)
+      :commands (lsp))
 
 (leaf lsp-ui
-  :ensure t
-  :after lsp-mode flycheck
-  :custom
-  (lsp-ui-sideline-enable . t)
-  (lsp-ui-sideline-show-diagnostics . t)
-  (lsp-ui-sideline-show-code-actions . t)
-  (lsp-ui-sideline-show-hover . nil)
-  (lsp-ui-peek-enable . t)
-  (lsp-ui-peek--offset . 10)
-  (lsp-ui-peek-always-show . t)
-  (lsp-ui-peek-list-width . 92)
-  (lsp-ui-peek-peek-height . 24)
-  (lsp-ui-doc-enable . t)
-  (lsp-ui-doc-show-with-cursor . t)
-  (lsp-ui-doc-include-signature . t)
-  (lsp-signature-auto-activate . t)
-  (lsp-lens-enable . t)
-  (lsp-signature-render-documentation . t)
-  :hook (lsp-mode-hook . lsp-ui-mode))
+      :ensure t
+      :after lsp-mode flycheck
+      :custom
+      (lsp-ui-sideline-enable . t)
+      (lsp-ui-sideline-show-diagnostics . t)
+      (lsp-ui-sideline-show-code-actions . t)
+      (lsp-ui-sideline-show-hover . nil)
+      (lsp-ui-peek-enable . t)
+      (lsp-ui-peek--offset . 10)
+      (lsp-ui-peek-always-show . t)
+      (lsp-ui-peek-list-width . 92)
+      (lsp-ui-peek-peek-height . 24)
+      (lsp-ui-doc-enable . t)
+      (lsp-ui-doc-show-with-cursor . t)
+      (lsp-ui-doc-include-signature . t)
+      (lsp-signature-auto-activate . t)
+      (lsp-lens-enable . t)
+      (lsp-signature-render-documentation . t)
+      :hook (lsp-mode-hook . lsp-ui-mode))
 
 (leaf dap-mode
-  :ensure t :after lsp-mode
-  :config
-  (dap-mode t)
-  (dap-ui-mode t)
-  ;; (dap-register-debug-template "PHP"
-  ;;                              (list :type "php"
-  ;;                                    :cwd nil
-  ;;                                    :request "launch"
-  ;;                                    :name "Php Debug"
-  ;;                                    :args '("--server=9000")
-  ;;                                    :pathMappings (ht ("/var/www/api" (projectile-project-root (buffer-file-name))))
-  ;;                                    :sourceMaps t))
-)
+      :ensure t :after lsp-mode
+      :config
+      (dap-mode t)
+      (dap-ui-mode t)
+      ;; (dap-register-debug-template "PHP"
+      ;;                              (list :type "php"
+      ;;                                    :cwd nil
+      ;;                                    :request "launch"
+      ;;                                    :name "Php Debug"
+      ;;                                    :args '("--server=9000")
+      ;;                                    :pathMappings (ht ("/var/www/api" (projectile-project-root (buffer-file-name))))
+      ;;                                    :sourceMaps t))
+      )
 
 (leaf elixir-mode
-  :ensure t)
+      :ensure t)
 
 (leaf rustic
-  :ensure t
-)
+      :ensure t
+      )
 
 (leaf elpy
-  :ensure t jedi pyvenv company-jedi
-  :after company
-  :init (elpy-enable)
-  :config
-  (add-to-list 'company-backends 'elpy-company-backend)
-  :custom (elpy-modules . (delq 'elpy-module-flymake elpy-modules))
-  (elpy-rpc-backend . "jedi")
-  (elpy-shell-echo-input . nil)
-  :hook (elpy-mode-hook . flycheck-mode))
+      :ensure t jedi pyvenv company-jedi
+      :after company
+      :init (elpy-enable)
+      :config
+      (add-to-list 'company-backends 'elpy-company-backend)
+      :custom (elpy-modules . (delq 'elpy-module-flymake elpy-modules))
+      (elpy-rpc-backend . "jedi")
+      (elpy-shell-echo-input . nil)
+      :hook (elpy-mode-hook . flycheck-mode))
 
 
 (leaf phpactor :ensure t)
@@ -388,49 +365,45 @@ Insert current date at point."
 (leaf company-phpactor :ensure t)
 
 (leaf php-mode
-  :ensure t yasnippet-snippets
-  :custom
-  (php-mode-coding-style . (quote symfony2))
-  (lsp-intelephense-licence-key . iphlicence)
-  :hook
-  (php-mode-hook . yas-minor-mode)
-  (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
-                              '(;; list of backends
-                                company-capf
-                                company-phpactor
-                                )))))
+      :ensure t yasnippet-snippets
+      :custom
+      (php-mode-coding-style . (quote symfony2))
+      (lsp-intelephense-licence-key . iphlicence)
+      :hook
+      (php-mode-hook . yas-minor-mode)
+      (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
+				       '(;; list of backends
+					 company-capf
+					 company-phpactor
+					 )))))
 
 (leaf flycheck-phpstan
-  :ensure t)
+      :ensure t)
 
 (leaf php-cs-fixer
-  :ensure t)
-
-(leaf phpcbf
-  :ensure t
-  :hook (php-mode . phpcbf-enable-on-save))
+      :ensure t)
 
 (leaf yaml-mode
-  :ensure t)
+      :ensure t)
 
 (leaf plantuml-mode
-  :ensure t
-  :custom (plantuml-executable-path . "/usr/bin/plantuml")
-  (plantuml-default-exec-mode . 'executable)
-  :config (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
-  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml)))
+      :ensure t
+      :custom (plantuml-executable-path . "/usr/bin/plantuml")
+      (plantuml-default-exec-mode . 'executable)
+      :config (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
+      (add-to-list 'org-src-lang-modes '("plantuml" . plantuml)))
 
 (leaf web-mode
-  :ensure t)
+      :ensure t)
 
 ;; (setq help-at-pt-display-when-idle t)
 ;; (help-at-pt-set-timer)
 
 (leaf graphviz-dot-mode
-  :ensure t)
+      :ensure t)
 
 (leaf lsp-java :ensure t :after lsp
-  :config (add-hook 'java-mode-hook 'lsp))
+      :config (add-hook 'java-mode-hook 'lsp))
 
 ;; (leaf
 ;;   org-re-reveal
@@ -441,33 +414,33 @@ Insert current date at point."
 ;;  )
 
 (leaf ox-reveal
-  :ensure t
-  :after org
-  :hook (org-mode . (require 'ox-reveal)))
+      :ensure t
+      :after org
+      :hook (org-mode . (require 'ox-reveal)))
 
 (leaf git-link
-  :ensure t
-)
+      :ensure t
+      )
 
 (leaf
-  yasnippet-snippets
-  :ensure t)
+ yasnippet-snippets
+ :ensure t)
 
 (leaf typescript-mode
-  :ensure t
-  :mode ("\\.ts$" "\\.tsx$")
-  :hook (typescript-mode-hook . lsp))
+      :ensure t
+      :mode ("\\.ts$" "\\.tsx$")
+      :hook (typescript-mode-hook . lsp))
 
 (leaf tide
-  :ensure t typescript-mode
-  :hook ((typescript-mode . setup-tide)
-         (javascript-mode . setup-tide)))
+      :ensure t typescript-mode
+      :hook ((typescript-mode . setup-tide)
+             (javascript-mode . setup-tide)))
 
 (defun my-open-phpstorm ()
   "Open file in phpstorm."
   (interactive)
-  (shell-command (concat "nohup phpstorm " (shell-quote-argument (buffer-file-name))))
-)
+  (shell-command (concat "nohup phpstorm &" (shell-quote-argument (buffer-file-name))))
+  )
 
 (provide 'init)
 ;;; init.el ends here

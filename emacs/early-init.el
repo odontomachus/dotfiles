@@ -12,6 +12,7 @@
       inhibit-startup-echo-area-message t
       inhibit-startup-screen +1
       initial-scratch-message nil
+      frame-inhibit-implied-resize t
       column-number-mode t
       frame-resize-pixelwise t
       default-frame-alist '((left . 0)
