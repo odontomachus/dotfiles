@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Proton\Apps\\${`(replace-regexp-in-string "/\\(app/\\)?" "\\\\" (directory-file-name (file-relative-name (file-name-directory buffer-file-name) (concat (projectile-project-root) (file-name-as-directory "apps"))) ))`};
+namespace \\${`(pm-get-ns (buffer-file-name) (projectile-project-root))`};
 
 /**
  *

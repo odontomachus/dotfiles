@@ -39,12 +39,13 @@
                                       search-ring
                                       regexp-search-ring)
       tooltip-use-echo-area t
-      show-trailing-whitespace 't
+      show-trailing-whitespace t
       confirm-nonexistent-file-or-buffer nil
       gc-cons-threshold 100000000
       read-process-output-max (* 1024 1024 4)
       ;; Speedup long lines
       bidi-inhibit-bpa t
+      global-visual-line-mode t
       )
 
 (tool-bar-mode -1)
@@ -87,7 +88,7 @@
 (package-initialize)
 
 (unless (package-installed-p 'leaf)
-  (prog
+  (progn
    (package-refresh-contents)
    (package-install 'leaf)))
 (require 'leaf)
@@ -119,13 +120,20 @@
       :custom (async-bytecomp-package-mode . t))
 
 (leaf kotlin-mode
-  :ensure t)
+  :ensure t
+  :init (add-to-list 'exec-path "~/.emacs.d/.cache/lsp/kotlin/server/bin/")
+  :hook (kotlin-mode-hook . lsp-deferred)
+  )
 
-(add-hook 'go-mode-hook
-          (lambda ()
-            (add-hook 'before-save-hook 'gofmt-before-save)
-            (setq tab-width 4)
-            (setq indent-tabs-mode 1)))
+(leaf go-mode
+  :ensure t
+  :hook (go-mode-hook . lsp-deferred)
+  )
+
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -141,8 +149,12 @@
  '(eldoc-idle-delay 0.3)
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
+ '(graphviz-dot-indent-width 4)
+ '(package-selected-packages
+   '(highlight-indentation typescript-mode yaml-mode php-mode phpactor pyvenv dap-mode lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets which-key web-mode tide solarized-theme rustic rainbow-delimiters plantuml-mode php-cs-fixer ox-reveal lsp-ui lsp-java lice kotlin-mode jedi helm-projectile helm-ag graphviz-dot-mode go-mode gitlab-ci-mode git-link forge flycheck-phpstan feather elpy elixir-mode company-phpactor company-jedi))
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
+ '(plantuml-jar-path "/usr/share/java/plantuml.jar" t)
  '(safe-local-variable-values
    '((php-project-root . git)
      (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api)
@@ -282,7 +294,8 @@ Insert current date at point."
       :ensure t)
 
 (leaf forge
-      :ensure t magit)
+  :ensure t magit
+  :after magit)
 
 (leaf gitlab-ci-mode
       :ensure t magit)

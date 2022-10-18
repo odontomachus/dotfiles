@@ -64,13 +64,24 @@ arg SEARCH  string to search."
         (widen))))
 
 (defun pm-test-drive (&optional filter)
-  "Run drive tests. arg filter."
+  "Run drive tests.
+arg FILTER."
   (interactive "p")
   )
 
 (defun pm-test-quick (&optional filter)
-  "Run quick suite tests. arg filter."
+  "Run quick suite tests.
+arg FILTER."
 )
+
+(defun pm-get-ns (file-name project-root)
+  "Derive namespace from filename.
+arg FILE-NAME current buffer's file name PROJECT-ROOT path to project root"
+  (let* ((path (directory-file-name (file-relative-name (file-name-directory file-name) (concat project-root (file-name-as-directory "apps")))))
+    (prefix (if (string-match "/tests/" path) "Tests\\" "Proton\\Apps\\"))
+    (ns (concat prefix (replace-regexp-in-string "/" "\\" path t t))))
+    (replace-regexp-in-string "\\\\\\(app\\|tests\\)\\\\" "\\\\" ns t))
+  )
 
 (provide 'proton)
 ;;; proton.el ends here
