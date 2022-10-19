@@ -135,6 +135,9 @@
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -150,8 +153,6 @@
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 4)
- '(package-selected-packages
-   '(highlight-indentation typescript-mode yaml-mode php-mode phpactor pyvenv dap-mode lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets which-key web-mode tide solarized-theme rustic rainbow-delimiters plantuml-mode php-cs-fixer ox-reveal lsp-ui lsp-java lice kotlin-mode jedi helm-projectile helm-ag graphviz-dot-mode go-mode gitlab-ci-mode git-link forge flycheck-phpstan feather elpy elixir-mode company-phpactor company-jedi))
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(plantuml-jar-path "/usr/share/java/plantuml.jar" t)
