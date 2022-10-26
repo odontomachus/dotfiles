@@ -77,10 +77,10 @@ arg FILTER."
 (defun pm-get-ns (file-name project-root)
   "Derive namespace from filename.
 arg FILE-NAME current buffer's file name PROJECT-ROOT path to project root"
-  (let* ((path (directory-file-name (file-relative-name (file-name-directory file-name) (concat project-root (file-name-as-directory "apps")))))
-    (prefix (if (string-match "/tests/" path) "Tests\\" "Proton\\Apps\\"))
+  (let* ((path (directory-file-name (file-relative-name (file-name-directory file-name) (concat project-root))))
+    (prefix (if (string-match "^apps/[[:word:]]+/tests/" path) "Tests\\" (if (string-match "^/apps" path) "Proton\\Apps\\") "Proton\\Bundles\\"))
     (ns (concat prefix (replace-regexp-in-string "/" "\\" path t t))))
-    (replace-regexp-in-string "\\\\\\(app\\|tests\\)\\\\" "\\\\" ns t))
+    (replace-regexp-in-string "\\\\\\(apps?\\|tests\\|src\\|bundles\\)\\\\" "\\\\" ns t))
   )
 
 (provide 'proton)
