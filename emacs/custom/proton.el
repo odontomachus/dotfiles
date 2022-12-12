@@ -6,6 +6,31 @@
 
 (require 'cl-lib)
 
+(leaf phpactor :ensure (boundp 'proton))
+
+(leaf company-phpactor :ensure t)
+
+(leaf php-mode
+  :ensure t yasnippet-snippets
+  :require dap-php
+      :custom
+      (php-mode-coding-style . (quote symfony2))
+      (lsp-intelephense-licence-key . iphlicence)
+      :hook
+      (php-mode-hook . yas-minor-mode)
+      (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
+				       '(;; list of backends
+					 company-capf
+					 company-phpactor
+					 ))))
+      )
+
+(leaf flycheck-phpstan
+      :ensure t)
+
+(leaf php-cs-fixer
+      :ensure t)
+
 (defun pm-oa (&optional ARG)
   "Keyboard macro.  arg ARG."
   (interactive "p")

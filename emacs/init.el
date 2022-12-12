@@ -23,8 +23,10 @@
 		     "")))
 
 ;; (require 'notifications)
+(if (file-exists-p "~/.proton") (
 (add-to-list 'load-path "~/.emacs.d/custom/")
 (require 'proton)
+)
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
@@ -158,7 +160,6 @@
  '(plantuml-jar-path "/usr/share/java/plantuml.jar" t)
  '(safe-local-variable-values
    '((php-project-root . git)
-     (php-project-root . /home/jonathan/projects/proton/containers/webserver/repos/api)
      (php-project-root . default-directory)))
  '(split-height-threshold 160)
  '(warning-suppress-types '((emacs))))
@@ -190,21 +191,23 @@
       :init (which-key-mode))
 
 (leaf projectile
-      :ensure t
-      :init (setq projectile-keymap-prefix (kbd "C-c p"))
-      :config
-      (projectile-mode +1)
-      (projectile-register-project-type 'php '("composer.json")
-					:src-dir "apps"
-					:test "composer test"
-					:run "composer serve"
-					:test-suffix "Test"
-					:test-dir "tests")
-      (projectile-register-project-type 'js '("package.json")
-					:test "composer test"
-					:run "composer serve"
-					:test-suffix "Test"
-					:test-dir "tests"))
+  :ensure t
+  :init (setq projectile-keymap-prefix (kbd "C-c p"))
+  :custom
+  (projectile-sort-order . 'recently-active)
+  :config
+  (projectile-mode +1)
+  (projectile-register-project-type 'php '("composer.json")
+				    :src-dir "apps"
+				    :test "composer test"
+				    :run "composer serve"
+				    :test-suffix "Test"
+				    :test-dir "tests")
+  (projectile-register-project-type 'js '("package.json")
+				    :test "composer test"
+				    :run "composer serve"
+				    :test-suffix "Test"
+				    :test-dir "tests"))
 
 (leaf ace-window
       :ensure t)
@@ -316,7 +319,8 @@ Insert current date at point."
       (lsp-intelephense-files-exclude .
                                       ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
                                         ; (lsp-idle-display . 0.500)
-      :hook (php-mode-hook . lsp-deferred)
+      :hook
+      (php-mode-hook . lsp-deferred)
       :commands (lsp))
 
 (leaf lsp-ui
@@ -345,14 +349,15 @@ Insert current date at point."
       :config
       (dap-mode t)
       (dap-ui-mode t)
-      ;; (dap-register-debug-template "PHP"
-      ;;                              (list :type "php"
-      ;;                                    :cwd nil
-      ;;                                    :request "launch"
-      ;;                                    :name "Php Debug"
-      ;;                                    :args '("--server=9000")
-      ;;                                    :pathMappings (ht ("/var/www/api" (projectile-project-root (buffer-file-name))))
-      ;;                                    :sourceMaps t))
+      (if (boundp 'proton)
+      (dap-register-debug-template "PHP"
+                                   (list :type "php"
+                                         :cwd nil
+                                         :request "launch"
+                                         :name "Php Debug"
+                                         :args '("--server=9000")
+                                         :pathMappings (ht ("/var/www/api" (projectile-project-root (buffer-file-name))))
+                                         :sourceMaps t)))
       )
 
 (leaf elixir-mode
@@ -373,29 +378,6 @@ Insert current date at point."
       (elpy-shell-echo-input . nil)
       :hook (elpy-mode-hook . flycheck-mode))
 
-
-(leaf phpactor :ensure t)
-
-(leaf company-phpactor :ensure t)
-
-(leaf php-mode
-      :ensure t yasnippet-snippets
-      :custom
-      (php-mode-coding-style . (quote symfony2))
-      (lsp-intelephense-licence-key . iphlicence)
-      :hook
-      (php-mode-hook . yas-minor-mode)
-      (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
-				       '(;; list of backends
-					 company-capf
-					 company-phpactor
-					 )))))
-
-(leaf flycheck-phpstan
-      :ensure t)
-
-(leaf php-cs-fixer
-      :ensure t)
 
 (leaf yaml-mode
       :ensure t)
