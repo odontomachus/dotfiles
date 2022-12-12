@@ -111,3 +111,6 @@ if [ -f '~/.local/lib/google-cloud-sdk/path.bash.inc' ]; then . '~/.local/lib/go
 # The next line enables shell command completion for gcloud.
 if [ -f '/.local/lib/google-cloud-sdk/completion.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/completion.bash.inc'; fi
 . "$HOME/.cargo/env"
+alias docker-compose=podman-compose
+[ -e $HOME/.config/podman/auth.json ] && export REGISTRY_AUTH_FILE=$HOME/.config/podman/auth.json
+which fd &>/dev/null && alias find=fd
