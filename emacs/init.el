@@ -26,7 +26,7 @@
 (if (file-exists-p "~/.proton") (
 (add-to-list 'load-path "~/.emacs.d/custom/")
 (require 'proton)
-)
+))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
@@ -397,9 +397,6 @@ Insert current date at point."
 
 (leaf graphviz-dot-mode
       :ensure t)
-
-(leaf lsp-java :ensure t :after lsp
-      :config (add-hook 'java-mode-hook 'lsp))
 
 ;; (leaf
 ;;   org-re-reveal
