@@ -12,16 +12,6 @@
 ;;(setq debug-on-quit t)
 ;; (setq lsp-print-io t)
 
-(setq iphlicence (let ((licf
-			(expand-file-name "~/intelephense/LICENCE.txt")))
-		   (if
-		       (file-exists-p licf)
-		       (with-temp-buffer
-			 (insert-file-contents licf)
-			 (string-trim
-			  (buffer-string)))
-		     "")))
-
 ;; (require 'notifications)
 (if (file-exists-p "~/.proton") (
 (add-to-list 'load-path "~/.emacs.d/custom/")
@@ -155,6 +145,8 @@
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 4)
+ '(package-selected-packages
+   '(tide typescript-mode yasnippet-snippets git-link ox-reveal graphviz-dot-mode web-mode plantuml-mode yaml-mode company-jedi pyvenv jedi elpy rustic elixir-mode dap-mode lsp-ui lsp-mode gitlab-ci-mode forge magit flycheck lice helm-ag helm-projectile ace-window projectile which-key go-mode kotlin-mode rainbow-delimiters solarized-theme company feather))
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(plantuml-jar-path "/usr/share/java/plantuml.jar" t)
@@ -162,7 +154,7 @@
    '((php-project-root . git)
      (php-project-root . default-directory)))
  '(split-height-threshold 160)
- '(warning-suppress-types '((emacs))))
+ '(warning-suppress-types '((leaf) (emacs))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -316,6 +308,7 @@ Insert current date at point."
       (lsp-signature-render-documentation . t)
       (lsp-file-watch-ignored . '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
       (lsp-file-watch-threshold . 30000)
+      (lsp-intelephense-php-version . "8.1")
       (lsp-intelephense-files-exclude .
                                       ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
                                         ; (lsp-idle-display . 0.500)
@@ -391,6 +384,9 @@ Insert current date at point."
 
 (leaf web-mode
       :ensure t)
+
+(leaf mermaid-mode
+  :ensure t)
 
 ;; (setq help-at-pt-display-when-idle t)
 ;; (help-at-pt-set-timer)

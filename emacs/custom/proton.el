@@ -6,6 +6,16 @@
 
 (require 'cl-lib)
 
+(setq iphlicence (let ((licf
+			(expand-file-name "~/intelephense/LICENCE.txt")))
+		   (if
+		       (file-exists-p licf)
+		       (with-temp-buffer
+			 (insert-file-contents licf)
+			 (string-trim
+			  (buffer-string)))
+		     "")))
+
 (leaf phpactor :ensure (boundp 'proton))
 
 (leaf company-phpactor :ensure t)
@@ -13,17 +23,18 @@
 (leaf php-mode
   :ensure t yasnippet-snippets
   :require dap-php
-      :custom
-      (php-mode-coding-style . (quote symfony2))
-      (lsp-intelephense-licence-key . iphlicence)
-      :hook
-      (php-mode-hook . yas-minor-mode)
-      (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
-				       '(;; list of backends
-					 company-capf
-					 company-phpactor
-					 ))))
-      )
+  :custom
+  (php-mode-coding-style . (quote symfony2))
+  (lsp-intelephense-licence-key . iphlicence)
+  (lsp-intelephense-php-version . "8.1")
+  :hook
+  (php-mode-hook . yas-minor-mode)
+  (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
+				   '(;; list of backends
+				     company-capf
+				     company-phpactor
+				     ))))
+  )
 
 (leaf flycheck-phpstan
       :ensure t)
