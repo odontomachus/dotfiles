@@ -13,10 +13,6 @@
 ;; (setq lsp-print-io t)
 
 ;; (require 'notifications)
-(if (file-exists-p "~/.proton") (
-(add-to-list 'load-path "~/.emacs.d/custom/")
-(require 'proton)
-))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
@@ -136,17 +132,17 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(async-bytecomp-package-mode t)
- '(company-idle-delay 0.3)
- '(company-minimum-prefix-length 1)
+ '(company-idle-delay 0.3 t)
+ '(company-minimum-prefix-length 1 t)
  '(custom-safe-themes
    '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
  '(delq nil t)
  '(eldoc-idle-delay 0.3)
- '(flycheck-phpcs-standard "PSR12")
+ '(flycheck-phpcs-standard "PSR12" t)
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 4)
  '(package-selected-packages
-   '(tide typescript-mode yasnippet-snippets git-link ox-reveal graphviz-dot-mode web-mode plantuml-mode yaml-mode company-jedi pyvenv jedi elpy rustic elixir-mode dap-mode lsp-ui lsp-mode gitlab-ci-mode forge magit flycheck lice helm-ag helm-projectile ace-window projectile which-key go-mode kotlin-mode rainbow-delimiters solarized-theme company feather))
+   '(mermaid-mode tide typescript-mode yasnippet-snippets git-link ox-reveal graphviz-dot-mode web-mode plantuml-mode yaml-mode company-jedi pyvenv jedi elpy rustic elixir-mode dap-mode lsp-ui lsp-mode gitlab-ci-mode forge magit flycheck lice helm-ag helm-projectile ace-window projectile which-key go-mode kotlin-mode rainbow-delimiters solarized-theme company feather))
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(plantuml-jar-path "/usr/share/java/plantuml.jar" t)
@@ -425,11 +421,10 @@ Insert current date at point."
       :hook ((typescript-mode . setup-tide)
              (javascript-mode . setup-tide)))
 
-(defun my-open-phpstorm ()
-  "Open file in phpstorm."
-  (interactive)
-  (shell-command (concat "nohup phpstorm &" (shell-quote-argument (buffer-file-name))))
-  )
+(if (file-exists-p "~/.proton") (progn
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/custom/"))
+(require 'proton)
+))
 
 (provide 'init)
 ;;; init.el ends here
