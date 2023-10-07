@@ -42,6 +42,11 @@
 (leaf php-cs-fixer
       :ensure t)
 
+
+(leaf mermaid-mode
+      :ensure t
+)
+
 (defun pm-oa (&optional ARG)
   "Keyboard macro.  arg ARG."
   (interactive "p")

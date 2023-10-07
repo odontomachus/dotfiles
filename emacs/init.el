@@ -91,9 +91,12 @@
       (company-minimum-prefix-length . 1)
       (company-tooltip-align-annotations . t)
       (company-idle-delay . 0.3)
+      (company-dabbrev-downcase . nil)
       :init
       (global-set-key  (kbd "C-c <tab>") 'company-complete-common)
-      (global-company-mode))
+      (global-company-mode)
+      :hook (org-mode-hook . (company-idle-delay . 0.8))
+      )
 
 (leaf solarized-theme
   :ensure t
@@ -141,8 +144,8 @@
  '(flycheck-phpcs-standard "PSR12" t)
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 4)
- '(package-selected-packages
-   '(mermaid-mode tide typescript-mode yasnippet-snippets git-link ox-reveal graphviz-dot-mode web-mode plantuml-mode yaml-mode company-jedi pyvenv jedi elpy rustic elixir-mode dap-mode lsp-ui lsp-mode gitlab-ci-mode forge magit flycheck lice helm-ag helm-projectile ace-window projectile which-key go-mode kotlin-mode rainbow-delimiters solarized-theme company feather))
+ '(lsp-intelephense-php-version "8.1.0")
+ '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(plantuml-jar-path "/usr/share/java/plantuml.jar" t)
@@ -425,6 +428,11 @@ Insert current date at point."
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom/"))
 (require 'proton)
 ))
+
+(leaf edit-indirect
+      :ensure t
+)
+
 
 (provide 'init)
 ;;; init.el ends here
