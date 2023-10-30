@@ -16,8 +16,6 @@
 			  (buffer-string)))
 		     "")))
 
-(leaf phpactor :ensure (boundp 'proton))
-
 (leaf company-phpactor :ensure t)
 
 (leaf php-mode
@@ -127,7 +125,7 @@ arg FILE-NAME current buffer's file name PROJECT-ROOT path to project root"
 (defun my-open-phpstorm ()
   "Open file in phpstorm."
   (interactive)
-  (shell-command (concat "nohup phpstorm &" (shell-quote-argument (buffer-file-name))))
+  (shell-command (concat "nohup phpstorm " (shell-quote-argument (buffer-file-name)) " &") "*phpstorm*" "*phpstorm-errors*")
   )
 
 (provide 'proton)
