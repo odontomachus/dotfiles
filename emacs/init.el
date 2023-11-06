@@ -134,17 +134,18 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(async-bytecomp-package-mode t)
- '(company-idle-delay 0.3 t)
- '(company-minimum-prefix-length 1 t)
+ '(company-idle-delay 0.3)
+ '(company-minimum-prefix-length 1)
  '(custom-safe-themes
    '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
  '(delq nil t)
  '(eldoc-idle-delay 0.3)
- '(flycheck-phpcs-standard "PSR12" t)
+ '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 4)
- '(lsp-intelephense-php-version "8.1.0")
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
+ '(package-selected-packages
+   '(php-mode yaml-mode pyvenv lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets which-key web-mode typescript-mode tide solarized-theme rustic rainbow-delimiters plantuml-mode php-cs-fixer ox-reveal mermaid-mode lsp-ui lice kotlin-mode jedi helm-projectile helm-ag graphviz-dot-mode go-mode gitlab-ci-mode git-link forge flycheck-phpstan feather elpy elixir-mode edit-indirect dap-mode company-phpactor company-jedi))
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(plantuml-jar-path "/usr/share/java/plantuml.jar" t)
@@ -306,7 +307,7 @@ Insert current date at point."
       (lsp-signature-render-documentation . t)
       (lsp-file-watch-ignored . '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
       (lsp-file-watch-threshold . 30000)
-      (lsp-intelephense-php-version . "8.1")
+      (lsp-intelephense-php-version . "8.1.0")
       (lsp-intelephense-files-exclude .
                                       ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
                                         ; (lsp-idle-display . 0.500)

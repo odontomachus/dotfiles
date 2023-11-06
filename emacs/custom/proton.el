@@ -122,6 +122,15 @@ arg FILE-NAME current buffer's file name PROJECT-ROOT path to project root"
     (replace-regexp-in-string "\\\\\\(apps?\\|tests\\|src\\|bundles\\)\\\\" "\\\\" ns t))
   )
 
+;; Work laptop use kde wallet
+(if (string= (system-name) "work-anthill")
+    (progn (setq auth-sources '("secrets:kdewallet"))))
+
+;; setup forge
+(with-eval-after-load 'forge
+  (add-to-list 'forge-alist
+               '("gitlab.protontech.ch" "gitlab.protontech.ch/api/v4" "gitlab.protontech.ch" forge-gitlab-repository)))
+
 (defun my-open-phpstorm ()
   "Open file in phpstorm."
   (interactive)
