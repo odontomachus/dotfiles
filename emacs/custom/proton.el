@@ -6,6 +6,8 @@
 
 (require 'cl-lib)
 
+(print "yes")
+
 (setq iphlicence (let ((licf
 			(expand-file-name "~/intelephense/LICENCE.txt")))
 		   (if
@@ -24,7 +26,7 @@
   :custom
   (php-mode-coding-style . (quote symfony2))
   (lsp-intelephense-licence-key . iphlicence)
-  (lsp-intelephense-php-version . "8.1")
+  (lsp-intelephense-php-version . "8.1.0")
   :hook
   (php-mode-hook . yas-minor-mode)
   (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
@@ -33,6 +35,9 @@
 				     company-phpactor
 				     ))))
   )
+
+(leaf swift-mode
+  :ensure t)
 
 (leaf flycheck-phpstan
       :ensure t)

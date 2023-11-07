@@ -143,6 +143,7 @@
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 4)
+ '(lsp-intelephense-php-version "8.1.0" nil nil "Customized with leaf in `php-mode' block at `/home/jonathan/.emacs.d/custom/proton.el'")
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
  '(package-selected-packages
    '(php-mode yaml-mode pyvenv lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets which-key web-mode typescript-mode tide solarized-theme rustic rainbow-delimiters plantuml-mode php-cs-fixer ox-reveal mermaid-mode lsp-ui lice kotlin-mode jedi helm-projectile helm-ag graphviz-dot-mode go-mode gitlab-ci-mode git-link forge flycheck-phpstan feather elpy elixir-mode edit-indirect dap-mode company-phpactor company-jedi))
@@ -424,14 +425,14 @@ Insert current date at point."
       :hook ((typescript-mode . setup-tide)
              (javascript-mode . setup-tide)))
 
+(leaf edit-indirect
+      :ensure t
+)
+
 (if (file-exists-p "~/.proton") (progn
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom/"))
 (require 'proton)
 ))
-
-(leaf edit-indirect
-      :ensure t
-)
 
 
 (provide 'init)
