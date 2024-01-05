@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: pm-quark-db
+# key: pm-qdb
+# group: proton
+# --
+quark db:mysql --shard-id=${1:$$(yas-choose-value '("56" "57" "161" "174" "175"))} ${2:$$(yas-choose-value '(" " "--master"))}--execute='
+$0
+'

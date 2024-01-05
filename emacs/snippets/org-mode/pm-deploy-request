@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: pm-backend-deploy-request
+# key: pm-dep
+# group: proton
+# --
+Request: API regular deploy [${1:tag}](https://gitlab.protontech.ch/ProtonMail/Slim-API/-/tags/$1)
+Vault: None
+Release notes: https://gitlab.protontech.ch/ProtonMail/Slim-API/-/releases/$1
+RPM: ${2:rpm}
+Risk: ${3:$$(yas-choose-value '("medium" "low" "high"))}
+$0
