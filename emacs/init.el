@@ -12,8 +12,6 @@
 ;;(setq debug-on-quit t)
 ;; (setq lsp-print-io t)
 
-;; (require 'notifications)
-
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups"))
       delete-old-versions 4
       version-control nil
@@ -434,6 +432,11 @@ Insert current date at point."
 (require 'proton)
 ))
 
+
+(if (file-exists-p "~/.proton") (progn
+(add-to-list 'load-path "~/.emacs.d/custom/")
+(require 'proton)
+))
 
 (provide 'init)
 ;;; init.el ends here
