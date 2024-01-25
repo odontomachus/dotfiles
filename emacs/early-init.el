@@ -24,7 +24,19 @@
          (display-buffer-reuse-window display-buffer-in-previous-window display-buffer-in-side-window)
          (window-width . 0.25)
          (side . right)
-         (reusable-frames . visible))))
+         (reusable-frames . visible)))
+      gc-cons-threshold (* 10 1024 1024))
+
+(defvar gc-timer nil)
+(defun maybe-gc ()
+  (let ((original gc-cons-threshold))
+    (setq gc-cons-threshold 800000)
+    (setq gc-cons-threshold original
+          gc-timer (run-with-timer 2 nil #'schedule-maybe-gc))))
+(defun schedule-maybe-gc ()
+  (setq gc-timer (run-with-idle-timer 2 nil #'maybe-gc)))
+
+(schedule-maybe-gc)
 
 ;; Full frame
 (add-hook
