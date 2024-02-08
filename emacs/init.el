@@ -92,7 +92,9 @@
       :init
       (global-set-key  (kbd "C-c <tab>") 'company-complete-common)
       (global-company-mode)
-      :hook (org-mode-hook . (company-idle-delay . 0.8))
+      :hook (org-mode-hook . (lambda ()
+             (setq-local company-idle-delay 0.8
+                         company-minimum-prefix-length 5)))
       )
 
 (leaf solarized-theme
@@ -132,8 +134,6 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(async-bytecomp-package-mode t)
- '(company-idle-delay 0.3)
- '(company-minimum-prefix-length 1)
  '(custom-safe-themes
    '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
  '(delq nil t)
