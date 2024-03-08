@@ -8,6 +8,7 @@
 ;;; Code:
 
 (savehist-mode 1)
+(recentf-mode 1)
 
 ;;(setq debug-on-quit t)
 ;; (setq lsp-print-io t)
