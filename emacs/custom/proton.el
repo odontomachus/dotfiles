@@ -142,5 +142,13 @@ arg FILE-NAME current buffer's file name PROJECT-ROOT path to project root"
   (shell-command (concat "nohup phpstorm " (shell-quote-argument (buffer-file-name)) " &") "*phpstorm*" "*phpstorm-errors*")
   )
 
+(defun pm-id-decrypt (encrypted-id)
+  (shell-command-to-string (concat "kubectl -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt -d " (shell-quote-argument encrypted-id))))
+                                        ;(pm-id-decrypt "OQCSAHH0TrEx_kRy6QEM4hxXXTjMaG9GAFiBYUicLBuOHKXURZ1xx2C-AKzG-QrWnxCrZQ_AGwxH4bM_eemQyw==")
+
+(defun pm-id-encrypt (internal-id)
+  (shell-command-to-string (concat "kubectl -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt " (shell-quote-argument internal-id))))
+
+
 (provide 'proton)
 ;;; proton.el ends here
