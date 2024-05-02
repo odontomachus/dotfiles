@@ -98,6 +98,9 @@
                          company-minimum-prefix-length 5)))
       )
 
+(leaf combobulate
+  :ensure t)
+
 (leaf solarized-theme
   :ensure t
   :config
@@ -176,6 +179,9 @@
          (org . t)
          (plantuml . t)
          (latex . t))))
+
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (leaf which-key
       :ensure t

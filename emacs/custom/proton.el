@@ -143,11 +143,35 @@ arg FILE-NAME current buffer's file name PROJECT-ROOT path to project root"
   )
 
 (defun pm-id-decrypt (encrypted-id)
-  (shell-command-to-string (concat "kubectl -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt -d " (shell-quote-argument encrypted-id))))
-                                        ;(pm-id-decrypt "OQCSAHH0TrEx_kRy6QEM4hxXXTjMaG9GAFiBYUicLBuOHKXURZ1xx2C-AKzG-QrWnxCrZQ_AGwxH4bM_eemQyw==")
+  "Decrypt an id. (ENCRYPTED-ID id to decrypt)"
+  (string-trim
+   (shell-command-to-string (concat "kubectl --context atlas -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt -d " (shell-quote-argument encrypted-id)))))
+;(pm-id-decrypt "OQCSAHH0TrEx_kRy6QEM4hxXXTjMaG9GAFiBYUicLBuOHKXURZ1xx2C-AKzG-QrWnxCrZQ_AGwxH4bM_eemQyw==")
 
 (defun pm-id-encrypt (internal-id)
-  (shell-command-to-string (concat "kubectl -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt " (shell-quote-argument internal-id))))
+  (string-trim
+  (shell-command-to-string (concat "kubectl --context atlas -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt " (shell-quote-argument internal-id)))))
+
+(defun pm-id-decrypt-interactive (beginning end)
+  (interactive "r")
+  (let '(decrypted
+         (let '(encrypted (buffer-substring beginning end))
+           (pm-id-decrypt encrypted)))
+    (progn
+      (goto-char end)
+      (insert " (" decrypted ")"))))
+
+(defun pm-id-encrypt-interactive (beginning end)
+  (interactive "r")
+  (let '(encrypted
+         (let '(decrypted (buffer-substring beginning end))
+           (pm-id-encrypt decrypted)))
+    (progn
+      (goto-char end)
+      (insert " (" encrypted ")"))))
+
+(keymap-global-set "C-c j p e" 'pm-id-encrypt-interactive)
+(keymap-global-set "C-c j p d" 'pm-id-decrypt-interactive)
 
 
 (provide 'proton)
