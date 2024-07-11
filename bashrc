@@ -112,3 +112,5 @@ if [ -f '~/.local/lib/google-cloud-sdk/path.bash.inc' ]; then . '~/.local/lib/go
 if [ -f '/.local/lib/google-cloud-sdk/completion.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/completion.bash.inc'; fi
 alias docker-compose=podman-compose
 [ -e $HOME/.config/podman/auth.json ] && export REGISTRY_AUTH_FILE=$HOME/.config/podman/auth.json
+export _JAVA_OPTIONS="-Djava.io.tmpdir=/var/tmp/java $_JAVA_OPTIONS"
+PATH=$PATH:/opt/android-sdk/platform-tools

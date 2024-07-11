@@ -98,9 +98,6 @@
                          company-minimum-prefix-length 5)))
       )
 
-(leaf combobulate
-  :ensure t)
-
 (leaf solarized-theme
   :ensure t
   :config
@@ -145,10 +142,10 @@
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 4)
- '(lsp-intelephense-php-version "8.1.0" t nil "Customized with leaf in `php-mode' block at `/home/jonathan/.emacs.d/custom/proton.el'")
+ '(lsp-intelephense-php-version "8.2.0" nil nil "Customized with leaf in `php-mode' block at `/home/jonathan/.emacs.d/custom/proton.el'")
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
  '(package-selected-packages
-   '(mermaid-mode mermaid-ts-mode swift-mode php-mode yaml-mode pyvenv lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets which-key web-mode typescript-mode tide solarized-theme rustic rainbow-delimiters plantuml-mode php-cs-fixer ox-reveal lsp-ui lice kotlin-mode jedi helm-projectile helm-ag graphviz-dot-mode go-mode gitlab-ci-mode git-link forge flycheck-phpstan feather elpy elixir-mode edit-indirect dap-mode company-phpactor company-jedi))
+   '(combobulate mermaid-mode mermaid-ts-mode swift-mode php-mode yaml-mode pyvenv lsp-mode magit flycheck ace-window projectile company leaf yasnippet-snippets which-key web-mode typescript-mode tide solarized-theme rustic rainbow-delimiters plantuml-mode php-cs-fixer ox-reveal lsp-ui lice kotlin-mode jedi helm-projectile helm-ag graphviz-dot-mode go-mode gitlab-ci-mode git-link forge flycheck-phpstan feather elpy elixir-mode edit-indirect dap-mode company-phpactor company-jedi))
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(plantuml-jar-path "/usr/share/java/plantuml.jar" t)
@@ -156,6 +153,7 @@
    '((php-project-root . git)
      (php-project-root . default-directory)))
  '(split-height-threshold 160)
+ '(typescript-indent-level 2)
  '(warning-suppress-types '((leaf) (emacs))))
 
 (custom-set-faces
@@ -316,7 +314,7 @@ Insert current date at point."
       (lsp-signature-render-documentation . t)
       (lsp-file-watch-ignored . '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
       (lsp-file-watch-threshold . 30000)
-      (lsp-intelephense-php-version . "8.1.0")
+      (lsp-intelephense-php-version . "8.2.0")
       (lsp-intelephense-files-exclude .
                                       ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
                                         ; (lsp-idle-display . 0.500)

@@ -142,15 +142,18 @@ arg FILE-NAME current buffer's file name PROJECT-ROOT path to project root"
   (shell-command (concat "nohup phpstorm " (shell-quote-argument (buffer-file-name)) " &") "*phpstorm*" "*phpstorm-errors*")
   )
 
+(setq pm-idcrypt-cmd (if (executable-find "pm-idcrypt") "pm-idcrypt " "kubectl --context atlas -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt "))
 (defun pm-id-decrypt (encrypted-id)
   "Decrypt an id. (ENCRYPTED-ID id to decrypt)"
   (string-trim
-   (shell-command-to-string (concat "kubectl --context atlas -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt -d " (shell-quote-argument encrypted-id)))))
-;(pm-id-decrypt "OQCSAHH0TrEx_kRy6QEM4hxXXTjMaG9GAFiBYUicLBuOHKXURZ1xx2C-AKzG-QrWnxCrZQ_AGwxH4bM_eemQyw==")
+   (shell-command-to-string (concat pm-idcrypt-cmd "-d " (shell-quote-argument encrypted-id)))))
 
 (defun pm-id-encrypt (internal-id)
   (string-trim
-  (shell-command-to-string (concat "kubectl --context atlas -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt " (shell-quote-argument internal-id)))))
+   (shell-command-to-string (concat pm-idcrypt-cmd (shell-quote-argument internal-id)))))
+
+;(pm-id-decrypt "OQCSAHH0TrEx_kRy6QEM4hxXXTjMaG9GAFiBYUicLBuOHKXURZ1xx2C-AKzG-QrWnxCrZQ_AGwxH4bM_eemQyw==")
+
 
 (defun pm-id-decrypt-interactive (beginning end)
   (interactive "r")
