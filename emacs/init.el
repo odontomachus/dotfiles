@@ -140,7 +140,7 @@
  '(graphviz-dot-indent-width 4)
  '(lsp-intelephense-php-version "8.2.0" nil nil "Customized with leaf in `php-mode' block at `/home/jonathan/.emacs.d/custom/proton.el'")
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
- '(package-selected-packages '()
+ '(package-selected-packages '())
  '(plantuml-default-exec-mode 'executable t)
  '(plantuml-executable-path "/usr/bin/plantuml" t)
  '(plantuml-jar-path "/usr/share/java/plantuml.jar" t)
