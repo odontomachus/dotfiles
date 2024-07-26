@@ -88,6 +88,7 @@
       (company-dabbrev-downcase . nil)
       :init
       (global-set-key  (kbd "C-c <tab>") 'company-complete-common)
+      (global-set-key  (kbd "C-c f") '(lambda () (interactive) (kill-new buffer-file-name)))
       (global-company-mode)
       :hook (org-mode-hook . (lambda ()
              (setq-local company-idle-delay 0.8
