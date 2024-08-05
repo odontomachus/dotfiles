@@ -26,7 +26,7 @@
   :custom
   (php-mode-coding-style . (quote symfony2))
   (lsp-intelephense-licence-key . iphlicence)
-  (lsp-intelephense-php-version . "8.1.0")
+  (lsp-intelephense-php-version . "8.2.0")
   :hook
   (php-mode-hook . yas-minor-mode)
   (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
