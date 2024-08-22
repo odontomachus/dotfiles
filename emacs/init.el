@@ -37,6 +37,7 @@
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+(yas-global-mode t)
 
 ;; Tooltips in echo area
 (tooltip-mode -1)
@@ -432,12 +433,6 @@ Insert current date at point."
 
 (if (file-exists-p "~/.proton") (progn
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom/"))
-(require 'proton)
-))
-
-
-(if (file-exists-p "~/.proton") (progn
-(add-to-list 'load-path "~/.emacs.d/custom/")
 (require 'proton)
 ))
 
