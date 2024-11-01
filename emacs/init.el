@@ -92,8 +92,8 @@
       (global-set-key  (kbd "C-c f") '(lambda () (interactive) (kill-new buffer-file-name)))
       (global-company-mode)
       :hook (org-mode-hook . (lambda ()
-             (setq-local company-idle-delay 0.8
-                         company-minimum-prefix-length 5)))
+             (setq-local company-idle-delay 0.5
+                         company-minimum-prefix-length 3)))
       )
 
 (leaf solarized-theme
@@ -137,6 +137,8 @@
    '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
  '(delq nil t)
  '(eldoc-idle-delay 0.3)
+ '(flycheck-markdown-markdownlint-cli-config
+   '(".markdownlint.json" ".markdownlint.jsonc" ".markdownlint.yaml" ".pymarkdown.yml"))
  '(flycheck-phpcs-standard "PSR12")
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 4)
@@ -204,16 +206,99 @@
       :ensure t)
 (global-set-key (kbd "C-c o") 'ace-window)
 
-(leaf helm-projectile
-      :after projectile
-      :ensure t
-      :init
-      (helm-projectile-on)
-      )
+;; https://github.com/minad/consult/wiki#minads-orderless-configuration
+(use-package vertico
+  :ensure t
+  :custom
+  ;; (vertico-scroll-margin 0) ;; Different scroll margin
+  (vertico-count 20) ;; Show more candidates
+  ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
+  ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+  :init
+  (vertico-mode))
 
-(leaf helm-ag
-      :ensure t
-      )
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :custom
+  ;; Support opening new minibuffers from inside existing minibuffers.
+  (enable-recursive-minibuffers t)
+  ;; Hide commands in M-x which do not work in the current mode.  Vertico
+  ;; commands are hidden in normal buffers. This setting is useful beyond
+  ;; Vertico.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
+
+(use-package orderless
+  :ensure t
+  :demand t
+  :config
+
+  (defun +orderless--consult-suffix ()
+    "Regexp which matches the end of string with Consult tofu support."
+    (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
+        (format "[%c-%c]*$"
+                consult--tofu-char
+                (+ consult--tofu-char consult--tofu-range -1))
+      "$"))
+
+  ;; Recognizes the following patterns:
+  ;; * .ext (file extension)
+  ;; * regexp$ (regexp matching at end)
+  (defun +orderless-consult-dispatch (word _index _total)
+    (cond
+     ;; Ensure that $ works with Consult commands, which add disambiguation suffixes
+     ((string-suffix-p "$" word)
+      `(orderless-regexp . ,(concat (substring word 0 -1) (+orderless--consult-suffix))))
+     ;; File extensions
+     ((and (or minibuffer-completing-file-name
+               (derived-mode-p 'eshell-mode))
+           (string-match-p "\\`\\.." word))
+      `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
+
+  ;; Define orderless style with initialism by default
+  (orderless-define-completion-style +orderless-with-initialism
+    (orderless-matching-styles '(orderless-initialism orderless-literal orderless-regexp)))
+
+  ;; Certain dynamic completion tables (completion-table-dynamic) do not work
+  ;; properly with orderless. One can add basic as a fallback.  Basic will only
+  ;; be used when orderless fails, which happens only for these special
+  ;; tables. Also note that you may want to configure special styles for special
+  ;; completion categories, e.g., partial-completion for files.
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        ;;; Enable partial-completion for files.
+        ;;; Either give orderless precedence or partial-completion.
+        ;;; Note that completion-category-overrides is not really an override,
+        ;;; but rather prepended to the default completion-styles.
+        ;; completion-category-overrides '((file (styles orderless partial-completion))) ;; orderless is tried first
+        completion-category-overrides '((file (styles partial-completion)) ;; partial-completion is tried first
+                                        ;; enable initialism by default for symbols
+                                        (command (styles +orderless-with-initialism))
+                                        (variable (styles +orderless-with-initialism))
+                                        (symbol (styles +orderless-with-initialism)))
+        orderless-component-separator #'orderless-escapable-split-on-space ;; allow escaping space with backslash!
+        orderless-style-dispatchers (list #'+orderless-consult-dispatch
+                                          #'orderless-affix-dispatch)))
 
 (leaf mermaid-ts-mode
   :ensure t)
@@ -405,7 +490,7 @@ Insert current date at point."
 ;;  )
 
 (leaf ox-reveal
-      :ensure t
+      :ensure nil
       :after org
       :hook (org-mode . (require 'ox-reveal)))
 
