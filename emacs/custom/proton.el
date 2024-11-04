@@ -18,17 +18,21 @@
 			  (buffer-string)))
 		     "")))
 
-(leaf company-phpactor :ensure t)
+(use-package company-phpactor :ensure t)
 
-(leaf php-mode
-  :ensure t yasnippet-snippets
-  :require dap-php
+(use-package php-mode
+  :ensure t
   :custom
-  (php-mode-coding-style . (quote symfony2))
-  (lsp-intelephense-licence-key . iphlicence)
-  (lsp-intelephense-php-version . "8.2.0")
+  (flycheck-php-phpcs-executable "~/.config/composer/vendor/bin/phpcs")
+  (flycheck-php-phpmd-executable "~/.config/composer/vendor/bin/phpmd")
+  (phpcbf-executable "~/.config/composer/vendor/bin/phpcbf")
+  (flycheck-phpcs-standard "PSR12")
+  (php-mode-coding-style (quote symfony2))
+  (lsp-intelephense-licence-key iphlicence)
+  (lsp-intelephense-php-version "8.2.0")
   :hook
   (php-mode-hook . yas-minor-mode)
+  (php-mode-hook . lsp-deferred)
   (php-mode-hook . (lambda () (set (make-local-variable 'company-backends)
 				   '(;; list of backends
 				     company-capf
@@ -36,19 +40,25 @@
 				     ))))
   )
 
-(leaf swift-mode
+(use-package swift-mode
   :ensure t)
 
-(leaf flycheck-phpstan
+(use-package flycheck-phpstan
       :ensure t)
 
-(leaf php-cs-fixer
+(use-package php-cs-fixer
       :ensure t)
 
 
-(leaf mermaid-mode
+(use-package mermaid-mode
       :ensure t
 )
+
+(use-package kotlin-mode
+  :ensure t
+  :init (add-to-list 'exec-path "~/.emacs.d/.cache/lsp/kotlin/server/bin/")
+  :hook (kotlin-mode-hook . lsp-deferred)
+  )
 
 (defun pm-oa (&optional ARG)
   "Keyboard macro.  arg ARG."
