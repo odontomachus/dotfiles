@@ -40,6 +40,22 @@
 				     ))))
   )
 
+(use-package dap-mode
+  :ensure t
+  :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t)
+  (dap-register-debug-template "PHP"
+                               (list :type "php"
+                                     :cwd nil
+                                     :request "launch"
+                                     :name "Php Debug"
+                                     :args '("--server=9000")
+                                     :pathMappings (ht ("/var/www/api" (projectile-project-root (buffer-file-name))))
+                                     :sourceMaps t))
+  )
+
 (use-package swift-mode
   :ensure t)
 

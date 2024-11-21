@@ -35,7 +35,7 @@
       global-visual-line-mode t
       )
 
-(global-set-key (kbd "C-c C-f") 'recentf)
+(global-set-key (kbd "C-c f") 'recentf)
 (global-set-key (kbd "C-c C-w") 'subword-mode)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -85,7 +85,7 @@
   (company-dabbrev-downcase nil)
   :init
   (global-set-key (kbd "C-c <tab>") 'company-complete-common)
-  (global-set-key (kbd "C-c f") '(lambda () (interactive) (kill-new buffer-file-name)))
+  (global-set-key (kbd "C-c j C-f") #'(lambda () (interactive) (kill-new buffer-file-name)))
   (global-company-mode)
   :hook (org-mode-hook . (lambda ()
                            (setq-local company-idle-delay 0.5
@@ -107,6 +107,10 @@
   :ensure t
   :hook (go-mode-hook . lsp-deferred)
   )
+
+;; python poetry
+(use-package poetry
+  :ensure t)
 
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
@@ -132,6 +136,7 @@
  '(graphviz-dot-indent-width 4)
  '(lsp-file-watch-ignored-directories
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") nil nil "Customized with use-package lsp-mode")
+ '(lsp-intelephense-php-version "8.2.0" t nil "Customized with use-package lsp-mode")
  '(markdown-code-lang-modes
    '(("ocaml" . tuareg-mode)
      ("elisp" . emacs-lisp-mode)
@@ -154,6 +159,8 @@
      ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
+ '(package-selected-packages
+   '(edit-indirect tide typescript-mode git-link graphviz-dot-mode web-mode plantuml-mode rustic elixir-mode dap-mode lsp-ui gitlab-ci-mode forge magit lice mermaid-ts-mode orderless vertico embark-consult embark marginalia ace-window projectile which-key poetry consult-lsp lsp-pyright lsp-consult mermaid-mode php-cs-fixer flycheck-phpstan swift-mode yasnippet-snippets php-mode company-phpactor))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(safe-local-variable-values
    '((php-project-root . git)
@@ -202,9 +209,9 @@
 
 (use-package projectile
   :ensure t
-  :init (setq projectile-keymap-prefix (kbd "C-c p"))
   :custom
   (projectile-sort-order 'recently-active)
+  :bind-keymap ("C-c p" . projectile-command-map)
   :config
   (projectile-mode +1)
   (projectile-register-project-type 'php '("composer.json")
@@ -596,22 +603,30 @@ Insert current date at point."
   (lsp-signature-render-documentation t)
   :hook (lsp-mode-hook . lsp-ui-mode))
 
+(use-package consult-lsp
+  :ensure t)
+
+(use-package lsp-pyright
+  :ensure t
+  :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp-deferred))))
+
 (use-package dap-mode
   :ensure t
   :after lsp-mode
   :config
   (dap-mode t)
-  (dap-ui-mode t)
-  (if (boundp 'proton)
-      (dap-register-debug-template "PHP"
-                                   (list :type "php"
-                                         :cwd nil
-                                         :request "launch"
-                                         :name "Php Debug"
-                                         :args '("--server=9000")
-                                         :pathMappings (ht ("/var/www/api" (projectile-project-root (buffer-file-name))))
-                                         :sourceMaps t)))
-  )
+  (dap-ui-mode t))
+
+(use-package treemacs
+  :ensure t)
+
+(use-package lsp-treemacs
+  :ensure t
+  :defer t)
+
 
 (use-package elixir-mode
   :ensure t
@@ -626,20 +641,6 @@ Insert current date at point."
   )
 
 (use-package pyvenv :ensure t)
-(use-package jedi :ensure t)
-(use-package company-jedi :ensure t
-  :after company jedi)
-
-(use-package elpy
-  :ensure t
-  :after company
-  :init (elpy-enable)
-  :config
-  (add-to-list 'company-backends 'elpy-company-backend)
-  :custom
-  (elpy-rpc-backend "jedi")
-  (elpy-shell-echo-input nil)
-  :hook (elpy-mode-hook . flycheck-mode))
 
 (use-package yaml-mode
   :ensure t)
