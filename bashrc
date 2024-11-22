@@ -100,11 +100,6 @@ nvm use stable > /dev/null &
 
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-
-alias daymode="xrandr --output DP-0 --brightness 1.0 --gamma 1.0:1:1"
-alias nightmode="xrandr --output DP-0 --brightness .50 --gamma 1.0:0.6:0.5"
-alias evemode="xrandr --output DP-0 --brightness .70 --gamma 1.0:0.8:0.7"
-
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '~/.local/lib/google-cloud-sdk/path.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/path.bash.inc'; fi
 
@@ -113,8 +108,9 @@ if [ -f '/.local/lib/google-cloud-sdk/completion.bash.inc' ]; then . '~/.local/l
 alias docker-compose=podman-compose
 [ -e $HOME/.config/podman/auth.json ] && export REGISTRY_AUTH_FILE=$HOME/.config/podman/auth.json
 
+alias ip="ip -c"
+
 export _JAVA_OPTIONS="-Djava.io.tmpdir=/var/tmp/java $_JAVA_OPTIONS"
 [ -e /opt/android-sdk/platform-tools ] && PATH=$PATH:/opt/android-sdk/platform-tools
-
 
 [ -e /home/jonathan/.config/broot/launcher/bash/br ] && . /home/jonathan/.config/broot/launcher/bash/br
