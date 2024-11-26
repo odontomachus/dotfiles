@@ -35,8 +35,9 @@
       global-visual-line-mode t
       )
 
-(global-set-key (kbd "C-c f") 'recentf)
 (global-set-key (kbd "C-c C-w") 'subword-mode)
+(global-set-key (kbd "C-c f") 'recentf)
+
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (yas-global-mode t)
