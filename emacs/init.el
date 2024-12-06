@@ -37,6 +37,7 @@
 
 (global-set-key (kbd "C-c C-w") 'subword-mode)
 (global-set-key (kbd "C-c f") 'recentf)
+(global-set-key (kbd "C-c j C-f") #'(lambda () (interactive) (kill-new buffer-file-name)))
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -80,13 +81,13 @@
 (use-package company
   :ensure t
   :custom
-  (company-minimum-prefix-length 1)
+  (company-minimum-prefix-length 3)
   (company-tooltip-align-annotations t)
-  (company-idle-delay 0.3)
+  (company-idle-delay 0.4)
   (company-dabbrev-downcase nil)
+  (company-global-modes '(not minibuffer))
   :init
   (global-set-key (kbd "C-c <tab>") 'company-complete-common)
-  (global-set-key (kbd "C-c j C-f") #'(lambda () (interactive) (kill-new buffer-file-name)))
   (global-company-mode)
   :hook (org-mode-hook . (lambda ()
                            (setq-local company-idle-delay 0.5
@@ -120,6 +121,7 @@
 
 (add-hook 'c-mode-hook 'lsp)
 (add-hook 'c++-mode-hook 'lsp)
+(add-hook 'csharp-mode-hook 'lsp-deferred)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -160,8 +162,6 @@
      ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
- '(package-selected-packages
-   '(edit-indirect tide typescript-mode git-link graphviz-dot-mode web-mode plantuml-mode rustic elixir-mode dap-mode lsp-ui gitlab-ci-mode forge magit lice mermaid-ts-mode orderless vertico embark-consult embark marginalia ace-window projectile which-key poetry consult-lsp lsp-pyright lsp-consult mermaid-mode php-cs-fixer flycheck-phpstan swift-mode yasnippet-snippets php-mode company-phpactor))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(safe-local-variable-values
    '((php-project-root . git)
@@ -402,10 +402,11 @@
   ;; (vertico-scroll-margin 0) ;; Different scroll margin
   (vertico-count 20) ;; Show more candidates
   ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
-  ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+  (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
   (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
   (vertico-multiform-mode)
   :init
+  (keymap-set vertico-map "TAB" #'minibuffer-complete)
   (vertico-mode))
 
 ;; A few more useful configurations...
