@@ -66,7 +66,7 @@ source ~/.sshagent > /dev/null
 ssh-add -l &>/dev/null
 if [[ "$?" = 2 ]] ; then
     {
-        flock -x -n ~/.sshagent.lock ssh-agent -t 8h > ~/.sshagent 2>/dev/null
+        flock -x -n ~/.sshagent.lock ssh-agent -t 10h > ~/.sshagent 2>/dev/null
     } 3>> ~/.sshagent
 fi;
 {
