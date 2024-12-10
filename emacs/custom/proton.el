@@ -172,7 +172,7 @@ arg FILE-NAME current buffer's file name PROJECT-ROOT path to project root"
 (defun pm-id-decrypt (encrypted-id)
   "Decrypt an id. (ENCRYPTED-ID id to decrypt)"
   (string-trim
-   (shell-command-to-string (concat pm-idcrypt-cmd "-d " (shell-quote-argument encrypted-id)))))
+   (shell-command-to-string (concat pm-idcrypt-cmd "-d -- " (shell-quote-argument encrypted-id)))))
 
 (defun pm-id-encrypt (internal-id)
   (string-trim
