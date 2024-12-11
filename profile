@@ -4,3 +4,4 @@ then
 fi
 export PATH
 PATH=$PATH:/opt/android-sdk/platform-tools
+test -f "$HOME/.cargo/env" && . "$HOME/.cargo/env"
