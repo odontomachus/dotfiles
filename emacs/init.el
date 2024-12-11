@@ -18,14 +18,8 @@
       version-control nil
       vc-make-backup-files nil
       auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t))
-      savehist-file "~/.emacs.d/savehist"
       history-length 1000
       history-delete-duplicates t
-      savehist-save-minibuffer-history 1
-      savehist-additional-variables '(kill-ring
-                                      search-ring
-                                      regexp-search-ring)
-      tooltip-use-echo-area t
       show-trailing-whitespace t
       confirm-nonexistent-file-or-buffer nil
       gc-cons-threshold 100000000
@@ -105,6 +99,10 @@
 (use-package rainbow-delimiters
   :ensure t)
 
+(use-package ag
+  :ensure t
+  )
+
 (use-package go-mode
   :ensure t
   :hook (go-mode-hook . lsp-deferred)
@@ -121,7 +119,7 @@
 
 (add-hook 'c-mode-hook 'lsp)
 (add-hook 'c++-mode-hook 'lsp)
-(add-hook 'csharp-mode-hook 'lsp-deferred)
+(add-hook 'csharp-mode-hook 'lsp)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -139,7 +137,6 @@
  '(graphviz-dot-indent-width 4)
  '(lsp-file-watch-ignored-directories
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") nil nil "Customized with use-package lsp-mode")
- '(lsp-intelephense-php-version "8.2.0" t nil "Customized with use-package lsp-mode")
  '(markdown-code-lang-modes
    '(("ocaml" . tuareg-mode)
      ("elisp" . emacs-lisp-mode)
@@ -166,7 +163,11 @@
  '(safe-local-variable-values
    '((php-project-root . git)
      (php-project-root . default-directory)))
+ '(savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
+ '(savehist-file "~/.emacs.d/savehist")
+ '(savehist-save-minibuffer-history 1)
  '(split-height-threshold 160)
+ '(tooltip-use-echo-area t)
  '(typescript-indent-level 2)
  '(xref-search-program 'ripgrep))
 
