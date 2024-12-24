@@ -7,9 +7,6 @@
 
 ;;; Code:
 
-(savehist-mode 1)
-(recentf-mode 1)
-
 ;;(setq debug-on-quit t)
 ;; (setq lsp-print-io t)
 
@@ -27,18 +24,22 @@
       ;; Speedup long lines
       bidi-inhibit-bpa t
       global-visual-line-mode t
+      recentf-max-saved-items 100
+      recentf-max-menu-items 10
+      recentf-exclude '("~/\\..*", "^/tmp/*")
       )
 
-(global-set-key (kbd "C-c C-w") 'subword-mode)
-(global-set-key (kbd "C-c f") 'recentf)
-(global-set-key (kbd "C-c j C-f") #'(lambda () (interactive) (kill-new buffer-file-name)))
-
+(savehist-mode 1)
+(recentf-mode 1)
+;; Tooltips in echo area
+(tooltip-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (yas-global-mode t)
 
-;; Tooltips in echo area
-(tooltip-mode -1)
+(global-set-key (kbd "C-c C-w") 'subword-mode)
+(global-set-key (kbd "C-c f") 'recentf)
+(global-set-key (kbd "C-c j C-f") #'(lambda () (interactive) (kill-new buffer-file-name)))
 
 (setq-default indent-tabs-mode nil)
 
@@ -117,9 +118,8 @@
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
-(add-hook 'csharp-mode-hook 'lsp)
+(add-hook 'c-mode-hook 'lsp-deferred)
+(add-hook 'c++-mode-hook 'lsp-deferred)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -163,11 +163,7 @@
  '(safe-local-variable-values
    '((php-project-root . git)
      (php-project-root . default-directory)))
- '(savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
- '(savehist-file "~/.emacs.d/savehist")
- '(savehist-save-minibuffer-history 1)
  '(split-height-threshold 160)
- '(tooltip-use-echo-area t)
  '(typescript-indent-level 2)
  '(xref-search-program 'ripgrep))
 

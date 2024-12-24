@@ -6,7 +6,11 @@
 
 (require 'cl-lib)
 
-(print "yes")
+(print "Loading proton mode")
+
+(add-hook 'csharp-mode-hook 'lsp-deferred)
+(add-hook 'php-mode-hook 'lsp-deferred)
+
 
 (setq iphlicence (let ((licf
 			(expand-file-name "~/intelephense/LICENCE.txt")))
