@@ -194,6 +194,7 @@
      (markdown-mode   . markdown-ts-mode)
      (conf-toml-mode  . toml-ts-mode)
      (css-mode        . css-ts-mode)
+     (go-mode         . go-ts-mode)
      (javascript-mode . js-ts-mode)
      (typescript-mode . typescript-ts-mode)
      (js-json-mode    . json-ts-mode)
