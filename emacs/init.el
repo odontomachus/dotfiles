@@ -191,7 +191,6 @@
      (php-mode        . php-ts-mode)
      (c-mode          . c-ts-mode)
      (c++-mode        . c++-ts-mode)
-     (markdown-mode   . markdown-ts-mode)
      (conf-toml-mode  . toml-ts-mode)
      (css-mode        . css-ts-mode)
      (go-mode         . go-ts-mode)
