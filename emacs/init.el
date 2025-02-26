@@ -134,7 +134,7 @@
  '(flycheck-markdown-markdownlint-cli-config
    '(".markdownlint.json" ".markdownlint.jsonc" ".markdownlint.yaml" ".pymarkdown.yml"))
  '(global-auto-revert-mode t)
- '(graphviz-dot-indent-width 4)
+ '(graphviz-dot-indent-width 2)
  '(lsp-file-watch-ignored-directories
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") nil nil "Customized with use-package lsp-mode")
  '(markdown-code-lang-modes
@@ -156,14 +156,20 @@
      ("json" . json-mode)
      ("rust" . rust-mode)
      ("sql" . sql-mode)
-     ("python" . python-mode)))
+     ("python" . python-ts-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
+ '(package-selected-packages
+   '(ellama yasnippet-snippets which-key web-mode vertico typescript-mode tide swift-mode solarized-theme rustic rainbow-delimiters projectile poetry plantuml-mode php-cs-fixer orderless mermaid-ts-mode mermaid-mode marginalia lsp-ui lsp-pyright lice kotlin-mode jedi graphviz-dot-mode go-mode gitlab-ci-mode git-link forge flycheck-phpstan embark-consult elpy elixir-mode edit-indirect dap-mode consult-lsp company-phpactor company-jedi ag))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(safe-local-variable-values
    '((php-project-root . git)
      (php-project-root . default-directory)))
+ '(savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
+ '(savehist-file "~/.emacs.d/savehist")
+ '(savehist-save-minibuffer-history 1)
  '(split-height-threshold 160)
+ '(tooltip-use-echo-area t)
  '(typescript-indent-level 2)
  '(xref-search-program 'ripgrep))
 
@@ -608,7 +614,7 @@ Insert current date at point."
 (use-package lsp-pyright
   :ensure t
   :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
-  :hook (python-mode . (lambda ()
+  :hook (python-ts-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp-deferred))))
 

@@ -56,6 +56,7 @@ rmvenv () {
 
 alias spwd='/bin/pwd > '$HOME'/.spwd'
 alias lpwd='cd "`cat '$HOME'/.spwd`"'
+alias va='. .venv/bin/activate'
 
 export EDITOR=emacs
 export VISUAL=emacs
