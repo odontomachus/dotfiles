@@ -156,7 +156,7 @@
      ("json" . json-mode)
      ("rust" . rust-mode)
      ("sql" . sql-mode)
-     ("python" . python-ts-mode)))
+     ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
  '(package-selected-packages
@@ -179,6 +179,31 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;;; Tree-sitter support
+(use-package treesit
+  :when (and (fboundp 'treesit-available-p)
+             (treesit-available-p))
+  :custom
+  (major-mode-remap-alist
+   '((python-mode     . python-ts-mode)
+     (rust-mode       . rust-ts-mode)
+     (php-mode        . php-ts-mode)
+     (c-mode          . c-ts-mode)
+     (c++-mode        . c++-ts-mode)
+     (markdown-mode   . markdown-ts-mode)
+     (conf-toml-mode  . toml-ts-mode)
+     (css-mode        . css-ts-mode)
+     (javascript-mode . js-ts-mode)
+     (typescript-mode . typescript-ts-mode)
+     (js-json-mode    . json-ts-mode)
+     (csharp-mode     . csharp-ts-mode)))
+  :config
+  (add-to-list 'auto-mode-alist
+               '("\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'" . cmake-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode)))
 
 (require 'org)
 (org-babel-do-load-languages
@@ -614,7 +639,7 @@ Insert current date at point."
 (use-package lsp-pyright
   :ensure t
   :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
-  :hook (python-ts-mode . (lambda ()
+  :hook (python-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp-deferred))))
 
@@ -646,9 +671,6 @@ Insert current date at point."
   )
 
 (use-package pyvenv :ensure t)
-
-(use-package yaml-mode
-  :ensure t)
 
 (use-package plantuml-mode
   :ensure t
