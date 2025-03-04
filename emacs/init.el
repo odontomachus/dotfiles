@@ -699,13 +699,7 @@ Insert current date at point."
 (use-package typescript-mode
   :ensure t
   :mode ("\\.ts$" "\\.tsx$")
-  :hook (typescript-mode-hook . lsp))
-
-(use-package tide
-  :ensure t
-  :after typescript-mode
-  :hook ((typescript-mode . setup-tide)
-         (javascript-mode . setup-tide)))
+  :hook (typescript-mode-hook . lsp-deferred))
 
 (use-package edit-indirect
   :ensure t
