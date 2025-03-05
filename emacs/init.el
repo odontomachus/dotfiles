@@ -159,8 +159,6 @@
      ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
- '(package-selected-packages
-   '(ellama yasnippet-snippets which-key web-mode vertico typescript-mode tide swift-mode solarized-theme rustic rainbow-delimiters projectile poetry plantuml-mode php-cs-fixer orderless mermaid-ts-mode mermaid-mode marginalia lsp-ui lsp-pyright lice kotlin-mode jedi graphviz-dot-mode go-mode gitlab-ci-mode git-link forge flycheck-phpstan embark-consult elpy elixir-mode edit-indirect dap-mode consult-lsp company-phpactor company-jedi ag))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(safe-local-variable-values
    '((php-project-root . git)
@@ -188,6 +186,9 @@
   (major-mode-remap-alist
    '((python-mode     . python-ts-mode)
      (rust-mode       . rust-ts-mode)
+     (bash-mode       . bash-ts-mode)
+     (sh-mode         . bash-ts-mode)
+     (sh-base-mode    . bash-ts-mode)
      (php-mode        . php-ts-mode)
      (c-mode          . c-ts-mode)
      (c++-mode        . c++-ts-mode)
@@ -201,8 +202,6 @@
   :config
   (add-to-list 'auto-mode-alist
                '("\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'" . cmake-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode)))
 
 (require 'org)
@@ -699,7 +698,7 @@ Insert current date at point."
 (use-package typescript-mode
   :ensure t
   :mode ("\\.ts$" "\\.tsx$")
-  :hook (typescript-mode-hook . lsp-deferred))
+  :hook ((typescript-ts-mode-hook . lsp-deferred) (typescript-mode-hook . lsp-deferred)))
 
 (use-package edit-indirect
   :ensure t
