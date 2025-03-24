@@ -104,6 +104,10 @@ nvm use stable > /dev/null &
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '~/.local/lib/google-cloud-sdk/path.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/path.bash.inc'; fi
 
+# The next line updates PATH for the Google Cloud SDK.
+if [ -d "$HOME/go/bin" ]; then PATH="$PATH:~/go/bin"; fi
+
+
 # The next line enables shell command completion for gcloud.
 if [ -f '/.local/lib/google-cloud-sdk/completion.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/completion.bash.inc'; fi
 alias docker-compose=podman-compose
@@ -112,6 +116,6 @@ alias docker-compose=podman-compose
 alias ip="ip -c"
 
 export _JAVA_OPTIONS="-Djava.io.tmpdir=/var/tmp/java $_JAVA_OPTIONS"
-[ -e /opt/android-sdk/platform-tools ] && PATH=$PATH:/opt/android-sdk/platform-tools
+[ -d /opt/android-sdk/platform-tools ] && PATH=$PATH:/opt/android-sdk/platform-tools
 
 [ -e /home/jonathan/.config/broot/launcher/bash/br ] && . /home/jonathan/.config/broot/launcher/bash/br

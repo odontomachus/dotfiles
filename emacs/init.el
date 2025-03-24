@@ -104,22 +104,9 @@
   :ensure t
   )
 
-(use-package go-mode
-  :ensure t
-  :hook (go-mode-hook . lsp-deferred)
-  )
-
 ;; python poetry
 (use-package poetry
   :ensure t)
-
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-
-(add-hook 'c-mode-hook 'lsp-deferred)
-(add-hook 'c++-mode-hook 'lsp-deferred)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -660,6 +647,15 @@ Insert current date at point."
 (use-package elixir-mode
   :ensure t
   :hook (elixir-mode-hook . lsp-deferred)
+  )
+
+(add-hook 'c-mode-hook 'lsp-deferred)
+(add-hook 'c++-mode-hook 'lsp-deferred)
+
+(use-package go-mode
+  :ensure t
+  :hook (go-ts-mode . lsp-deferred)
+  (before-save-hook . (lambda () (progn (lsp-format-buffer) (lsp-organize-imports))))
   )
 
 (use-package rustic
