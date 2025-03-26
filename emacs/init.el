@@ -165,6 +165,7 @@
  '(split-height-threshold 160)
  '(tooltip-use-echo-area t)
  '(typescript-indent-level 2)
+ '(warning-suppress-types '((treesit)))
  '(xref-search-program 'ripgrep))
 
 (custom-set-faces
@@ -199,8 +200,9 @@
                '("\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'" . cmake-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.go\\.mod\\'" . go-mod-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . javascript-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode)))
-
 
 (require 'org)
 (org-babel-do-load-languages
@@ -656,6 +658,11 @@ Insert current date at point."
 
 (add-hook 'c-mode-hook 'lsp-deferred)
 (add-hook 'c++-mode-hook 'lsp-deferred)
+
+(use-package typescript-ts-mode
+  :hook (typescript-ts-mode . lsp-deferred)
+)
+
 
 (use-package go-ts-mode
   :custom (go-ts-mode-indent-offset 4)
