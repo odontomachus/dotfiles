@@ -115,41 +115,50 @@
  ;; If there is more than one, they won't work right.
  '(async-bytecomp-package-mode t)
  '(custom-safe-themes
-   '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))
+   '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c"
+     "4c56af497ddf0e30f65a7232a8ee21b3d62a8c332c6b268c81e9ea99b11da0d3"
+     "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
+     default))
  '(delq nil t)
  '(eldoc-idle-delay 0.3)
  '(flycheck-markdown-markdownlint-cli-config
-   '(".markdownlint.json" ".markdownlint.jsonc" ".markdownlint.yaml" ".pymarkdown.yml"))
+   '(".markdownlint.json" ".markdownlint.jsonc" ".markdownlint.yaml"
+     ".pymarkdown.yml"))
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 2)
  '(lsp-file-watch-ignored-directories
-   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache") nil nil "Customized with use-package lsp-mode")
+   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$"
+     "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$"
+     "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$"
+     "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$"
+     "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$"
+     "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$"
+     "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$"
+     "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec"
+     "[/\\\\]var" "[/\\\\]cache") nil nil "Customized with use-package lsp-mode")
  '(markdown-code-lang-modes
-   '(("ocaml" . tuareg-mode)
-     ("elisp" . emacs-lisp-mode)
-     ("ditaa" . artist-mode)
-     ("asymptote" . asy-mode)
-     ("dot" . fundamental-mode)
-     ("sqlite" . sql-mode)
-     ("calc" . fundamental-mode)
-     ("C" . c-mode)
-     ("cpp" . c++-mode)
-     ("C++" . c++-mode)
-     ("screen" . shell-script-mode)
-     ("shell" . sh-mode)
-     ("bash" . sh-mode)
-     ("ts" . typescript-mode)
-     ("js" . javascript-mode)
-     ("json" . json-mode)
-     ("rust" . rust-mode)
-     ("sql" . sql-mode)
-     ("python" . python-mode)))
+   '(("ocaml" . tuareg-mode) ("elisp" . emacs-lisp-mode)
+     ("ditaa" . artist-mode) ("asymptote" . asy-mode)
+     ("dot" . fundamental-mode) ("sqlite" . sql-mode)
+     ("calc" . fundamental-mode) ("C" . c-mode) ("cpp" . c++-mode)
+     ("C++" . c++-mode) ("screen" . shell-script-mode)
+     ("shell" . sh-mode) ("bash" . sh-mode) ("ts" . typescript-mode)
+     ("js" . javascript-mode) ("json" . json-mode)
+     ("rust" . rust-mode) ("sql" . sql-mode) ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
+ '(package-selected-packages
+   '(ag company-jedi company-phpactor consult-lsp dap-mode edit-indirect
+        elixir-mode ellama elpy embark-consult flycheck-phpstan forge
+        git-link gitlab-ci-mode graphviz-dot-mode jedi kotlin-mode
+        lice lsp-pyright lsp-ui marginalia mermaid-mode
+        mermaid-ts-mode orderless php-cs-fixer plantuml-mode poetry
+        projectile rainbow-delimiters rustic solarized-theme
+        swift-mode tide typescript-mode vertico web-mode which-key
+        yasnippet-snippets))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(safe-local-variable-values
-   '((php-project-root . git)
-     (php-project-root . default-directory)))
+   '((php-project-root . git) (php-project-root . default-directory)))
  '(savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
  '(savehist-file "~/.emacs.d/savehist")
  '(savehist-save-minibuffer-history 1)
@@ -172,7 +181,6 @@
   :custom
   (major-mode-remap-alist
    '((python-mode     . python-ts-mode)
-     (rust-mode       . rust-ts-mode)
      (bash-mode       . bash-ts-mode)
      (sh-mode         . bash-ts-mode)
      (sh-base-mode    . bash-ts-mode)
@@ -180,8 +188,8 @@
      (c-mode          . c-ts-mode)
      (c++-mode        . c++-ts-mode)
      (conf-toml-mode  . toml-ts-mode)
+     (elixir-mode     . elixir-ts-mode)
      (css-mode        . css-ts-mode)
-     (go-mode         . go-ts-mode)
      (javascript-mode . js-ts-mode)
      (typescript-mode . typescript-ts-mode)
      (js-json-mode    . json-ts-mode)
@@ -189,7 +197,10 @@
   :config
   (add-to-list 'auto-mode-alist
                '("\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'" . cmake-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.go\\.mod\\'" . go-mod-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode)))
+
 
 (require 'org)
 (org-babel-do-load-languages
@@ -625,7 +636,7 @@ Insert current date at point."
 (use-package lsp-pyright
   :ensure t
   :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
-  :hook (python-mode . (lambda ()
+  :hook (python-ts-mode . (lambda ()
                           (require 'lsp-pyright)
                           (lsp-deferred))))
 
@@ -643,20 +654,21 @@ Insert current date at point."
   :ensure t
   :defer t)
 
-
-(use-package elixir-mode
-  :ensure t
-  :hook (elixir-mode-hook . lsp-deferred)
-  )
-
 (add-hook 'c-mode-hook 'lsp-deferred)
 (add-hook 'c++-mode-hook 'lsp-deferred)
 
-(use-package go-mode
-  :ensure t
-  :hook (go-ts-mode . lsp-deferred)
-  (before-save-hook . (lambda () (progn (lsp-format-buffer) (lsp-organize-imports))))
+(use-package go-ts-mode
+  :custom (go-ts-mode-indent-offset 4)
+  :hook (go-ts-mode . (lambda ()
+                    (progn
+                      (add-hook 'before-save-hook #'lsp-format-buffer t t)
+                      (add-hook 'before-save-hook #'lsp-organize-imports t t)
+                      (lsp-deferred))))
   )
+
+(use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive t))
 
 (use-package rustic
   :ensure t
@@ -664,6 +676,8 @@ Insert current date at point."
   (rust-mode-hook . lsp-deferred)
   (rust-mode-hook . yas-minor-mode)
   )
+
+(add-hook 'csharp-ts-mode 'lsp-deferred)
 
 (use-package pyvenv :ensure t)
 
@@ -687,12 +701,10 @@ Insert current date at point."
   :ensure t
   )
 
-(use-package
-  yasnippet-snippets
+(use-package yasnippet-snippets
   :ensure t)
 
-(use-package typescript-mode
-  :ensure t
+(use-package typescript-ts-mode
   :mode ("\\.ts$" "\\.tsx$")
   :hook ((typescript-ts-mode-hook . lsp-deferred) (typescript-mode-hook . lsp-deferred)))
 
