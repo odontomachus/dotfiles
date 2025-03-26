@@ -35,7 +35,7 @@
 (tooltip-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(yas-global-mode t)
+
 
 (global-set-key (kbd "C-c C-w") 'subword-mode)
 (global-set-key (kbd "C-c f") 'recentf)
@@ -73,6 +73,11 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+(use-package yasnippet-snippets
+  :ensure t
+  :init
+  (yas-global-mode t))
+
 (use-package company
   :ensure t
   :custom
@@ -93,9 +98,6 @@
   :ensure t
   :config
   (load-theme 'solarized-light t))
-
-(use-package yasnippet-snippets
-  :ensure t)
 
 (use-package rainbow-delimiters
   :ensure t)
