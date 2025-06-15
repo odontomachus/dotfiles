@@ -73,6 +73,9 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
+(use-package editorconfig
+  :config (editorconfig-mode 1))
+
 (use-package yasnippet-snippets
   :ensure t
   :init
@@ -156,7 +159,7 @@
         lice lsp-pyright lsp-ui marginalia mermaid-mode
         mermaid-ts-mode orderless php-cs-fixer plantuml-mode poetry
         projectile rainbow-delimiters rustic solarized-theme
-        swift-mode tide typescript-mode vertico web-mode which-key
+        swift-mode tide typescript-mode vertico which-key
         yasnippet-snippets))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(safe-local-variable-values
@@ -167,6 +170,7 @@
  '(split-height-threshold 160)
  '(tooltip-use-echo-area t)
  '(typescript-indent-level 2)
+ '(typescript-ts-mode-indent-offset 4)
  '(warning-suppress-types '((treesit)))
  '(xref-search-program 'ripgrep))
 
@@ -697,9 +701,6 @@ Insert current date at point."
   :config (add-to-list 'auto-mode-alist '("\\.uml\\'" . plantuml-mode))
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml)))
 
-(use-package web-mode
-  :ensure t)
-
 ;; (setq help-at-pt-display-when-idle t)
 ;; (help-at-pt-set-timer)
 
@@ -716,10 +717,6 @@ Insert current date at point."
 (use-package typescript-ts-mode
   :mode ("\\.ts$" "\\.tsx$")
   :hook ((typescript-ts-mode-hook . lsp-deferred) (typescript-mode-hook . lsp-deferred)))
-
-(use-package edit-indirect
-  :ensure t
-  )
 
 (if (file-exists-p "~/.proton") (progn
                                   (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom/"))
