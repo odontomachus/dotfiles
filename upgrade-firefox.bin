@@ -1,0 +1,26 @@
+set -a
+TMPDIR=$(mktemp -d)
+chmod 700 $TMPDIR
+curl -sL --etag-compare /opt/firefox/etag --etag-save $TMPDIR/etag 'https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=linux64&lang=en-US' -o $TMPDIR/ff.xz &
+CURL_PID=$!
+sleep 0.3 ;
+if ps -p "$CURL_PID" > /dev/null; then
+    sudo echo "" &>/dev/null
+fi
+wait $CURL_PID ; CURL_STATUS=$?
+if [ $CURL_STATUS -eq 0 ]; then
+    if [ -f $TMPDIR/ff.xz ] ; then
+        cd $TMPDIR
+        sudo echo "" &>/dev/null
+        tar xJf $TMPDIR/ff.xz
+        mv etag $TMPDIR/firefox/
+        sudo rsync -rp firefox/ /opt/firefox/
+        sudo chown -R nobody:nobody /opt/firefox
+        rm -r $TMPDIR/firefox $TMPDIR/ff.xz
+        echo "Updated firefox"
+    else
+        echo "Nothing to update"
+    fi
+fi
+rm -r $TMPDIR/etag
+rmdir $TMPDIR
