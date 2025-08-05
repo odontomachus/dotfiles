@@ -9,6 +9,7 @@
 (print "Loading proton mode")
 
 (add-hook 'csharp-mode-hook 'lsp-deferred)
+(add-hook 'csharp-ts-mode-hook 'lsp-deferred)
 (add-hook 'php-mode-hook 'lsp-deferred)
 
 

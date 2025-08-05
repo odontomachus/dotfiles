@@ -94,7 +94,7 @@ export NVM_DIR="/home/jonathan/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # use stable nodejs
-nvm use stable > /dev/null &
+nvm use stable &> /dev/null &
 # . $HOME/.asdf/asdf.sh
 
 # . $HOME/.asdf/completions/asdf.bash
@@ -119,3 +119,8 @@ export _JAVA_OPTIONS="-Djava.io.tmpdir=/var/tmp/java $_JAVA_OPTIONS"
 [ -d /opt/android-sdk/platform-tools ] && PATH=$PATH:/opt/android-sdk/platform-tools
 
 [ -e /home/jonathan/.config/broot/launcher/bash/br ] && . /home/jonathan/.config/broot/launcher/bash/br
+test -d /mnt/proton/dotnet && export DOTNET_ROOT=/mnt/proton/dotnet || ( test -d $HOME/.dotnet && export DOTNET_ROOT=$HOME/.dotnet )
+test -d $DOTNET_ROOT && export PATH=${DOTNET_ROOT}:${DOTNET_ROOT}/tools:$PATH
+
+# created by espup for rust esp programming
+[ -f ~/export-esp.sh ] && . ~/export-esp.sh

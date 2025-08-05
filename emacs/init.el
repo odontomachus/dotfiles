@@ -153,17 +153,25 @@
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
  '(package-selected-packages
-   '(ag company-jedi company-phpactor consult-lsp dap-mode edit-indirect
+   '(ag aidermacs company-jedi company-phpactor consult-lsp dap-mode
         elixir-mode ellama elpy embark-consult flycheck-phpstan forge
-        git-link gitlab-ci-mode graphviz-dot-mode jedi kotlin-mode
-        lice lsp-pyright lsp-ui marginalia mermaid-mode
+        git-link gitlab-ci-mode gptel graphviz-dot-mode jedi
+        kotlin-mode lice lsp-pyright lsp-ui marginalia mermaid-mode
         mermaid-ts-mode orderless php-cs-fixer plantuml-mode poetry
         projectile rainbow-delimiters rustic solarized-theme
-        swift-mode tide typescript-mode vertico which-key
+        swift-mode tide true typescript-mode vertico which-key
         yasnippet-snippets))
+ '(package-vc-selected-packages
+   '((aidermacs :url "https://github.com/odontomachus/aidermacs")))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(safe-local-variable-values
-   '((php-project-root . git) (php-project-root . default-directory)))
+   '((lsp-rust-analyzer-server-settings
+      (check
+       (overrideCommand
+        . ["cargo" "check" "+esp" "--message-format=json"
+           "--all-targets"])))
+     (flycheck-checker . lsp) (php-project-root . git)
+     (php-project-root . default-directory)))
  '(savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
  '(savehist-file "~/.emacs.d/savehist")
  '(savehist-save-minibuffer-history 1)
@@ -188,13 +196,9 @@
   :custom
   (major-mode-remap-alist
    '((python-mode     . python-ts-mode)
-     (bash-mode       . bash-ts-mode)
-     (sh-mode         . bash-ts-mode)
-     (sh-base-mode    . bash-ts-mode)
      (php-mode        . php-ts-mode)
      (c-mode          . c-ts-mode)
      (c++-mode        . c++-ts-mode)
-     (conf-toml-mode  . toml-ts-mode)
      (elixir-mode     . elixir-ts-mode)
      (css-mode        . css-ts-mode)
      (javascript-mode . js-ts-mode)
@@ -411,8 +415,8 @@
   ;; jarring since the message shown in the minibuffer can be more
   ;; than one line, causing the modeline to move up and down:
 
-  ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-  ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+  (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+  (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
 
   :config
 
@@ -718,10 +722,11 @@ Insert current date at point."
   :mode ("\\.ts$" "\\.tsx$")
   :hook ((typescript-ts-mode-hook . lsp-deferred) (typescript-mode-hook . lsp-deferred)))
 
-(if (file-exists-p "~/.proton") (progn
-                                  (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom/"))
-                                  (require 'proton)
-                                  ))
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/custom/"))
+
+(if (file-exists-p "~/.proton") (require 'proton))
+
+(require 'ai)
 
 (provide 'init)
 ;;; init.el ends here
