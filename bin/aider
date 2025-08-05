@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Default volume to mount
+DEFAULT_VOLUME="$(pwd)"
+MOUNT_VOLUME="$DEFAULT_VOLUME"
+
+# Check if --mount is the first argument
+if [[ "$1" == "--mount" ]]; then
+  if [ -n "$2" ]; then
+    MOUNT_VOLUME="$2"
+    shift 2 # Consume --mount and its value
+  else
+    echo "Error: --mount option requires an argument (the path to mount)." >&2
+    exit 1
+  fi
+fi
+
+# Ensure the provided volume path is absolute
+if [[ ! "$MOUNT_VOLUME" = /* ]]; then
+  # If it's a relative path, resolve it against the current working directory
+  MOUNT_VOLUME="$(pwd)/$MOUNT_VOLUME"
+fi
+
+if [ -t 1 ] ; then
+    AIDER_TTY="--tty --interactive"
+fi;
+
+# Define your Podman command
+PODMAN_CMD="podman run \
+  --rm \
+  --volume ${MOUNT_VOLUME}:/app:z \
+  --secret gemini_api_key,type=env,target=GEMINI_API_KEY \
+  --user $(id -u):$(id -g) \
+  --userns keep-id"
+
+# podman secret ls |grep -q api_key
+
+AIDER_IMAGE="docker.io/paulgauthier/aider-full:latest" # Or your custom Aider image
+
+# Pass all remaining arguments (which are now the actual aider arguments) to aider inside the container
+echo exec ${PODMAN_CMD} ${AIDER_TTY} ${AIDER_IMAGE} "$@" >/tmp/aider.log
+exec ${PODMAN_CMD} ${AIDER_TTY} ${AIDER_IMAGE} "$@"
