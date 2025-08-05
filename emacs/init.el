@@ -152,15 +152,7 @@
      ("rust" . rust-mode) ("sql" . sql-mode) ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
- '(package-selected-packages
-   '(ag aidermacs company-jedi company-phpactor consult-lsp dap-mode
-        elixir-mode ellama elpy embark-consult flycheck-phpstan forge
-        git-link gitlab-ci-mode gptel graphviz-dot-mode jedi
-        kotlin-mode lice lsp-pyright lsp-ui marginalia mermaid-mode
-        mermaid-ts-mode orderless php-cs-fixer plantuml-mode poetry
-        projectile rainbow-delimiters rustic solarized-theme
-        swift-mode tide true typescript-mode vertico which-key
-        yasnippet-snippets))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((aidermacs :url "https://github.com/odontomachus/aidermacs")))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
@@ -196,7 +188,6 @@
   :custom
   (major-mode-remap-alist
    '((python-mode     . python-ts-mode)
-     (php-mode        . php-ts-mode)
      (c-mode          . c-ts-mode)
      (c++-mode        . c++-ts-mode)
      (elixir-mode     . elixir-ts-mode)
@@ -218,6 +209,8 @@
 (org-babel-do-load-languages
  (quote org-babel-load-languages)
  (quote ((emacs-lisp . t)
+         (lisp . t)
+         (shell . t)
          (java . t)
          (dot . t)
          (ditaa . t)
