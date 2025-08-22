@@ -129,6 +129,9 @@
  '(flycheck-markdown-markdownlint-cli-config
    '(".markdownlint.json" ".markdownlint.jsonc" ".markdownlint.yaml"
      ".pymarkdown.yml"))
+ '(flycheck-markdown-pymarkdown-config
+   '(".markdownlint.json" ".markdownlint.jsonc" ".markdownlint.yaml"
+     ".pymarkdown.yml"))
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 2)
  '(lsp-file-watch-ignored-directories
@@ -152,9 +155,18 @@
      ("rust" . rust-mode) ("sql" . sql-mode) ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(ag aidermacs claude-?code claude-code company-phpactor consult-lsp
+        dap-mode difftastic edit-indirect ellama embark-consult
+        flycheck-phpstan forge git-link gitlab-ci-mode gptel
+        graphviz-dot-mode kotlin-mode lice lsp-pyright lsp-ui
+        marginalia mermaid-mode mermaid-ts-mode orderless php-cs-fixer
+        plantuml-mode poetry projectile rainbow-delimiters rustic
+        solarized-theme swift-mode vertico vterm web-mode
+        yasnippet-snippets))
  '(package-vc-selected-packages
-   '((aidermacs :url "https://github.com/odontomachus/aidermacs")))
+   '((claude-code :url "https://github.com/stevemolitor/claude-code.el")
+     (aidermacs :url "https://github.com/odontomachus/aidermacs")))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(safe-local-variable-values
    '((lsp-rust-analyzer-server-settings
@@ -588,6 +600,10 @@ Insert current date at point."
 (use-package magit
   :ensure t)
 
+(use-package difftastic-bindings
+  :ensure difftastic ;; or nil if you prefer manual installation
+  :config (difftastic-bindings-mode))
+
 (use-package forge
   :ensure t
   :after magit)
@@ -707,6 +723,8 @@ Insert current date at point."
 (use-package git-link
   :ensure t
   )
+
+(add-hook 'elixir-ts-mode 'lsp-deferred)
 
 (use-package yasnippet-snippets
   :ensure t)
