@@ -5,11 +5,13 @@ curl -sL --etag-compare /opt/firefox/etag --etag-save $TMPDIR/etag 'https://down
 CURL_PID=$!
 sleep 0.3 ;
 if ps -p "$CURL_PID" > /dev/null; then
+    echo "Downloading, grant permissions for installation"
     sudo echo "" &>/dev/null
 fi
 wait $CURL_PID ; CURL_STATUS=$?
 if [ $CURL_STATUS -eq 0 ]; then
     if [ -f $TMPDIR/ff.xz ] ; then
+        echo "Installing"
         cd $TMPDIR
         sudo echo "" &>/dev/null
         tar xJf $TMPDIR/ff.xz
@@ -22,5 +24,5 @@ if [ $CURL_STATUS -eq 0 ]; then
         echo "Nothing to update"
     fi
 fi
-rm -r $TMPDIR/etag
+rm -f $TMPDIR/etag
 rmdir $TMPDIR

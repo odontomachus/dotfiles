@@ -12,13 +12,6 @@ fi
 # exit if we're not running an interactive shell
 [ -z "$PS1" ] && return
 
-# User specific environment
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
-then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-fi
-export PATH
-
 # Turn the **** bell off
 set bell-style none
 
@@ -57,6 +50,8 @@ rmvenv () {
 alias spwd='/bin/pwd > '$HOME'/.spwd'
 alias lpwd='cd "`cat '$HOME'/.spwd`"'
 alias va='. .venv/bin/activate'
+alias ip="ip -c"
+alias docker-compose=podman-compose
 
 export EDITOR=emacs
 export VISUAL=emacs
@@ -90,37 +85,24 @@ export LC_ALL="en_US.utf8"
 # No accessibility bridge.
 export NO_AT_BRIDGE=1
 
-export NVM_DIR="/home/jonathan/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-# use stable nodejs
-nvm use stable &> /dev/null &
-# . $HOME/.asdf/asdf.sh
-
-# . $HOME/.asdf/completions/asdf.bash
-
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '~/.local/lib/google-cloud-sdk/path.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/path.bash.inc'; fi
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -d "$HOME/go/bin" ]; then PATH="$PATH:~/go/bin"; fi
-
-
 # The next line enables shell command completion for gcloud.
 if [ -f '/.local/lib/google-cloud-sdk/completion.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/completion.bash.inc'; fi
-alias docker-compose=podman-compose
+
 [ -e $HOME/.config/podman/auth.json ] && export REGISTRY_AUTH_FILE=$HOME/.config/podman/auth.json
 
-alias ip="ip -c"
-
 export _JAVA_OPTIONS="-Djava.io.tmpdir=/var/tmp/java $_JAVA_OPTIONS"
+export PATH
 [ -d /opt/android-sdk/platform-tools ] && PATH=$PATH:/opt/android-sdk/platform-tools
 
 [ -e /home/jonathan/.config/broot/launcher/bash/br ] && . /home/jonathan/.config/broot/launcher/bash/br
-test -d /mnt/proton/dotnet && export DOTNET_ROOT=/mnt/proton/dotnet || ( test -d $HOME/.dotnet && export DOTNET_ROOT=$HOME/.dotnet )
-test -d $DOTNET_ROOT && export PATH=${DOTNET_ROOT}:${DOTNET_ROOT}/tools:$PATH
+
 
 # created by espup for rust esp programming
 [ -f ~/export-esp.sh ] && . ~/export-esp.sh
+
+. <(asdf completion bash)

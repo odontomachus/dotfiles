@@ -29,7 +29,7 @@ fi;
 PODMAN_CMD="podman run \
   --rm \
   --volume ${MOUNT_VOLUME}:/app:z \
-  --secret gemini_api_key,type=env,target=GEMINI_API_KEY \
+  --secret work_api_mistral,type=env,target=MISTRAL_API_KEY \
   --user $(id -u):$(id -g) \
   --userns keep-id"
 
