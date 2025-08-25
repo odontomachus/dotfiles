@@ -202,7 +202,6 @@
    '((python-mode     . python-ts-mode)
      (c-mode          . c-ts-mode)
      (c++-mode        . c++-ts-mode)
-     (elixir-mode     . elixir-ts-mode)
      (css-mode        . css-ts-mode)
      (javascript-mode . js-ts-mode)
      (typescript-mode . typescript-ts-mode)
@@ -211,6 +210,7 @@
   :config
   (add-to-list 'auto-mode-alist
                '("\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'" . cmake-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.exs?\\'" . elixir-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.go\\.mod\\'" . go-mod-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-ts-mode))
@@ -703,7 +703,7 @@ Insert current date at point."
   (rust-mode-hook . yas-minor-mode)
   )
 
-(add-hook 'csharp-ts-mode 'lsp-deferred)
+(add-hook 'csharp-ts-mode-hook 'lsp-deferred)
 
 (use-package pyvenv :ensure t)
 
@@ -724,7 +724,7 @@ Insert current date at point."
   :ensure t
   )
 
-(add-hook 'elixir-ts-mode 'lsp-deferred)
+(add-hook 'elixir-ts-mode-hook 'lsp-deferred)
 
 (use-package yasnippet-snippets
   :ensure t)

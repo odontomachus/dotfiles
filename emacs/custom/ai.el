@@ -13,8 +13,8 @@
   :custom
   (aidermacs-custom-args '(lambda () (list "--mount" (projectile-project-root))))
   (aidermacs-default-chat-mode 'architect)
-  (aidermacs-default-model "mistral/devstral-medium-2507")
-  (aidermacs-weak-model "mistral/devstral-medium-2507"))
+  (aidermacs-default-model "mistral/devstral-medium-latest")
+  (aidermacs-weak-model "mistral/magistral-small-latest"))
 ;;; https://ai.google.dev/gemini-api/docs/models#model-versions
 
 
