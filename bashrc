@@ -105,4 +105,4 @@ export PATH
 # created by espup for rust esp programming
 [ -f ~/export-esp.sh ] && . ~/export-esp.sh
 
-. <(asdf completion bash)
+command -v asdf &>/dev/null && . <(asdf completion bash)
