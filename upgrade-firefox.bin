@@ -1,13 +1,20 @@
 set -a
+
 TMPDIR=$(mktemp -d)
 chmod 700 $TMPDIR
 curl -sL --etag-compare /opt/firefox/etag --etag-save $TMPDIR/etag 'https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=linux64&lang=en-US' -o $TMPDIR/ff.xz &
 CURL_PID=$!
-sleep 0.3 ;
+sleep 0.4 ;
+for i in `seq 10`; do
+    if ps -p "$CURL_PID" > /dev/null; then
+        sleep 0.1
+    fi
+done
 if ps -p "$CURL_PID" > /dev/null; then
     echo "Downloading, grant permissions for installation"
     sudo echo "" &>/dev/null
 fi
+
 wait $CURL_PID ; CURL_STATUS=$?
 if [ $CURL_STATUS -eq 0 ]; then
     if [ -f $TMPDIR/ff.xz ] ; then

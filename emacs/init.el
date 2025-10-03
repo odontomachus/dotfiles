@@ -678,6 +678,9 @@ Insert current date at point."
 (add-hook 'c-mode-hook 'lsp-deferred)
 (add-hook 'c++-mode-hook 'lsp-deferred)
 
+(add-hook 'c-ts-mode-hook 'lsp-deferred)
+(add-hook 'c++-ts-mode-hook 'lsp-deferred)
+
 (use-package typescript-ts-mode
   :hook (typescript-ts-mode . lsp-deferred)
 )
