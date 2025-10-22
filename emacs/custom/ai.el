@@ -5,20 +5,6 @@
 (use-package gptel
   :ensure t)
 
-(use-package aidermacs
-  :vc (:url "https://github.com/odontomachus/aidermacs"
-       :rev "feat/enable-custom-lambda-arguments-for-aider")
-  :ensure t
-  :bind (("C-c a" . aidermacs-transient-menu))
-  :custom
-  (aidermacs-custom-args '(lambda () (list "--mount" (projectile-project-root))))
-  (aidermacs-default-chat-mode 'architect)
-  (aidermacs-default-model "mistral/devstral-medium-latest")
-  (aidermacs-weak-model "mistral/magistral-small-latest"))
-;;; https://ai.google.dev/gemini-api/docs/models#model-versions
-
-
-
 (gptel-make-gemini "Gemini pro"
    :key (secrets-get-secret "kdewallet" "api-keys/gemini-api-key")
    :stream t)

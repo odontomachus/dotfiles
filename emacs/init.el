@@ -20,7 +20,7 @@
       show-trailing-whitespace t
       confirm-nonexistent-file-or-buffer nil
       gc-cons-threshold 100000000
-      read-process-output-max (* 1024 1024 4)
+      read-process-output-max (* 1024 1024)
       ;; Speedup long lines
       bidi-inhibit-bpa t
       global-visual-line-mode t
@@ -126,6 +126,7 @@
      default))
  '(delq nil t)
  '(eldoc-idle-delay 0.3)
+ '(flycheck-checker-error-threshold 1000)
  '(flycheck-markdown-markdownlint-cli-config
    '(".markdownlint.json" ".markdownlint.jsonc" ".markdownlint.yaml"
      ".pymarkdown.yml"))
@@ -156,14 +157,13 @@
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
  '(package-selected-packages
-   '(ag aidermacs claude-?code claude-code company-phpactor consult-lsp
-        dap-mode difftastic edit-indirect ellama embark-consult
-        flycheck-phpstan forge git-link gitlab-ci-mode gptel
-        graphviz-dot-mode kotlin-mode lice lsp-pyright lsp-ui
+   '(ag claude-code company-phpactor dape difftastic edit-indirect ellama
+        embark-consult f flycheck-phpstan forge git-link
+        gitlab-ci-mode gptel graphviz-dot-mode kotlin-mode lice
         marginalia mermaid-mode mermaid-ts-mode orderless php-cs-fixer
-        plantuml-mode poetry projectile rainbow-delimiters rustic
-        solarized-theme swift-mode vertico vterm web-mode
-        yasnippet-snippets))
+        plantuml-mode poetry projectile protobuf-mode
+        rainbow-delimiters rustic solarized-theme swift-mode treemacs
+        vertico vterm web-mode yasnippet-snippets))
  '(package-vc-selected-packages
    '((claude-code :url "https://github.com/stevemolitor/claude-code.el")
      (aidermacs :url "https://github.com/odontomachus/aidermacs")))
@@ -183,7 +183,7 @@
  '(tooltip-use-echo-area t)
  '(typescript-indent-level 2)
  '(typescript-ts-mode-indent-offset 4)
- '(warning-suppress-types '((treesit)))
+ '(warning-suppress-types '((lsp-mode) (treesit)))
  '(xref-search-program 'ripgrep))
 
 (custom-set-faces
@@ -404,15 +404,15 @@
    ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
-  :init
+  ;;:init
 
   ;; Optionally replace the key help with a completing-read interface
-  (setq prefix-help-command #'embark-prefix-help-command
-        embark-indicators
-        '(embark-minimal-indicator  ; default is embark-mixed-indicator
-          embark-highlight-indicator
-          embark-isearch-highlight-indicator)
-        )
+  ;; (setq prefix-help-command #'embark-prefix-help-command
+  ;;       embark-indicators
+  ;;       '(embark-minimal-indicator  ; default is embark-mixed-indicator
+  ;;         embark-highlight-indicator
+  ;;         embark-isearch-highlight-indicator)
+  ;;       )
 
   ;; Show the Embark target at point via Eldoc. You may adjust the
   ;; Eldoc strategy, if you want to see the documentation from
@@ -420,8 +420,8 @@
   ;; jarring since the message shown in the minibuffer can be more
   ;; than one line, causing the modeline to move up and down:
 
-  (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-  (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+  ;;(add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+  ;;(setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
 
   :config
 
@@ -611,88 +611,89 @@ Insert current date at point."
 (use-package gitlab-ci-mode
   :ensure t)
 
-(use-package lsp-mode
-  :ensure t
-  :after company
-  :init (setq lsp-keymap-prefix (kbd "C-c l"))
-  :custom (lsp-prefer-capf t)
-  (lsp-eldoc-enable-hover t)
-  (lsp-log-io nil)
-  (lsp-semantic-highlighting t)
-  (lsp-enable-xref t)
-  (lsp-signature-auto-activate t)
-  (lsp-signature-render-documentation t)
-  (lsp-file-watch-ignored '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
-  (lsp-file-watch-threshold 30000)
-  (lsp-intelephense-php-version "8.2.0")
-  (lsp-intelephense-files-exclude
-   ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
-                                        ; (lsp-idle-display . 0.500)
-  :commands (lsp))
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :after company
+;;   :init (setq lsp-keymap-prefix (kbd "C-c l"))
+;;   :custom (lsp-prefer-capf t)
+;;   (lsp-eldoc-enable-hover t)
+;;   (lsp-log-io nil)
+;;   (lsp-semantic-highlighting t)
+;;   (lsp-enable-xref t)
+;;   (lsp-signature-auto-activate t)
+;;   (lsp-signature-render-documentation t)
+;;   (lsp-file-watch-ignored '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
+;;   (lsp-file-watch-threshold 30000)
+;;   (lsp-intelephense-php-version "8.2.0")
+;;   (lsp-intelephense-files-exclude
+;;    ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
+;;                                         ; (lsp-idle-display . 0.500)
+;;   :commands (lsp))
 
-(use-package lsp-ui
-  :ensure t
-  :after lsp-mode flycheck
-  :custom
-  (lsp-ui-sideline-enable t)
-  (lsp-ui-sideline-show-diagnostics t)
-  (lsp-ui-sideline-show-code-actions t)
-  (lsp-ui-sideline-show-hover nil)
-  (lsp-ui-peek-enable t)
-  (lsp-ui-peek--offset 10)
-  (lsp-ui-peek-always-show t)
-  (lsp-ui-peek-list-width 92)
-  (lsp-ui-peek-peek-height 24)
-  (lsp-ui-doc-enable t)
-  (lsp-ui-doc-show-with-cursor t)
-  (lsp-ui-doc-include-signature t)
-  (lsp-signature-auto-activate t)
-  (lsp-lens-enable t)
-  (lsp-signature-render-documentation t)
-  :hook (lsp-mode-hook . lsp-ui-mode))
+;; (use-package lsp-ui
+;;   :ensure t
+;;   :after lsp-mode flycheck
+;;   :custom
+;;   (lsp-ui-sideline-enable t)
+;;   (lsp-ui-sideline-show-diagnostics t)
+;;   (lsp-ui-sideline-show-code-actions t)
+;;   (lsp-ui-sideline-show-hover nil)
+;;   (lsp-ui-peek-enable t)
+;;   (lsp-ui-peek--offset 10)
+;;   (lsp-ui-peek-always-show t)
+;;   (lsp-ui-peek-list-width 92)
+;;   (lsp-ui-peek-peek-height 24)
+;;   (lsp-ui-doc-enable t)
+;;   (lsp-ui-doc-show-with-cursor t)
+;;   (lsp-ui-doc-include-signature t)
+;;   (lsp-signature-auto-activate t)
+;;   (lsp-lens-enable t)
+;;   (lsp-signature-render-documentation t)
+;;   :hook (lsp-mode-hook . lsp-ui-mode))
 
-(use-package consult-lsp
-  :ensure t)
+;; (use-package consult-lsp
+;;   :ensure t)
 
-(use-package lsp-pyright
-  :ensure t
-  :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
-  :hook (python-ts-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp-deferred))))
+;; (use-package lsp-pyright
+;;   :ensure t
+;;   :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
+;;   :hook (python-ts-mode . (lambda ()
+;;                           (require 'lsp-pyright)
+;;                           (lsp-deferred))))
 
-(use-package dap-mode
-  :ensure t
-  :after lsp-mode
-  :config
-  (dap-mode t)
-  (dap-ui-mode t))
+;; (use-package dap-mode
+;;   :ensure t
+;; ;;  :after lsp-mode
+;;   :config
+;;   (dap-mode t)
+;;   (dap-ui-mode t))
 
 (use-package treemacs
   :ensure t)
 
-(use-package lsp-treemacs
-  :ensure t
-  :defer t)
+;; (use-package lsp-treemacs
+;;   :ensure t
+;;   :defer t)
 
-(add-hook 'c-mode-hook 'lsp-deferred)
-(add-hook 'c++-mode-hook 'lsp-deferred)
+;; (add-hook 'c-mode-hook 'lsp-deferred)
+;; (add-hook 'c++-mode-hook 'lsp-deferred)
 
-(add-hook 'c-ts-mode-hook 'lsp-deferred)
-(add-hook 'c++-ts-mode-hook 'lsp-deferred)
+;; (add-hook 'c-ts-mode-hook 'lsp-deferred)
+;; (add-hook 'c++-ts-mode-hook 'lsp-deferred)
 
-(use-package typescript-ts-mode
-  :hook (typescript-ts-mode . lsp-deferred)
-)
+;; (use-package typescript-ts-mode
+;;   :hook (typescript-ts-mode . lsp-deferred)
+;; )
 
 
 (use-package go-ts-mode
   :custom (go-ts-mode-indent-offset 4)
   :hook (go-ts-mode . (lambda ()
                     (progn
-                      (add-hook 'before-save-hook #'lsp-format-buffer t t)
-                      (add-hook 'before-save-hook #'lsp-organize-imports t t)
-                      (lsp-deferred))))
+;;                      (add-hook 'before-save-hook #'lsp-format-buffer t t)
+;;                      (add-hook 'before-save-hook #'lsp-organize-imports t t)
+;;                      (lsp-deferred)
+                      )))
   )
 
 (use-package rust-mode
@@ -701,12 +702,13 @@ Insert current date at point."
 
 (use-package rustic
   :ensure t
+  :after (rust-mode)
   :hook
-  (rust-mode-hook . lsp-deferred)
+;;  (rust-mode-hook . lsp-deferred)
   (rust-mode-hook . yas-minor-mode)
   )
 
-(add-hook 'csharp-ts-mode-hook 'lsp-deferred)
+;; (add-hook 'csharp-ts-mode-hook 'lsp-deferred)
 
 (use-package pyvenv :ensure t)
 
@@ -727,16 +729,82 @@ Insert current date at point."
   :ensure t
   )
 
-(add-hook 'elixir-ts-mode-hook 'lsp-deferred)
+;; (add-hook 'elixir-ts-mode-hook 'lsp-deferred)
 
 (use-package yasnippet-snippets
   :ensure t)
 
 (use-package typescript-ts-mode
   :mode ("\\.ts$" "\\.tsx$")
-  :hook ((typescript-ts-mode-hook . lsp-deferred) (typescript-mode-hook . lsp-deferred)))
+  ;;  :hook ((typescript-ts-mode-hook . lsp-deferred) (typescript-mode-hook . lsp-deferred))
+  )
 
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom/"))
+
+
+(use-package eglot
+  :ensure t
+  :custom
+  (eglot-display-mapping-mode t)
+  (company-show-numbers t)
+  (eglot-enable-eldoc-preview t)
+  :hook
+  (python-ts-mode . eglot-ensure)
+  (go-ts-mode . eglot-ensure)
+  (rust-mode . eglot-ensure)
+  (typescript-ts-mode . eglot-ensure)
+  (c-ts-mode . eglot-ensure)
+  (c++-ts-mode . eglot-ensure)
+  (elixir-ts-mode . eglot-ensure)
+  (eglot-mode . (lambda () (deactivate-mark)))
+  )
+
+(use-package dape
+  :ensure t
+  :preface
+  ;; By default dape shares the same keybinding prefix as `gud'
+  ;; If you do not want to use any prefix, set it to nil.
+  ;; (setq dape-key-prefix "\C-x\C-a")
+
+  :hook
+  ;; Save breakpoints on quit
+  (kill-emacs . dape-breakpoint-save)
+  ;; Load breakpoints on startup
+  (after-init . dape-breakpoint-load)
+
+  :custom
+  ;; Turn on global bindings for setting breakpoints with mouse
+  (dape-breakpoint-global-mode +1)
+
+  ;; Info buffers to the right
+  (dape-buffer-window-arrangement 'right)
+  ;; Info buffers like gud (gdb-mi)
+  (dape-buffer-window-arrangement 'gud)
+  (dape-info-hide-mode-line nil)
+
+  ;; Projectile users
+  (dape-cwd-function #'projectile-project-root)
+
+  :config
+  ;; Pulse source line (performance hit)
+  ;; (add-hook 'dape-display-source-hook #'pulse-momentary-highlight-one-line)
+
+  ;; Save buffers on startup, useful for interpreted languages
+  ;; (add-hook 'dape-start-hook (lambda () (save-some-buffers t t)))
+
+  ;; Kill compile buffer on build success
+  (add-hook 'dape-compile-hook #'kill-buffer)
+  )
+
+;; For a more ergonomic Emacs and `dape' experience
+(use-package repeat
+  :custom
+  (repeat-mode +1))
+
+;; Left and right side windows occupy full frame height
+(use-package emacs
+  :custom
+  (window-sides-vertical t))
 
 (if (file-exists-p "~/.proton") (require 'proton))
 
