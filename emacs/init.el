@@ -168,6 +168,7 @@
    '((claude-code :url "https://github.com/stevemolitor/claude-code.el")
      (aidermacs :url "https://github.com/odontomachus/aidermacs")))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
+ '(rustic-lsp-client 'eglot)
  '(safe-local-variable-values
    '((lsp-rust-analyzer-server-settings
       (check
@@ -598,7 +599,9 @@ Insert current date at point."
   :config (global-flycheck-mode t))
 
 (use-package magit
-  :ensure t)
+  :ensure t
+  :bind (("C-c g" . magit-status))
+  )
 
 (use-package difftastic-bindings
   :ensure difftastic ;; or nil if you prefer manual installation
@@ -745,9 +748,16 @@ Insert current date at point."
 (use-package eglot
   :ensure t
   :custom
+  (eglot-autoshutdown t)
   (eglot-display-mapping-mode t)
   (company-show-numbers t)
   (eglot-enable-eldoc-preview t)
+  :bind (:map eglot-mode-map
+	      ("C-c l a" . eglot-code-actions)
+	      ("C-c l r" . eglot-rename)
+	      ("C-c l h" . eldoc)
+	      ("C-c l f" . eglot-format)
+	      ("C-c l F" . eglot-format-buffer))
   :hook
   (python-ts-mode . eglot-ensure)
   (go-ts-mode . eglot-ensure)
