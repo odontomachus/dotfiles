@@ -161,9 +161,9 @@
         embark-consult f flycheck-phpstan forge git-link
         gitlab-ci-mode gptel graphviz-dot-mode kotlin-mode lice
         marginalia mermaid-mode mermaid-ts-mode orderless php-cs-fixer
-        plantuml-mode poetry projectile protobuf-mode
-        rainbow-delimiters rustic solarized-theme swift-mode treemacs
-        vertico vterm web-mode yasnippet-snippets))
+        plantuml-mode poetry protobuf-mode rainbow-delimiters rustic
+        solarized-theme swift-mode treemacs vertico vterm web-mode
+        yasnippet-snippets))
  '(package-vc-selected-packages
    '((claude-code :url "https://github.com/stevemolitor/claude-code.el")
      (aidermacs :url "https://github.com/odontomachus/aidermacs")))
@@ -250,25 +250,6 @@
 (use-package which-key
   :ensure t
   :init (which-key-mode))
-
-(use-package projectile
-  :ensure t
-  :custom
-  (projectile-sort-order 'recently-active)
-  :bind-keymap ("C-c p" . projectile-command-map)
-  :config
-  (projectile-mode +1)
-  (projectile-register-project-type 'php '("composer.json")
-				    :src-dir "apps"
-				    :test "composer test"
-				    :run "composer serve"
-				    :test-suffix "Test"
-				    :test-dir "tests")
-  (projectile-register-project-type 'js '("package.json")
-				    :test "composer test"
-				    :run "composer serve"
-				    :test-suffix "Test"
-				    :test-dir "tests"))
 
 (use-package ace-window
   :ensure t)
@@ -793,7 +774,7 @@ Insert current date at point."
   (dape-info-hide-mode-line nil)
 
   ;; Projectile users
-  (dape-cwd-function #'projectile-project-root)
+  ;; (dape-cwd-function #'projectile-project-root)
 
   :config
   ;; Pulse source line (performance hit)
