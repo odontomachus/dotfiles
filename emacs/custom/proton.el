@@ -28,10 +28,7 @@
 (use-package php-mode
   :ensure t
   :custom
-  (flycheck-php-phpcs-executable "~/.config/composer/vendor/bin/phpcs")
-  (flycheck-php-phpmd-executable "~/.config/composer/vendor/bin/phpmd")
   (phpcbf-executable "~/.config/composer/vendor/bin/phpcbf")
-  (flycheck-phpcs-standard "PSR12")
   (php-mode-coding-style (quote symfony2))
   (lsp-intelephense-licence-key iphlicence)
   (lsp-intelephense-php-version "8.2.0")
@@ -64,12 +61,8 @@
 (use-package swift-mode
   :ensure t)
 
-(use-package flycheck-phpstan
-      :ensure t)
-
 (use-package php-cs-fixer
       :ensure t)
-
 
 (use-package mermaid-mode
       :ensure t

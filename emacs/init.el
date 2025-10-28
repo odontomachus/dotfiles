@@ -157,13 +157,12 @@
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
  '(package-selected-packages
-   '(ag claude-code company-phpactor dape difftastic edit-indirect ellama
-        embark-consult f flycheck-phpstan forge git-link
-        gitlab-ci-mode gptel graphviz-dot-mode kotlin-mode lice
-        marginalia mermaid-mode mermaid-ts-mode orderless php-cs-fixer
-        plantuml-mode poetry protobuf-mode rainbow-delimiters rustic
-        solarized-theme swift-mode treemacs vertico vterm web-mode
-        yasnippet-snippets))
+   '(ag claude-code company-phpactor dape edit-indirect ellama
+        embark-consult f forge git-link gitlab-ci-mode gptel
+        graphviz-dot-mode kotlin-mode lice marginalia mermaid-mode
+        mermaid-ts-mode orderless php-cs-fixer plantuml-mode poetry
+        protobuf-mode rainbow-delimiters rustic solarized-theme
+        swift-mode treemacs vertico vterm web-mode yasnippet-snippets))
  '(package-vc-selected-packages
    '((claude-code :url "https://github.com/stevemolitor/claude-code.el")
      (aidermacs :url "https://github.com/odontomachus/aidermacs")))
@@ -574,10 +573,6 @@ Insert current date at point."
 ;; Licence headers & content
 (use-package lice
   :ensure t)
-
-(use-package flycheck
-  :ensure t
-  :config (global-flycheck-mode t))
 
 (use-package magit
   :ensure t
