@@ -156,16 +156,6 @@
      ("rust" . rust-mode) ("sql" . sql-mode) ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
- '(package-selected-packages
-   '(ag claude-code company-phpactor dape edit-indirect ellama
-        embark-consult f forge git-link gitlab-ci-mode gptel
-        graphviz-dot-mode kotlin-mode lice marginalia mermaid-mode
-        mermaid-ts-mode orderless php-cs-fixer plantuml-mode poetry
-        protobuf-mode rainbow-delimiters rustic solarized-theme
-        swift-mode treemacs vertico vterm web-mode yasnippet-snippets))
- '(package-vc-selected-packages
-   '((claude-code :url "https://github.com/stevemolitor/claude-code.el")
-     (aidermacs :url "https://github.com/odontomachus/aidermacs")))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(rustic-lsp-client 'eglot)
  '(safe-local-variable-values
@@ -347,8 +337,6 @@
    consult-theme :preview-key '(:debounce 0.2 any)
    consult-ripgrep consult-git-grep consult-grep
    consult-bookmark consult-recent-file consult-xref
-   consult--source-bookmark consult--source-file-register
-   consult--source-recent-file consult--source-project-recent-file
    ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any))
 
@@ -743,6 +731,15 @@ Insert current date at point."
   (c++-ts-mode . eglot-ensure)
   (elixir-ts-mode . eglot-ensure)
   (eglot-mode . (lambda () (deactivate-mark)))
+  :config
+  ;; Force eglot to use pylsp for both standard and tree-sitter python modes
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode) . ("poetry" "run" "pylsp")))
+  )
+
+(use-package consult-eglot
+  :ensure t
+  :after consult
   )
 
 (use-package dape
