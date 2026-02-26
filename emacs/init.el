@@ -39,7 +39,7 @@
 
 (global-set-key (kbd "C-c C-w") 'subword-mode)
 (global-set-key (kbd "C-c f") 'recentf)
-(global-set-key (kbd "C-c j C-f") #'(lambda () (interactive) (kill-new buffer-file-name)))
+(global-set-key (kbd "C-c j f") #'(lambda () (interactive) (kill-new buffer-file-name)))
 
 (setq-default indent-tabs-mode nil)
 
@@ -621,6 +621,10 @@ Insert current date at point."
 ;; (use-package consult-lsp
 ;;   :ensure t)
 
+(use-package consult-eglot
+  :ensure t
+  )
+
 ;; (use-package lsp-pyright
 ;;   :ensure t
 ;;   :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
@@ -711,6 +715,7 @@ Insert current date at point."
 
 (use-package eglot
   :ensure t
+  :after yasnippet-snippets
   :custom
   (eglot-autoshutdown t)
   (eglot-display-mapping-mode t)
@@ -721,6 +726,7 @@ Insert current date at point."
 	      ("C-c l r" . eglot-rename)
 	      ("C-c l h" . eldoc)
 	      ("C-c l f" . eglot-format)
+	      ("C-c l i" . eglot-find-implementation)
 	      ("C-c l F" . eglot-format-buffer))
   :hook
   (python-ts-mode . eglot-ensure)
@@ -741,6 +747,15 @@ Insert current date at point."
   :ensure t
   :after consult
   )
+
+(use-package breadcrumb
+  :ensure t
+  :after eglot
+  :init
+  (breadcrumb-mode 1)
+  :custom
+  (breadcrumb-project-max-length 16)
+)
 
 (use-package dape
   :ensure t
@@ -784,10 +799,29 @@ Insert current date at point."
   :custom
   (repeat-mode +1))
 
+(use-package poke-mode
+  :ensure t
+  :after poke-mode
+  )
+
+(use-package poke
+  :ensure t
+  :after poke-mode
+  )
+
 ;; Left and right side windows occupy full frame height
 (use-package emacs
   :custom
   (window-sides-vertical t))
+
+(defun copy-file-link-to-clipboard ()
+  "Copy current line in file to clipboard as '<filename>:<line-number>'."
+  (interactive)
+  (let ((path-with-line-number
+         (concat (buffer-file-name) ":" (number-to-string (line-number-at-pos)))))
+    (kill-new path-with-line-number)
+    (message (concat path-with-line-number " copied to clipboard"))))
+(global-set-key (kbd "C-c j l") 'copy-file-link-to-clipboard)
 
 (if (file-exists-p "~/.proton") (require 'proton))
 
