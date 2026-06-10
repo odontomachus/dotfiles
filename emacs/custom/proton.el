@@ -8,11 +8,6 @@
 
 (print "Loading proton mode")
 
-;; (add-hook 'csharp-mode-hook 'lsp-deferred)
-;; (add-hook 'csharp-ts-mode-hook 'lsp-deferred)
-;; (add-hook 'php-mode-hook 'lsp-deferred)
-
-
 (setq iphlicence (let ((licf
 			(expand-file-name "~/intelephense/LICENCE.txt")))
 		   (if
@@ -47,7 +42,7 @@
   (phpcbf-executable "~/.config/composer/vendor/bin/phpcbf")
   (php-mode-coding-style (quote symfony2))
   (lsp-intelephense-licence-key iphlicence)
-  (lsp-intelephense-php-version "8.2.0")
+  (lsp-intelephense-php-version "8.4.0")
   :hook
   (php-mode-hook . yas-minor-mode)
 ;;  (php-mode-hook . lsp-deferred)
@@ -58,21 +53,42 @@
 				     ))))
   )
 
-;; (use-package dap-mode
-;;   :ensure t
-;; ;;  :after lsp-mode
-;;   :config
-;;   (dap-mode t)
-;;   (dap-ui-mode t)
-;;   (dap-register-debug-template "PHP"
-;;                                (list :type "php"
-;;                                      :cwd nil
-;;                                      :request "launch"
-;;                                      :name "Php Debug"
-;;                                      :args '("--server=9000")
-;;                                      :pathMappings (ht ("/var/www/api" (projectile-project-root (buffer-file-name))))
-;;                                      :sourceMaps t))
-;;   )
+(with-eval-after-load 'csharp-ts-mode
+  (define-key csharp-ts-mode-map (kbd "C-c p c")
+    (lambda ()
+      (interactive)
+      (let ((sln (my/find-csharp-solution (project-current t))))
+        (compile (concat "dotnet build" (when sln (concat " " sln)))))))
+  (define-key csharp-mode-map (kbd "C-c p t")
+    (lambda ()
+      (interactive)
+      (let ((sln (my/find-csharp-solution (project-current t))))
+        (compile (concat "dotnet test" (when sln (concat " " sln))))))))
+
+(defun my/find-csharp-solution (project)
+  "Find a .slnx file in PROJECT root or one level deep, preferring non-Public."
+  (let* ((root (project-root project))
+         (all-slnx (directory-files root t "\\.slnx$"))
+         (candidates (or all-slnx
+                         (let ((found '()))
+                           (dolist (dir (directory-files root t "^[^.]"))
+                             (when (file-directory-p dir)
+                               (setq found (append found (directory-files dir t "\\.slnx$")))))
+                           found)))
+         (non-public (seq-remove (lambda (f) (string-match-p "Public" f)) candidates)))
+    (car (or non-public candidates))))
+
+(defun my/roslyn-lsp-command (_)
+  "Build the command line for Roslyn."
+  (list "~/.local/share/roslyn-lsp/content/LanguageServer/linux-x64/Microsoft.CodeAnalysis.LanguageServer"
+        "--stdio" "--logLevel" "Information" "--extensionLogDirectory" "/tmp/roslyn-logs"))
+
+(defun my/csharp-eglot-setup ()
+  "Configure eglot workspace settings for C# with the correct solution file."
+  (when-let* ((proj (project-current))
+              (sln (my/find-csharp-solution proj)))
+    (setq-local eglot-workspace-configuration
+                `(:csharp (:solution ,sln)))))
 
 (use-package swift-mode
   :ensure t)
@@ -92,12 +108,17 @@
 
 (use-package eglot
   :ensure t
+  :config
+  (add-to-list 'eglot-server-programs
+               `((php-mode :language-id "php") . ("intelephense" "--stdio" :initializationOptions
+                                                  (:licenseKey ,iphlicence))))
+  ;; (add-to-list 'eglot-server-programs
+  ;;              '((csharp-ts-mode :language-id "csharp") . my/roslyn-lsp-command))
   :hook
   (php-mode . eglot-ensure)
   (kotlin-mode . eglot-ensure)
-  (csharp-ts-mode . eglot-ensure)
-)
-
+  (csharp-ts-mode . my/csharp-eglot-setup)
+  (csharp-ts-mode . eglot-ensure))
 
 (defun pm-get-ns (file-name project-root)
   "Derive namespace from filename.
@@ -113,15 +134,15 @@ arg FILE-NAME current buffer's file name PROJECT-ROOT path to project root"
     (progn (setq auth-sources '("secrets:kdewallet"))))
 
 ;; setup forge
+;; https://magit.vc/manual/forge.html#Setup-for-Another-Gitlab-Instance
 (with-eval-after-load 'forge
   (add-to-list 'forge-alist
                '("gitlab.protontech.ch" "gitlab.protontech.ch/api/v4" "gitlab.protontech.ch" forge-gitlab-repository)))
 
-(defun my-open-phpstorm ()
-  "Open file in phpstorm."
-  (interactive)
-  (shell-command (concat "nohup phpstorm " (shell-quote-argument (buffer-file-name)) " &") "*phpstorm*" "*phpstorm-errors*")
-  )
+;; https://www.gnu.org/software/emacs/manual/html_mono/auth.html#Top
+;; (setq auth-sources '((:source (:secrets default)
+;;                      :host "myserver" :user "joe")
+;;                     "~/.authinfo.gpg"))
 
 (setq pm-idcrypt-cmd (if (executable-find "pm-idcrypt") "pm-idcrypt " "kubectl --context atlas -n env-dev exec services/slim-api -c slim-api -- ./quark idcrypt "))
 (defun pm-id-decrypt (encrypted-id)

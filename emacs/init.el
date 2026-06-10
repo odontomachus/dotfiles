@@ -169,7 +169,7 @@
  '(savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
  '(savehist-file "~/.emacs.d/savehist")
  '(savehist-save-minibuffer-history 1)
- '(split-height-threshold 160)
+ '(split-height-threshold 150)
  '(tooltip-use-echo-area t)
  '(typescript-indent-level 2)
  '(typescript-ts-mode-indent-offset 4)
@@ -204,8 +204,19 @@
   (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.go\\.mod\\'" . go-mod-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . javascript-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode)))
+
+(use-package treesit-fold
+  :ensure t
+  :init
+  (global-treesit-fold-mode )
+  :bind
+  ("C-c t o" . treesit-fold-open)
+  ("C-c t f" . treesit-fold-close)
+  ("C-c t F" . treesit-fold-close-all)
+  ("C-c t O" . treesit-fold-open-all)
+  )
 
 (require 'org)
 (org-babel-do-load-languages
@@ -224,8 +235,12 @@
          (plantuml . t)
          (latex . t))))
 
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(use-package flyspell
+  :custom-face
+  (flyspell-incorrect ((t (:underline (:color "light violet" :style wave :position nil)))))
+  :hook (text-mode-hook . flyspell-mode)
+  (prog-mode-hook . flyspell-prog-mode)
+  )
 
 (use-package markdown-mode
   :ensure t
@@ -825,7 +840,8 @@ Insert current date at point."
 
 (if (file-exists-p "~/.proton") (require 'proton))
 
-(require 'ai)
+(if (file-exists-p "~/.emacs.d/init-ai") (require 'ai))
 
 (provide 'init)
 ;;; init.el ends here
+(put 'downcase-region 'disabled nil)

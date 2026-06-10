@@ -101,8 +101,9 @@ export PATH
 
 [ -e /home/jonathan/.config/broot/launcher/bash/br ] && . /home/jonathan/.config/broot/launcher/bash/br
 
-
 # created by espup for rust esp programming
 [ -f ~/export-esp.sh ] && . ~/export-esp.sh
 
 command -v asdf &>/dev/null && . <(asdf completion bash)
+
+[ -f ~/.work.env ] && . ~/.work.env
