@@ -23,14 +23,14 @@
       read-process-output-max (* 1024 1024)
       ;; Speedup long lines
       bidi-inhibit-bpa t
-      global-visual-line-mode t
       recentf-max-saved-items 100
       recentf-max-menu-items 10
-      recentf-exclude '("~/\\..*", "^/tmp/*")
+      recentf-exclude '("~/\\..*" "^/tmp/")
       )
 
 (savehist-mode 1)
 (recentf-mode 1)
+(global-visual-line-mode 1)
 ;; Tooltips in echo area
 (tooltip-mode -1)
 (tool-bar-mode -1)
@@ -44,11 +44,17 @@
 (setq-default indent-tabs-mode nil)
 
 (let* ((node_path (expand-file-name "~/.nvm/versions/node/"))
-       (version (car (reverse (sort (directory-files node_path) 'string-collate-lessp))))
-       )
-  (if (string-match-p "^v[0-9]\\{2\\}\\." version)
-      (add-to-list 'exec-path (concat node_path version "/bin"))
-    ))
+       (versions (and (file-directory-p node_path)
+                      (directory-files node_path nil "\\`v[0-9]")))
+       (latest (car (sort versions (lambda (a b)
+                                      (version< (substring b 1) (substring a 1)))))))
+  (when latest
+    (let ((bin-dir (concat node_path latest "/bin")))
+      (add-to-list 'exec-path bin-dir)
+      ;; Also export PATH so subprocesses spawned via a real shell
+      ;; (compile, async-shell-command, vterm) can find node/npm too -
+      ;; exec-path alone only helps Emacs's own subprocess resolution.
+      (setenv "PATH" (concat bin-dir path-separator (getenv "PATH"))))))
 
 ;; y/n prompt only, no yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -62,15 +68,9 @@
 
 (require 'uniquify)
 
-;; (setq ido-enable-flex-matching t)
-;; (setq ido-everywhere t)
-;; (ido-mode 1)
-;; (setq ido-auto-merge-delay-time 1.5)
-;; ;; No prompt when creating new buffer
-;; (setq ido-create-new-buffer 'always)
-
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(setq package-check-signature 'allow-unsigned)
 (package-initialize)
 
 (use-package editorconfig
@@ -126,13 +126,6 @@
      default))
  '(delq nil t)
  '(eldoc-idle-delay 0.3)
- '(flycheck-checker-error-threshold 1000)
- '(flycheck-markdown-markdownlint-cli-config
-   '(".markdownlint.json" ".markdownlint.jsonc" ".markdownlint.yaml"
-     ".pymarkdown.yml"))
- '(flycheck-markdown-pymarkdown-config
-   '(".markdownlint.json" ".markdownlint.jsonc" ".markdownlint.yaml"
-     ".pymarkdown.yml"))
  '(global-auto-revert-mode t)
  '(graphviz-dot-indent-width 2)
  '(lsp-file-watch-ignored-directories
@@ -156,6 +149,14 @@
      ("rust" . rust-mode) ("sql" . sql-mode) ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
  '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
+ '(package-selected-packages
+   '(ag breadcrumb claude-code company-phpactor consult-eglot dape
+        difftastic edit-indirect embark-consult forge git-link
+        gitlab-ci-mode graphviz-dot-mode kotlin-mode lice marginalia
+        mermaid-mode mermaid-ts-mode orderless php-cs-fixer php-mode
+        plantuml-mode poetry protobuf-mode rainbow-delimiters rustic
+        solarized-theme swift-mode treemacs treesit-fold vertico
+        web-mode yasnippet-snippets))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(rustic-lsp-client 'eglot)
  '(safe-local-variable-values
@@ -164,7 +165,7 @@
        (overrideCommand
         . ["cargo" "check" "+esp" "--message-format=json"
            "--all-targets"])))
-     (flycheck-checker . lsp) (php-project-root . git)
+     (php-project-root . git)
      (php-project-root . default-directory)))
  '(savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
  '(savehist-file "~/.emacs.d/savehist")
@@ -237,7 +238,7 @@
 
 (use-package flyspell
   :custom-face
-  (flyspell-incorrect ((t (:underline (:color "light violet" :style wave :position nil)))))
+  (flyspell-incorrect ((t (:underline (:color "violet" :style wave :position nil)))))
   :hook (text-mode-hook . flyspell-mode)
   (prog-mode-hook . flyspell-prog-mode)
   )
@@ -593,93 +594,11 @@ Insert current date at point."
 (use-package gitlab-ci-mode
   :ensure t)
 
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :after company
-;;   :init (setq lsp-keymap-prefix (kbd "C-c l"))
-;;   :custom (lsp-prefer-capf t)
-;;   (lsp-eldoc-enable-hover t)
-;;   (lsp-log-io nil)
-;;   (lsp-semantic-highlighting t)
-;;   (lsp-enable-xref t)
-;;   (lsp-signature-auto-activate t)
-;;   (lsp-signature-render-documentation t)
-;;   (lsp-file-watch-ignored '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]vendor" "[/\\\\]api-spec" "[/\\\\]var" "[/\\\\]cache"))
-;;   (lsp-file-watch-threshold 30000)
-;;   (lsp-intelephense-php-version "8.2.0")
-;;   (lsp-intelephense-files-exclude
-;;    ["**/.git/**" "**/.svn/**" "**/.hg/**" "**/CVS/**" "**/.DS_Store/**" "**/node_modules/**" "**/bower_components/**" "**/vendor/**/{Test,test,Tests,tests}/**" "**/vendor/protonlabs/**"])
-;;                                         ; (lsp-idle-display . 0.500)
-;;   :commands (lsp))
-
-;; (use-package lsp-ui
-;;   :ensure t
-;;   :after lsp-mode flycheck
-;;   :custom
-;;   (lsp-ui-sideline-enable t)
-;;   (lsp-ui-sideline-show-diagnostics t)
-;;   (lsp-ui-sideline-show-code-actions t)
-;;   (lsp-ui-sideline-show-hover nil)
-;;   (lsp-ui-peek-enable t)
-;;   (lsp-ui-peek--offset 10)
-;;   (lsp-ui-peek-always-show t)
-;;   (lsp-ui-peek-list-width 92)
-;;   (lsp-ui-peek-peek-height 24)
-;;   (lsp-ui-doc-enable t)
-;;   (lsp-ui-doc-show-with-cursor t)
-;;   (lsp-ui-doc-include-signature t)
-;;   (lsp-signature-auto-activate t)
-;;   (lsp-lens-enable t)
-;;   (lsp-signature-render-documentation t)
-;;   :hook (lsp-mode-hook . lsp-ui-mode))
-
-;; (use-package consult-lsp
-;;   :ensure t)
-
-(use-package consult-eglot
-  :ensure t
-  )
-
-;; (use-package lsp-pyright
-;;   :ensure t
-;;   :custom (lsp-pyright-langserver-command "pyright") ;; or basedpyright
-;;   :hook (python-ts-mode . (lambda ()
-;;                           (require 'lsp-pyright)
-;;                           (lsp-deferred))))
-
-;; (use-package dap-mode
-;;   :ensure t
-;; ;;  :after lsp-mode
-;;   :config
-;;   (dap-mode t)
-;;   (dap-ui-mode t))
-
 (use-package treemacs
   :ensure t)
 
-;; (use-package lsp-treemacs
-;;   :ensure t
-;;   :defer t)
-
-;; (add-hook 'c-mode-hook 'lsp-deferred)
-;; (add-hook 'c++-mode-hook 'lsp-deferred)
-
-;; (add-hook 'c-ts-mode-hook 'lsp-deferred)
-;; (add-hook 'c++-ts-mode-hook 'lsp-deferred)
-
-;; (use-package typescript-ts-mode
-;;   :hook (typescript-ts-mode . lsp-deferred)
-;; )
-
-
 (use-package go-ts-mode
   :custom (go-ts-mode-indent-offset 4)
-  :hook (go-ts-mode . (lambda ()
-                    (progn
-;;                      (add-hook 'before-save-hook #'lsp-format-buffer t t)
-;;                      (add-hook 'before-save-hook #'lsp-organize-imports t t)
-;;                      (lsp-deferred)
-                      )))
   )
 
 (use-package rust-mode
@@ -690,11 +609,8 @@ Insert current date at point."
   :ensure t
   :after (rust-mode)
   :hook
-;;  (rust-mode-hook . lsp-deferred)
   (rust-mode-hook . yas-minor-mode)
   )
-
-;; (add-hook 'csharp-ts-mode-hook 'lsp-deferred)
 
 (use-package pyvenv :ensure t)
 
@@ -715,18 +631,10 @@ Insert current date at point."
   :ensure t
   )
 
-;; (add-hook 'elixir-ts-mode-hook 'lsp-deferred)
-
-(use-package yasnippet-snippets
-  :ensure t)
-
 (use-package typescript-ts-mode
-  :mode ("\\.ts$" "\\.tsx$")
-  ;;  :hook ((typescript-ts-mode-hook . lsp-deferred) (typescript-mode-hook . lsp-deferred))
-  )
+  :mode ("\\.ts$" "\\.tsx$"))
 
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/custom/"))
-
 
 (use-package eglot
   :ensure t
@@ -755,12 +663,7 @@ Insert current date at point."
   :config
   ;; Force eglot to use pylsp for both standard and tree-sitter python modes
   (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode) . ("poetry" "run" "pylsp")))
-  )
-
-(use-package consult-eglot
-  :ensure t
-  :after consult
+               '((python-mode python-ts-mode) . ("pylsp")))
   )
 
 (use-package breadcrumb
@@ -814,16 +717,6 @@ Insert current date at point."
   :custom
   (repeat-mode +1))
 
-(use-package poke-mode
-  :ensure t
-  :after poke-mode
-  )
-
-(use-package poke
-  :ensure t
-  :after poke-mode
-  )
-
 ;; Left and right side windows occupy full frame height
 (use-package emacs
   :custom
@@ -838,7 +731,9 @@ Insert current date at point."
     (message (concat path-with-line-number " copied to clipboard"))))
 (global-set-key (kbd "C-c j l") 'copy-file-link-to-clipboard)
 
-(if (file-exists-p "~/.proton") (require 'proton))
+(if (file-exists-p "~/.proton") (progn
+                                  (add-to-list 'load-path (expand-file-name "~/.emacs.d/proton/"))
+                                        (require 'proton)))
 
 (if (file-exists-p "~/.emacs.d/init-ai") (require 'ai))
 

@@ -1,5 +1,4 @@
 # .bashrc
-
 shopt -qs histappend
 export HISTCONTROL=ignoredups:erasedups:ignorespace
 
@@ -15,43 +14,10 @@ fi
 # Turn the **** bell off
 set bell-style none
 
-# Autocomplete virtualenv listings
-_venv() {
-    ls -d ~/virtualenv/$2* 2> /dev/null | xargs -n 1 basename 2> /dev/null
-}
-
-# Activate a virtualenv
-venv () {
-    test -f ~/virtualenv/$1/bin/activate || ( echo "No such virtualenv" && exit 1 ) || return 1
-    source ~/virtualenv/$1/bin/activate
-}
-
-complete -C _venv venv
-
-mkvenv () {
-        test -f ~/virtualenv/$1/bin/activate && ( echo "Virtualenv already exists" && exit 1 )
-	python3 -m venv ~/virtualenv/"$@"
-}
-
-rmvenv () {
-    test -d ~/virtualenv/"$1" || ( echo "No such virtualenv" && exit 1 ) || return 1
-    N=0;
-    echo -n "Are you sure you want to remove virtualenv $1? (y/N) "
-    read a
-    while [ $N -lt 3 ]; do
-	[[ x$a =~ ^x[yY]$ ]] && return $( rm -r ~/virtualenv/"$1" )
-	[[ x$a =~ ^x[nN]$ ]] && echo "Cancelling" && return 1
-	let N=N+1
-	echo -n "Please answer 'y' or 'n'."
-	read a
-    done;
-}
-
 alias spwd='/bin/pwd > '$HOME'/.spwd'
 alias lpwd='cd "`cat '$HOME'/.spwd`"'
 alias va='. .venv/bin/activate'
 alias ip="ip -c"
-alias docker-compose=podman-compose
 
 export EDITOR=emacs
 export VISUAL=emacs
@@ -70,13 +36,6 @@ fi;
     source ~/.sshagent > /dev/null
 } 3< ~/.sshagent
 
-
-# up down arrow key behavior
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
-bind '"\C-p": history-search-backward'
-bind '"\C-n": history-search-forward'
-
 export HISTSIZE=10000
 
 export LANG="en_US.utf8"
@@ -85,21 +44,10 @@ export LC_ALL="en_US.utf8"
 # No accessibility bridge.
 export NO_AT_BRIDGE=1
 
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '~/.local/lib/google-cloud-sdk/path.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/path.bash.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/.local/lib/google-cloud-sdk/completion.bash.inc' ]; then . '~/.local/lib/google-cloud-sdk/completion.bash.inc'; fi
-
 [ -e $HOME/.config/podman/auth.json ] && export REGISTRY_AUTH_FILE=$HOME/.config/podman/auth.json
 
 export _JAVA_OPTIONS="-Djava.io.tmpdir=/var/tmp/java $_JAVA_OPTIONS"
 export PATH
-[ -d /opt/android-sdk/platform-tools ] && PATH=$PATH:/opt/android-sdk/platform-tools
-
-[ -e /home/jonathan/.config/broot/launcher/bash/br ] && . /home/jonathan/.config/broot/launcher/bash/br
 
 # created by espup for rust esp programming
 [ -f ~/export-esp.sh ] && . ~/export-esp.sh
@@ -107,3 +55,27 @@ export PATH
 command -v asdf &>/dev/null && . <(asdf completion bash)
 
 [ -f ~/.work.env ] && . ~/.work.env
+
+export NVM_DIR="$HOME/.nvm"
+
+# Helper function to load the real NVM and completions
+_lazy_load_nvm() {
+  # Unset placeholder functions to prevent infinite loops
+  unset -f nvm node npm npx yarn corepack 2>/dev/null || true
+  unfunction nvm node npm npx yarn corepack 2>/dev/null || true # For Zsh compatibility
+
+  # Load NVM
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+  # Load Bash/Zsh Completions
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
+
+# Create placeholder functions for Node-related commands
+nvm() { _lazy_load_nvm; nvm "$@"; }
+node() { _lazy_load_nvm; node "$@"; }
+npm() { _lazy_load_nvm; npm "$@"; }
+npx() { _lazy_load_nvm; npx "$@"; }
+yarn() { _lazy_load_nvm; yarn "$@"; }
+corepack() { _lazy_load_nvm; corepack "$@"; }
+
