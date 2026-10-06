@@ -202,6 +202,7 @@
   (add-to-list 'auto-mode-alist
                '("\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'" . cmake-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.exs?\\'" . elixir-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.heex\\'" . heex-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.go\\.mod\\'" . go-mod-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-ts-mode))
@@ -659,11 +660,19 @@ Insert current date at point."
   (c-ts-mode . eglot-ensure)
   (c++-ts-mode . eglot-ensure)
   (elixir-ts-mode . eglot-ensure)
+  (heex-ts-mod . eglot-ensure)
   (eglot-mode . (lambda () (deactivate-mark)))
   :config
   ;; Force eglot to use pylsp for both standard and tree-sitter python modes
   (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode) . ("pylsp")))
+               '((python-mode python-ts-mode) . ("poetry" "run" "pylsp")))
+  (add-to-list 'eglot-server-programs
+               '((elixir-ts-mode heex-ts-mode) . ("expert" "--stdio")))
+  )
+
+(use-package consult-eglot
+  :ensure t
+  :after consult
   )
 
 (use-package breadcrumb
