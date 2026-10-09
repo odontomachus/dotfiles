@@ -720,6 +720,32 @@ Insert current date at point."
   :custom
   (window-sides-vertical t))
 
+(use-package diff-hl
+  :ensure t
+  :init
+  ;; Enable diff-hl globally across all programming and text buffers
+  (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+  (add-hook 'text-mode-hook 'turn-on-diff-hl-mode)
+
+  :config
+  ;; 1. Live diffing: Highlight changes as you type, rather than waiting for file saves
+  (diff-hl-flydiff-mode 1)
+
+  ;; 2. Magit Integration: Instantly refresh the fringe markers when you stage/unstage in Magit
+  (with-eval-after-load 'magit
+    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
+  ;; 3. Dired integration (Optional): Show modified status markers next to files in Dired
+  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+
+  :bind
+  ;; 4. Ergonomic keybindings to navigate and revert changed hunks inline
+  ( :map diff-hl-mode-map
+    ("M-[" . diff-hl-previous-hunk) ; Jump to previous modification
+    ("M-]" . diff-hl-next-hunk)     ; Jump to next modification
+    ("C-c v r" . diff-hl-revert-hunk))) ; Revert only the hunk under the cursor
+
+
 (defun copy-file-link-to-clipboard ()
   "Copy current line in file to clipboard as '<filename>:<line-number>'."
   (interactive)
