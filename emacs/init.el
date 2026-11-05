@@ -148,15 +148,6 @@
      ("js" . javascript-mode) ("json" . json-mode)
      ("rust" . rust-mode) ("sql" . sql-mode) ("python" . python-mode)))
  '(markdown-fontify-code-blocks-natively t)
- '(org-agenda-files '("/home/jonathan/projects/proton/misc/journal.org"))
- '(package-selected-packages
-   '(ag breadcrumb claude-code company-phpactor consult-eglot dape
-        difftastic edit-indirect embark-consult forge git-link
-        gitlab-ci-mode graphviz-dot-mode kotlin-mode lice marginalia
-        mermaid-mode mermaid-ts-mode orderless php-cs-fixer php-mode
-        plantuml-mode poetry protobuf-mode rainbow-delimiters rustic
-        solarized-theme swift-mode treemacs treesit-fold vertico
-        web-mode yasnippet-snippets))
  '(plantuml-jar-path "/usr/share/java/plantuml.jar")
  '(rustic-lsp-client 'eglot)
  '(safe-local-variable-values
@@ -164,9 +155,7 @@
       (check
        (overrideCommand
         . ["cargo" "check" "+esp" "--message-format=json"
-           "--all-targets"])))
-     (php-project-root . git)
-     (php-project-root . default-directory)))
+           "--all-targets"])))))
  '(savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
  '(savehist-file "~/.emacs.d/savehist")
  '(savehist-save-minibuffer-history 1)
@@ -673,7 +662,7 @@ Insert current date at point."
 (use-package consult-eglot
   :ensure t
   :after consult
-  )
+  '((python-mode python-ts-mode) . ("pylsp")))
 
 (use-package breadcrumb
   :ensure t
